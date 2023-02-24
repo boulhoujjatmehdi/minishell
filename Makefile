@@ -1,6 +1,16 @@
-NAME = minishell
+
+
+
+
+
+
+
+
+mehdi5 
+inishell
 mehdiboulhoujjat
 kan 
 rajel 
 mezya
-NAME
+NAME = mehdi
+ 
