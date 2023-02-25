@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/02/24 20:07:13 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/02/25 15:56:51 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,49 +170,164 @@ void funct(t_comm *com, char **env, int token , int file_descriptors[2][2] , int
 #define FT_REDIRECT 3
 
 
-
-
-
-int main(int ac , char **av , char **env)
+void first_child(int *fd1 , int *fd2, int *fd3, int *pid)
 {
-    int num_child_processes = 5;
-    int i = 0;
-	int pid[100];
-	bzero(pid, 4 * 100);
-	int pd = 01;
-	pid[0] = 1;
-	t_comm *com;
-	char *c0[3];	c0[0] = strdup("/bin/ls");	c0[1] = strdup("-la");	c0[2] = NULL;
-	char *c1[3];	c1[0] = strdup("/usr/bin/grep");	c1[1] = strdup("18");	c1[2] = NULL;
-	char *c2[3];	c2[0] = strdup("/usr/bin/grep");	c2[1] = strdup("pipex");	c2[2] = NULL;
-	
-	t_comm *cc0 = new_comm (c0 , 0);
-	t_comm *cc1 = new_comm (c1 , 1);
-	t_comm *cc2 = new_comm (c2 , 2);
-	int fd[2][2];
-	pipe(fd[0]);
-	pipe(fd[1]);
-	while(i < 3)
+	pid[0] = fork();
+	if(pid[0] == 0)
 	{
-		int piid;
-		if(i == 0)
-		{
-			funct(cc0, env, FT_PIPE , fd , &piid);
-		}
-		if(i == 1)
-			funct(cc1, env, FT_REDIRECT, fd, &piid);
-		if(i == 2)
-			funct(cc2, env, FT_PIPED, fd, &piid);
-		printf("-- %d -- \n", piid);
-		i++;
+		dup2(fd1[1] , 1);
+		//close all
+		close(fd1[0]);
+		close(fd1[1]);
+		close(fd2[0]);
+		close(fd2[1]);
+		close(fd3[0]);
+		close(fd3[1]);
+		//-------------
+		char *c0[3];	c0[0] = strdup("/bin/ls");	c0[1] = strdup("-la");	c0[2] = NULL;
+		t_comm *cc0 = new_comm (c0 , 0);
+		char **env;
+		env = NULL;
+		execve(cc0->com, cc0->flags, env);
 	}
-		close(fd[0][0]);
-		close(fd[0][1]);
-		close(fd[1][0]);
-		close(fd[1][1]);
-		waitpid(-1, NULL, 0);
-	return 0;
 }
+
+void middle_child(int *fd1 , int *fd2, int *fd3 , int *pid)
+{
+	pid[1] = fork();
+	if(pid[1] == 0)
+	{
+		dup2(fd1[0], 0);
+		dup2(fd2[1], 1);
+		//close all
+		close(fd1[0]);
+		close(fd1[1]);
+		close(fd2[0]);
+		close(fd2[1]);
+		close(fd3[0]);
+		close(fd3[1]);
+		//-------------
+		char *c1[3];	c1[0] = strdup("/usr/bin/grep");	c1[1] = strdup("eboulhou");	c1[2] = NULL;
+		t_comm *cc1 = new_comm (c1 , 1);
+		char **env;
+		env = NULL;
+		execve(cc1->com, cc1->flags, env);
+	}
+}
+
+void third_child(int *fd1 , int *fd2, int *fd3 , int *pid)
+{
+	pid[2] = fork();
+	if(!pid[2])
+	{
+		dup2(fd2[0], 0);
+		//close all
+		close(fd1[0]);
+		close(fd1[1]);
+		close(fd2[0]);
+		close(fd2[1]);
+		close(fd3[0]);
+		close(fd3[1]);
+		//-------------
+		char *c2[3];	c2[0] = strdup("/usr/bin/grep");	c2[1] = strdup("1");	c2[2] = NULL;
+		t_comm *cc2 = new_comm (c2 , 2);
+		char **env;
+		env = NULL;
+		execve(cc2->com, cc2->flags, env);
+	}
+}
+
+
+int main()
+{
+	int i = 0;
+	
+	//open pipes
+	int fd1[2];
+	int fd2[2];
+	int fd3[2];
+	
+	pipe(fd1);
+	pipe(fd2);
+	pipe(fd3);
+	//-----------
+	int pid[3] = {0};
+	first_child(fd1, fd2, fd3, pid);
+	middle_child(fd1, fd2, fd3, pid);
+	third_child(fd1, fd2, fd3, pid);
+	
+	close(fd1[0]);
+	close(fd1[1]);
+	close(fd2[0]);
+	close(fd2[1]);
+	close(fd3[0]);
+	close(fd3[1]);
+	waitpid(-1 , NULL, 0);
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// int main(int ac , char **av , char **env)
+// {
+//     int num_child_processes = 5;
+//     int i = 0;
+// 	int pid[100];
+// 	bzero(pid, 4 * 100);
+// 	int pd = 01;
+// 	pid[0] = 1;
+// 	t_comm *com;
+// 	char *c0[3];	c0[0] = strdup("/bin/ls");	c0[1] = strdup("-la");	c0[2] = NULL;
+// 	char *c1[3];	c1[0] = strdup("/usr/bin/grep");	c1[1] = strdup("18");	c1[2] = NULL;
+// 	char *c2[3];	c2[0] = strdup("/usr/bin/grep");	c2[1] = strdup("pipex");	c2[2] = NULL;
+	
+// 	t_comm *cc0 = new_comm (c0 , 0);
+// 	t_comm *cc1 = new_comm (c1 , 1);
+// 	// char *c2[3];	c2[0] = strdup("/usr/bin/grep");	c2[1] = strdup("pipex");	c2[2] = NULL;
+// 	t_comm *cc2 = new_comm (c2 , 2);
+// 	int fd[2][2];
+// 	pipe(fd[0]);
+// 	pipe(fd[1]);
+// 	while(i < 3)
+// 	{
+// 		int piid;
+// 		if(i == 0)
+// 		{
+// 			funct(cc0, env, FT_PIPE , fd , &piid);
+// 		}
+// 		if(i == 1)
+// 			funct(cc1, env, FT_REDIRECT, fd, &piid);
+// 		if(i == 2)
+// 			funct(cc2, env, FT_PIPED, fd, &piid);
+// 		printf("-- %d -- \n", piid);
+// 		i++;
+// 	}
+// 		close(fd[0][0]);
+// 		close(fd[0][1]);
+// 		close(fd[1][0]);
+// 		close(fd[1][1]);
+// 		waitpid(-1, NULL, 0);
+// 	return 0;
+// }
 
 // int main(int ac , char **av, char **env) 
 // {
