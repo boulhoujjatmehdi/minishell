@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/02/27 21:10:08 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/02/27 21:17:29 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,7 +275,7 @@ int *open_pipes(int nb)
 	return fd;
 }
 // void fork_it_for_me()
-
+testboulhoujjat mehdi kan hna
 int main(int ac , char **av, char **env) 
 {
 	char *str;
