@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/01 15:51:30 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/01 21:57:45 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ void last_child(t_minishell *msh, int idx)
 	if(pid == 0)
 	{
 		dup2(msh->pipe[(idx - 1) * 2], 0);
-		// dup2(msh->pipe[idx*2 + 1])
+		dup2(msh->pipe[idx*2 + 1], 1);
 		close_all_pipes(msh);
 
 		execve(msh->comms->com, msh->comms->flags, msh->env);
@@ -203,13 +203,16 @@ void printer_child(t_minishell *msh, int idx)
 	{
 		dup2(msh->pipe[(idx - 1) * 2], 0);
 		close_all_pipes(msh);
-		char str[11];
+		char *str;
+		str = get_next_line(0);
 		int i = 0;
-		while((i = read(0, str, 10)))
+		while(str)
 		{
-			write(1, str, i);
+			write(1, str , ft_strlen(str));
+			str = get_next_line(0);
+			write(1, "\n\n", 1);//this is wher i left it the get next line dont read the last line if it ends without new line
+			
 		}
-		// execve(msh->comms->com, msh->comms->flags, msh->env);
 	}
 }
 
@@ -250,10 +253,11 @@ void  open_pipes(t_minishell *msh)
 	}
 	while(i <= msh->pipe_nb)
 	{
-		printf("%d \n" , msh->pipe_nb);
+		// printf("%d \n" , msh->pipe_nb);
 		pipe(&msh->pipe[i * 2]);
 		i++;
 	}
+	
 }
 
 void fork_it_for_me(t_minishell *msh)
@@ -273,8 +277,9 @@ void fork_it_for_me(t_minishell *msh)
 			middle_child(msh , i++);
 			j++;	
 		}
-		// msh->comms = msh->comms->next;
-		// last_child(msh, i);
+		msh->comms = msh->comms->next;
+		last_child(msh, i++);
+		
 	}
 	else if(msh->child_nb == 1)
 	{
@@ -284,7 +289,7 @@ void fork_it_for_me(t_minishell *msh)
 	printer_child(msh , i);
 }
 
-/* -----------------MAIN FUNCTION----------------- */
+// /* -----------------MAIN FUNCTION----------------- */
 int main(int ac , char **av, char **env) 
 {
 	char *str;
@@ -297,36 +302,33 @@ int main(int ac , char **av, char **env)
 	while(1)
 	{
 		
-		str = readline("minishell $>");	
+		str = readline("nminishell $>");	
 		add_history(str);
 		// rl_redisplay();
-		rl_on_new_line();
 		msh.comms = ft_get_commands(str, env);
 		initialize_data(&msh);
 		open_pipes(&msh);
 		fork_it_for_me(&msh);
 		while(1 + msh.pipe_nb--)
 		{
+			// printf("000000000\n");
 			waitpid(-1 , NULL, 0);
 		}
 		close_all_pipes(&msh);
+		// pause();
 	}
 
 	return 0;
 }
 
 // int main() {
-//     char* line;
-//     rl_initialize();
-
-//     while ((line = readline("> ")) != NULL) {
-//         // Do something with the input
-//         printf("You entered: %s\nkljs\nmehdi", line);
-//         // Move the cursor to a new line
-//         rl_on_new_line();
-//         // Free the input buffer
-//         free(line);
-//     }
-
-//     return 0;
+// 	int fd = open("Makefile", O_RDONLY);
+// 	char *str = get_next_line(fd);
+// 	while(str)
+// 	{
+// 		write(1, str , ft_strlen(str));
+		
+// 		str = get_next_line(fd);
+// 	}
+	
 // }

@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 11:53:04 by eboulhou          #+#    #+#             */
-/*   Updated: 2022/11/06 17:37:10 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/01 21:09:32 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	*read_function(int fd, char *temp)
 			break ;
 		buff[rd] = 0;
 		if (rd)
-			temp = ft_strjoin(temp, buff);
+			temp = ftt_strjoin(temp, buff);
 	}
 	return (temp);
 }
@@ -110,7 +110,7 @@ char	*get_next_line(int fd)
 	temp = NULL;
 	line = NULL;
 	if (stat[0])
-		temp = ft_strjoin (temp, stat);
+		temp = ftt_strjoin (temp, stat);
 	temp = read_function(fd, temp);
 	if (!temp)
 	{

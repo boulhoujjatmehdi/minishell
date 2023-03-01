@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 12:18:34 by eboulhou          #+#    #+#             */
-/*   Updated: 2022/11/06 17:45:24 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/01 21:09:27 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*ftt_strjoin(char *s1, char *s2)
 {
 	int		s1_len;
 	int		s2_len;
