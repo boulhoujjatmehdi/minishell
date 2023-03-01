@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/02/27 20:58:59 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/02/28 12:18:20 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_minishell
 	t_comm *comms;
 	int *pipe;
 	int pipe_nb;
+	char **env;
 }t_minishell;
 
 #endif

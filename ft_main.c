@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/02/27 21:17:29 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/02/28 15:57:56 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,72 +170,77 @@ void funct(t_comm *com, char **env, int token , int file_descriptors[2][2] , int
 #define FT_PIPED 2
 #define FT_REDIRECT 3
 
-
-void first_child(int *fd, int *pid)
+void close_all_pipes(t_minishell *msh)
 {
-	pid[0] = fork();
-	if(pid[0] == 0)
-	{
-		dup2(fd[1] , 1);
-		//close all
-		// printf("mehdi boulhoujjat\n");
 		int ii = 0;
-		while(ii < 10)
-			close(fd[ii++]);
+		while(ii < msh->pipe_nb)
+		{
+			close(msh->pipe[ii]);
+			// msh->pipe[ii] = 0;
+			close(msh->pipe[ii + 1]);
+			printf("closed --%d-- --%d--\n", msh->pipe)
+			// msh->pipe[ii + 1] = 0;
+			ii += 2;
+		}
+}
+
+void first_child(t_minishell *msh)
+{
+	int pid;
+	int i;
+	
+	i = 0;
+	pid = fork();
+	if(pid == 0)
+	{
+		dup2(msh->pipe[1] , 1);
+		//close all
+		close_all_pipes(msh);
 		//-------------
-		char *c0[3];	c0[0] = strdup("/bin/ls");	c0[1] = strdup("-la");	c0[2] = NULL;
-		t_comm *cc0 = new_comm (c0 , 0);
-		char **env;
-		env = NULL;
-		// sleep(1);
-		execve(cc0->com, cc0->flags, env);
+		// char *c0[3];	c0[0] = strdup("/bin/ls");	c0[1] = strdup("-la");	c0[2] = NULL;
+		// t_comm *cc0 = new_comm (c0 , 0);
+		// char **env;
+		// env = NULL;
+		// // sleep(1);
+		execve(msh->comms->com, msh->comms->flags, msh->env);
 	}
 }
 
-void middle_child(int *fdd, int *fd, int *pid , int i)
+
+void middle_child(t_minishell *msh, int idx)
 {
-	pid[1] = fork();
-	if(pid[1] == 0)
+	int pid;
+
+	pid = fork();
+	if(pid == 0)
 	{
-		// sleep(8);
-		dup2(fdd[0], 0);
-		dup2(fdd[3], 1);
-		//close all
-		int ii = 0;
-		while(ii < 10)
-			close(fd[ii++]);
+		dup2(msh->pipe[(idx - 1) * 2], 0);
+
+		close_all_pipes(msh);
 		//-------------
-		char str[100];
-		str[0] = '0' + i;
-		str[1] = 0;
-		char *c1[3];	c1[0] = strdup("/usr/bin/grep");	c1[1] = strdup(str);	c1[2] = NULL;
-		t_comm *cc1 = new_comm (c1 , 1);
-		char **env;
-		env = NULL;
-		execve(cc1->com, cc1->flags, env);
+		printf("********%d******\n", msh->pipe[(idx - 1) * 2]);
+		execve(msh->comms->com, msh->comms->flags, msh->env);
 	}
 }
 
-void third_child(int *fdd ,int *fd, int *pid)
-{
-	pid[2] = fork();
-	if(!pid[2])
-	{
-		dup2(fdd[0], 0);
-		//close all
-		int ii = 0;
-		while(ii < 10)
-			close(fd[ii++]);
-		//-------------
+// void last_child(int *fdd ,int *fd, int *pid 	pid[2] = fork();
+// 	if(!pid[2])
+// 	{
+// 		dup2(fdd[0], 0);
+// 		//close all
+// 		int ii = 0;
+// 		while(ii < 10)
+// 			close(fd[ii++]);
+// 		//-------------
 		
-		char *c2[3];	c2[0] = strdup("/usr/bin/wc");	c2[1] = strdup("-l");	c2[2] = NULL;
-		t_comm *cc2 = new_comm (c2 , 2);
-		char **env;
-		env = NULL;
-		execve(cc2->com, cc2->flags, env);
-	}
+// 		char *c2[3];	c2[0] = strdup("/usr/bin/wc");	c2[1] = strdup("-l");	c2[2] = NULL;
+// 		t_comm *cc2 = new_comm (c2 , 2);
+// 		char **env;
+// 		env = NULL;
+// 		execve(cc2->com, cc2->flags, env);
+// 	}
 
-}
+// }
 
 
 
@@ -258,228 +263,63 @@ void initialize_data(t_minishell *msh)
 	}
 }
 
-int *open_pipes(int nb)
+void  open_pipes(t_minishell *msh)
 {
-	int *fd;
 	int i;
 
 	i = 0;
-	fd = malloc(sizeof(int) * nb);
-	if(!fd)
-		return NULL;
-	while(i < nb)
+	msh->pipe = malloc(sizeof(int) * msh->pipe_nb);
+	bzero(msh->pipe, sizeof(int)*msh->pipe_nb);
+	if(!msh->pipe)
 	{
-		pipe(&fd[ i * 2]);
+		msh->pipe = NULL;
+		return ;
+	}
+	while(i <= msh->pipe_nb)
+	{
+		pipe(&msh->pipe[i * 2]);
+		printf("----%d------%d-----\n", msh->pipe[i*2],msh->pipe[i*2+1]);
 		i++;
 	}
-	return fd;
 }
-// void fork_it_for_me()
-testboulhoujjat mehdi kan hna
+
+void fork_it_for_me(t_minishell *msh)
+{
+	int i;
+	
+	i = 1;
+	if(i <= msh->pipe_nb)
+	{
+		first_child(msh);
+		// while(i < msh->pipe);
+		msh->comms = msh->comms->next;
+		middle_child(msh , i);
+	}
+}
+
+// /* -----------------MAIN FUNCTION----------------- */
 int main(int ac , char **av, char **env) 
 {
 	char *str;
 	int i;
-
+	t_minishell msh;
+	
+	msh.env = env;
+	add_history("ls -la | grep libft");
 	while(1)
 	{
-		t_minishell msh;
-
+		
 		str = readline("minishell $>");
 		add_history(str);
 		msh.comms = ft_get_commands(str, env);
 		initialize_data(&msh);
-		for(int j = 0; j < 3; j++)
-		{
-			printf("com = %s **||** flags = %s\n" , msh.comms->com ,msh.comms->flags[1]);
-			msh.comms = msh.comms->next;
-		}
+		open_pipes(&msh);
+		fork_it_for_me(&msh);
 
-		
-		
+		waitpid(-1, NULL, 0);
+		close_all_pipes(&msh);
 	}
 	return 0;
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// int main(int ac , char **av , char **env)
-// {
-//     int num_child_processes = 5;
-//     int i = 0;
-// 	int pid[100];
-// 	bzero(pid, 4 * 100);
-// 	int pd = 01;
-// 	pid[0] = 1;
-// 	t_comm *com;
-// 	char *c0[3];	c0[0] = strdup("/bin/ls");	c0[1] = strdup("-la");	c0[2] = NULL;
-// 	char *c1[3];	c1[0] = strdup("/usr/bin/grep");	c1[1] = strdup("18");	c1[2] = NULL;
-// 	char *c2[3];	c2[0] = strdup("/usr/bin/grep");	c2[1] = strdup("pipex");	c2[2] = NULL;
-	
-// 	t_comm *cc0 = new_comm (c0 , 0);
-// 	t_comm *cc1 = new_comm (c1 , 1);
-// 	// char *c2[3];	c2[0] = strdup("/usr/bin/grep");	c2[1] = strdup("pipex");	c2[2] = NULL;
-// 	t_comm *cc2 = new_comm (c2 , 2);
-// 	int fd[2][2];
-// 	pipe(fd[0]);
-// 	pipe(fd[1]);
-// 	while(i < 3)
-// 	{
-// 		int piid;
-// 		if(i == 0)
-// 		{
-// 			funct(cc0, env, FT_PIPE , fd , &piid);
-// 		}
-// 		if(i == 1)
-// 			funct(cc1, env, FT_REDIRECT, fd, &piid);
-// 		if(i == 2)
-// 			funct(cc2, env, FT_PIPED, fd, &piid);
-// 		printf("-- %d -- \n", piid);
-// 		i++;
-// 	}
-// 		close(fd[0][0]);
-// 		close(fd[0][1]);
-// 		close(fd[1][0]);
-// 		close(fd[1][1]);
-// 		waitpid(-1, NULL, 0);
-// 	return 0;
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// int main()
-// {
-// 	int i = 0;
-	
-// 	//open pipes
-// 	int fd[100];
-// 	pipe(&fd[0]);
-// 	pipe(&fd[2]);
-// 	pipe(&fd[4]);
-// 	pipe(&fd[6]);
-// 	pipe(&fd[8]);
-// 	//-----------
-// 	int pid[3] = {0};
-// 	first_child(fd, pid);
-// 	while(i < 3)
-// 	{
-// 		middle_child(&fd[i*2], fd, pid , i*2);
-// 		printf("%d -- is the fd\n", fd[i*2]);
-// 		i++;
-// 	}
-	
-// 	third_child(&fd[(i)*2],fd ,  pid);
-// 	int ii = 0;
-// 	while(ii < 10)
-// 		close(fd[ii++]);
-// 	for (int j=0; j < 5; j++)
-// 	{
-// 		waitpid(-1 , NULL, 0);
-// 	}
-
-// }
