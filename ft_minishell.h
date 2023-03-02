@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/01 21:06:58 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/02 10:23:58 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <string.h>
 #include <curses.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 

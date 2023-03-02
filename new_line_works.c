@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/02 15:54:15 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/02 15:31:43 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,21 +206,14 @@ void printer_child(t_minishell *msh, int idx, int *pid)
 		dup2(msh->pipe[0], 0);
 		close_all_pipes(msh);
 		char *str;
-		char tmp;
 		while(1)
 		{
 			str = get_next_line(0);
 			if (!str)
 				break ;
 			ft_putstr_fd(str, 1);
-			tmp = str[ft_strlen(str)-1];
 		}
-		if(tmp != 10)
-		{
-			// write();
-			write(1, "%\n", 3);
-		}
-
+		write(1, "\n", 1);
 		exit(0);
 	}
 }
@@ -301,8 +294,8 @@ void fork_it_for_me(t_minishell *msh)
 	// }
 	printer_child(msh , i , pid);
 	close_all_pipes( msh);
-	// waitpid(pid[0], NULL, 0);
-	// waitpid(pid[1], NULL, 0);
+	waitpid(pid[0], NULL, 0);
+	waitpid(pid[1], NULL, 0);
 
 }
 
@@ -328,11 +321,11 @@ int main(int ac , char **av, char **env)
 		fork_it_for_me(&msh);
 
 		// sleep(3);
-		while(1 + msh.pipe_nb--)
-		{
-			// printf("000000000\n");
-			waitpid(-1 , NULL, 0);
-		}
+		// while(1 + msh.pipe_nb--)
+		// {
+		// 	// printf("000000000\n");
+		// 	waitpid(-1 , NULL, 0);
+		// }
 		rl_on_new_line();
 	// 	pause();
 	}
