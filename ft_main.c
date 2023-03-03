@@ -6,131 +6,11 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/02 15:54:15 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/03 21:54:30 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minishell.h"
-
-int counter;
-t_comm *new_comm(char **com, int idx)
-{
-	t_comm *new;
-	new = malloc(sizeof(t_comm));
-	new->com = com[0];
-	new->flags = com;
-	new->idx = idx;
-	new->next = NULL;
-	return new;
-}
-
-char *get_right_path(char *str, char **env)
-{
-	int i;
-		
-	i = 0;
-	while(env[i])
-	{
-		if(!ft_strncmp(env[i], "PATH=", 5))
-		{
-			env = ft_split(env[i], '=');
-			env = ft_split(env[1], ':');
-			i = 0;
-			while(env[i])
-			{
-				env[i] = ft_strjoin(env[i], ft_strjoin("/", str));
-				if(!access(env[i], F_OK))
-				{
-					return ft_strdup(env[i]);
-				}
-				i++;
-			}
-			break;
-		}
-		i++;
-	}
-	return NULL;
-}
-
-void add_back_comm(t_comm **comms, t_comm *new)
-{
-	t_comm *tmp;
-
-	tmp = *comms;
-	if (!*comms)
-		*comms = new;
-	else
-	{
-		while(tmp->next)
-			tmp = tmp->next;
-		tmp->next = new;
-	}
-}
-
-int get_comm_lenght(t_comm *comms)
-{
-	int i;
-	
-	i = 0;
-	while(comms)
-	{
-		comms = comms->next;
-		i++;
-	}
-	return i;
-}
-
-t_comm *ft_get_commands(char *str, char **env)
-{
-	char **ret = ft_split(str, '|');
-	int i = 0;
-	t_comm *comms;
-
-	comms = NULL;
-	while(ret[i])
-	{
-		// printf("%s\n************\n", ret[i]);
-		char **com = ft_split(ret[i], ' ');
-		t_comm *tmp = new_comm(com, i);
-		tmp->com = get_right_path(tmp->com, env);
-		add_back_comm(&comms, tmp);
-		i++;
-	}
-	return comms;
-}
-
-int glob[100];
-void	ft_pipe(int *fd, int *fd2)
-{
-	int i = 1;
-	char *buffer;
-	int pid = fork();
-
-	
-	if(!pid)
-	{	
-		close(fd[1]);
-		close(fd2[0]);
-		dup2(fd[0], 0);
-		dup2(fd2[1], 1);
-		i = read(fd[0], buffer, 500);
-		puts("mehdi\n");
-		while(i>0)
-		{
-			write(fd2[1], "390 test\nlkdjfka d\nklfjadjsfklajsd\n", 35);
-			write(fd2[1], buffer, i);
-			i = read(fd[0], buffer, 500);
-		}
-		close(fd[0]);
-		close(fd2[1]);
-	}
-	exit(0);
-}
-
-
-#define FT_PIPE 1
-#define FT_PIPED 2
-#define FT_REDIRECT 3
 
 void close_all_pipes(t_minishell *msh)
 {
@@ -138,10 +18,8 @@ void close_all_pipes(t_minishell *msh)
 		while(ii <= msh->pipe_nb*2)
 		{
 			close(msh->pipe[ii]);
-			// msh->pipe[ii] = 0;
 			close(msh->pipe[ii + 1]);
 			// printf("closed --%d-- --%d--\n", msh->pipe[ii], msh->pipe[ii+1]);
-			msh->pipe[ii + 1] = 0;
 			ii += 2;
 		}
 }
@@ -156,23 +34,28 @@ void first_child(t_minishell *msh , int *pid)
 	*pid = fork();
 	if(*pid == 0)
 	{
-		// if(msh->child_nb > 1)
+		sleep(1);
+		printf("hello from the first child id = %d\n" , getpid());
+		exit(11);
 		dup2(msh->pipe[1], 1);
 		close_all_pipes(msh);
 
 		execve(msh->comms->com, msh->comms->flags, msh->env);
 		exit(10);
 	}
-	
+	else
+		printf("-------- pid = %d first\n", *pid);
 }
 
-void middle_child(t_minishell *msh, int idx)
+void middle_child(t_minishell *msh, int idx , int *pid)
 {
-	int pid;
 
-	pid = fork();
-	if(pid == 0)
+
+	*pid = fork();
+	if(*pid == 0)
 	{
+		printf("hello from the child number %d\n", idx);
+		exit(idx);
 		dup2(msh->pipe[(idx - 1) * 2], 0);
 		dup2(msh->pipe[idx * 2 + 1], 1);
 
@@ -189,8 +72,11 @@ void last_child(t_minishell *msh, int idx)
 	pid = fork();
 	if(pid == 0)
 	{
+		printf("hello from the last child number %d id = %d \n", idx , getpid());
+		exit(idx);
 		dup2(msh->pipe[(idx - 1) * 2], 0);
-		// dup2(msh->pipe[idx*2 + 1], 1);
+		dup2(msh->pipe[idx * 2 + 1], 1);
+
 		close_all_pipes(msh);
 
 		execve(msh->comms->com, msh->comms->flags, msh->env);
@@ -200,13 +86,18 @@ void last_child(t_minishell *msh, int idx)
 void printer_child(t_minishell *msh, int idx, int *pid)
 {
 
-	pid[1] = fork();
-	if(pid[1] == 0)
+	*pid = fork();
+	if(*pid == 0)
 	{
-		dup2(msh->pipe[0], 0);
+		printf("hello from the printer child number %d id = %d\n", idx , getpid());
+		exit(idx);
+		dup2(msh->pipe[(idx - 1) * 2], 0);
 		close_all_pipes(msh);
 		char *str;
 		char tmp;
+		int i;
+
+		i = 0;
 		while(1)
 		{
 			str = get_next_line(0);
@@ -214,15 +105,19 @@ void printer_child(t_minishell *msh, int idx, int *pid)
 				break ;
 			ft_putstr_fd(str, 1);
 			tmp = str[ft_strlen(str)-1];
+			i++;
 		}
-		if(tmp != 10)
+		if(tmp != 10 && i )
 		{
 			// write();
 			write(1, "%\n", 3);
 		}
+		// printf("*******************\n");
 
 		exit(0);
 	}
+	else
+		printf("======== pid = %d printer\n", *pid);
 }
 
 
@@ -253,24 +148,43 @@ void initialize_data(t_minishell *msh)
 
 void  open_pipes(t_minishell *msh)
 {
-	// int i;
+	int i;
 
+	i = 0;
+	msh->pipe = malloc(sizeof(int) * msh->pipe_nb);
+	bzero(msh->pipe, sizeof(int)*msh->pipe_nb);
+	if(!msh->pipe)
+	{
+		msh->pipe = NULL;
+		return ;
+	}
+	while(i <= msh->pipe_nb)
+	{
+		// printf("%d \n" , msh->pipe_nb);
+		pipe(&msh->pipe[i * 2]);
+		i++;
+	}
+	// msh->pipe = malloc(3*3);
+	// pipe(msh->pipe);
+}
+
+void wait_for_all(int *pids , int nb)
+{
+	int i;
+
+	i = 0;
+	while(i <= nb)
+	{
+		waitpid(pids[i], NULL, 0);
+		// printf("%d -- " , pids[i]);
+		// printf("\n");
+		i++;
+	}
 	// i = 0;
-	// msh->pipe = malloc(sizeof(int) * msh->pipe_nb);
-	// bzero(msh->pipe, sizeof(int)*msh->pipe_nb);
-	// if(!msh->pipe)
+	// while(i < nb)
 	// {
-	// 	msh->pipe = NULL;
-	// 	return ;
-	// }
-	// while(i <= msh->pipe_nb)
-	// {
-	// 	// printf("%d \n" , msh->pipe_nb);
-	// 	pipe(&msh->pipe[i * 2]);
 	// 	i++;
 	// }
-	msh->pipe = malloc(3*3);
-	pipe(msh->pipe);
 }
 
 void fork_it_for_me(t_minishell *msh)
@@ -280,29 +194,38 @@ void fork_it_for_me(t_minishell *msh)
 	
 	j = 2;
 	i = 1;
-	// if(msh->child_nb > 1)
-	// {
-	// 	first_child(msh);
-	// 	while(j < msh->child_nb)
-	// 	{
-	// 		msh->comms = msh->comms->next;
-	// 		middle_child(msh , i++);
-	// 		j++;	
-	// 	}
-	// 	msh->comms = msh->comms->next;
-	// 	last_child(msh, i);
+	int pid[500];
+	if(msh->child_nb > 1)
+	{
+		first_child(msh, pid);
+		waitpid(pid[0], NULL, 0);
+		while(j < msh->child_nb)
+		{
+			
+			msh->comms = msh->comms->next;
+			middle_child(msh , i , &pid[i]);
+			waitpid(pid[i], NULL, 0);
+
+			i++;
+			j++;
+		}
+		msh->comms = msh->comms->next;
+		last_child(msh, i);
+		waitpid(pid[i], NULL, 0);
+		i++;
 		
-	// }
-	// else
-	int pid[5];
-	// if(msh->child_nb == 1)
-	// {
+	}
+	else
+	if(msh->child_nb == 1)
+	{
 		first_child(msh , pid);
-	// }
-	printer_child(msh , i , pid);
-	close_all_pipes( msh);
-	// waitpid(pid[0], NULL, 0);
-	// waitpid(pid[1], NULL, 0);
+		waitpid(pid[i], NULL, 0);
+	}
+	printer_child(msh , i , &pid[i]);
+		waitpid(pid[i], NULL, 0);
+	// wait_for_all(pid, msh->child_nb);
+	// pause();
+
 
 }
 
@@ -315,6 +238,7 @@ int main(int ac , char **av, char **env)
 	
 	msh.env = env;
 	add_history("ls -la | grep ft | grep 1");
+	add_history("cat Makefile | grep me");
 	add_history("cat Makefile");
 	while(1)
 	{
@@ -326,15 +250,15 @@ int main(int ac , char **av, char **env)
 		initialize_data(&msh);
 		open_pipes(&msh);
 		fork_it_for_me(&msh);
-
+		// pause();
+		
 		// sleep(3);
+		close_all_pipes(&msh);
 		while(1 + msh.pipe_nb--)
 		{
-			// printf("000000000\n");
 			waitpid(-1 , NULL, 0);
 		}
 		rl_on_new_line();
-	// 	pause();
 	}
 
 	return 0;

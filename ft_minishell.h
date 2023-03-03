@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/02 10:23:58 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/03 12:50:02 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,19 @@ typedef struct s_minishell
 	int child_nb;
 	char **env;
 }t_minishell;
+
+
+//ft_commands.c
+
+t_comm *new_comm(char **com, int idx);
+char *get_right_path(char *str, char **env);
+void add_back_comm(t_comm **comms, t_comm *new);
+int get_comm_lenght(t_comm *comms);
+t_comm *ft_get_commands(char *str, char **env);
+
+
+
+
+
 
 #endif
