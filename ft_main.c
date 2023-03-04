@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/03 21:54:30 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/04 10:37:28 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,7 @@ void wait_for_all(int *pids , int nb)
 	// {
 	// 	i++;
 	// }
+	
 }
 
 void fork_it_for_me(t_minishell *msh)
