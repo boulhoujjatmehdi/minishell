@@ -5,19 +5,11 @@
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <unistd.h>
+int main(int ac, char **av , char **env) 
+{
 
-int main() {
-    char *input;
-    while ((input = readline("> ")) != NULL) {
-        // Process the user input here
-        printf("You entered: %s", input);
+    char *str[5] = {"/usr/bin/awk" , "{printf (\"mehdiboulhoujjat\")}"};
+    execve(str[0], str, env);
 
-        // Move the cursor to a new line
-        rl_on_new_line();
-        rl_on_new_line();
-
-        // Free the memory used by readline
-        // free(input);
-    }
-    return 0;
 }
