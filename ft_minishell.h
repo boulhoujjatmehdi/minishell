@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/06 11:29:06 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/08 12:06:15 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,28 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-#define NX_PIPE
-#define NX_OUT
-#define PR_PIPE
-#define PR_IN
-#define PR_FRST
+
+#define REDIRECT_INPUT 1
+#define REDIRECT_OUTPUT 2
+
+
+// #define PR_FRST
+#define BEGIN_COM 1
+#define BEGIN_REDIR 2
 
 
 typedef struct s_comm
 {
 	int idx;
 	char *com;
+	int begin_com;
 	char **flags;
-	int nxt;
+	int red;
+	char **infiles;
+	char **outfiles;
 	struct s_comm *next;
 }t_comm;
+
 typedef struct s_minishell
 {
 	t_comm *comms;
@@ -66,7 +73,7 @@ t_comm *new_comm(char **com, int idx);
 char *get_right_path(char *str, char **env);
 void add_back_comm(t_comm **comms, t_comm *new);
 int get_comm_lenght(t_comm *comms);
-t_comm *ft_get_commands(char *str, char **env);
+t_comm *ft_get_commands(t_minishell *msh, char *str, char **env);
 void ft_free_commands(t_comm *comms);
 void ft_free_command(t_comm *comms);
 void ft_free_mat(char **mat);
@@ -81,5 +88,6 @@ void first_child(t_minishell *msh , int *pid);
 //ft_args.c
 void ft_replace(char *str , char sign, char c, char r);
 void ft_replace_mat(char **str , char sign, char c, char r);
+void combine_rdir(char **inputs, char **outputs, char *str);
 
 #endif

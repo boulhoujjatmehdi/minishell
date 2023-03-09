@@ -3,3 +3,4 @@ minishell
 *.o
 libftprintf.a
 output.txt
+out*

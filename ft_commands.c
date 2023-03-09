@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 12:48:00 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/06 12:19:01 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/09 13:07:29 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ t_comm *new_comm(char **com, int idx)
 	new->flags = com;
 	new->idx = idx;
 	new->next = NULL;
+	new->infiles = NULL;
+	new->outfiles = NULL;
 	return new;
 }
 
@@ -98,32 +100,38 @@ void ft_free_mat(char **mat)
 	free(mat);
 }
 
-t_comm *ft_get_commands(char *str, char **env)
+t_comm *ft_get_commands(t_minishell *msh, char *str, char **env)
 {
 	char **ret = ft_split(str, '|');
 	int i = 0;
 	t_comm *comms;
 	char **com;
+	char **inputs;
+	char **outputs;
+	// *inputs = NULL;
+	// *outputs = NULL;
 	com = NULL;
 	comms = NULL;
 	while(ret[i])
 	{
-		// if(com)
-		// 	ft_free_mat(com);
+		inputs = ft_calloc(sizeof(char *) , 10);
+		outputs = ft_calloc(sizeof(char *) , 10);
 		ft_replace(ret[i], '\'', ' ', '|');
-		// puts(ret[i]);
+		combine_rdir(inputs, outputs, ret[i]);
 		com  = ft_split(ret[i], ' ');
 		ft_replace_mat(com, '\'', '|', ' ');
 		t_comm *tmp = new_comm(com, i);
+		tmp->infiles = inputs;
+		tmp->outfiles = outputs;
 		tmp->com = get_right_path(tmp->com, env);
+		// puts(tmp->infiles[0]);
 		add_back_comm(&comms, tmp);
-
+		inputs = NULL;
+		outputs = NULL;
 		i++;
 	}
-		// pause();
 	ft_free_mat(ret);
-	// pause();
-	// ft_free_mat(ret);
+	msh->comms = comms;
 	return comms;
 }
 

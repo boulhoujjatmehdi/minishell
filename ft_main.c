@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/07 10:02:40 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/09 15:56:26 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,30 @@ void close_all_pipes(t_minishell *msh)
 //pipe_nb == 0, no pipe needed
 //pipe_nb == -1, no command
 
+int get_nb_of_pipes(t_comm *comms)
+{
+	int i;
+	
+	i = 0;
+	while(comms)
+	{
+		if(*comms->infiles)
+		{
+			i++;
+		}
+		comms = comms->next;
+		i++;
+	}
+	return i;
+	
+}
+
 void initialize_data(t_minishell *msh)
 {
 	int i;
 
-	msh->pipe_nb = get_comm_lenght(msh->comms) - 1;
-	msh->child_nb = msh->pipe_nb + 1;
+	msh->pipe_nb = get_nb_of_pipes(msh->comms) - 1;
+	msh->child_nb = get_comm_lenght(msh->comms);
 }
 
 
@@ -95,7 +113,13 @@ void fork_it_for_me(t_minishell *msh)
 	{
 		first_child(msh , pid);
 	}
-	printer_child(msh , i , &pid[i]);
+	// printer_child(msh , 0 , &pid[i]);
+	// printer_child(msh , 1 , &pid[i]);
+	// printer_child(msh , 2 , &pid[i]);
+	
+
+
+		// puts(msh.comms->infiles[0]);
 	
 	close_all_pipes(msh);
 	wait_for_all(pid, msh->child_nb);
@@ -118,16 +142,18 @@ int main(int ac , char **av, char **env)
 	msh.env = env;
 	add_history("ls -la | grep ft | grep 1");
 	add_history("cat Makefile | grep me");
-	add_history("cat Makefile");
 	add_history("ls -la | grep ft | grep 1 | ls -la | grep ft");
 	add_history("ls -la | grep ft | grep 15: | grep ft_m | grep ma | cat Makefile | grep me");
+	add_history("cat > text.txt");
+	add_history("cat < outerr >out | cat -e");
+	add_history("cat < outerr >out ");
 	while(1)
 	{
-		
+		rl_on_new_line();
 		str = readline("minishell $> ");	
 		add_history(str);
-		msh.comms = ft_get_commands(str, env);
-		t_comm *coo = msh.comms;
+		ft_get_commands(&msh, str, env);
+		// t_comm *coo = msh.comms;
 		// while(coo)
 		// {
 		// 	printf("com = %s , flag1 = -%s- , flag2 = -%s-\n", coo->com, coo->flags[1], coo->flags[2]);
@@ -137,9 +163,9 @@ int main(int ac , char **av, char **env)
 		open_pipes(&msh);
 
 		fork_it_for_me(&msh);
-
 		ft_free_msh(msh);
 		free(str);
+		rl_redisplay();
 	}
 	return 0;
 }
