@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/09 15:56:26 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/10 21:47:23 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void wait_for_all(int *pids , int nb)
 	while(i <= nb)
 	{
 		waitpid(pids[i], NULL, 0);
+		printf("watied for pids[%d] == %d\n", i , pids[i]);
 		i++;
 	}
 }
@@ -113,14 +114,6 @@ void fork_it_for_me(t_minishell *msh)
 	{
 		first_child(msh , pid);
 	}
-	// printer_child(msh , 0 , &pid[i]);
-	// printer_child(msh , 1 , &pid[i]);
-	// printer_child(msh , 2 , &pid[i]);
-	
-
-
-		// puts(msh.comms->infiles[0]);
-	
 	close_all_pipes(msh);
 	wait_for_all(pid, msh->child_nb);
 	free(pid);
