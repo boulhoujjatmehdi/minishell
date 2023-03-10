@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:52:48 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/09 20:31:30 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/10 15:58:28 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,11 @@ void infiles_child(t_comm * com , int *pipe , int *pid)
 	if(*pid == 0)
 	{
 		printf("mehdi bouhloujjat\n");
-		if(dup2(pipe[1], 1) < 0)
-			printf("dup faild!!!!!!!\n");
+		printf("%d == %d\n", pipe[0] , pipe[1]);
+		dup2(pipe[1], 1);
 		close(pipe[0]);
+		close(pipe[1]);
+		// printf("----=%d\n",pipe[1] );
 		int i = 0;
 		while(com->infiles[i])
 		{
@@ -28,13 +30,12 @@ void infiles_child(t_comm * com , int *pipe , int *pid)
 			char *str = get_next_line(fd);
 			while(str)
 			{
-				ft_putstr_fd(str, 1);
-				str = get_next_line(fd);// this is weher i left it
-				
+				puts(str);
+				write(1, "\n", 1);
+				str = get_next_line(fd);
 			}
 			i++;
 		}
-		close(pipe[1]);
 		exit(0);
 	}	
 }
@@ -42,33 +43,35 @@ void infiles_child(t_comm * com , int *pipe , int *pid)
 void first_child(t_minishell *msh , int *pid)
 {
 	// int pid;
-	
+	if(msh->comms->infiles)
+	{
+		int pd[1];
+		infiles_child(msh->comms, msh->pipe , pd);
+		printf("test\n");
+		// dup2(pp[0] , 0);
+		close_all_pipes(msh);
+		// waitpid(*pd, NULL, 0);
+	}
 	*pid = fork();
 	if(*pid == 0)
 	{
 		// sleep(1);
 		// printf("hello from the first child \n");
 		// exit(11);
-		if(msh->child_nb > 1)
-			dup2(msh->pipe[1], 1);
+		
+		// if(msh->child_nb > 1)
+		// 	dup2(msh->pipe[1], 1);
+			dup2(msh->pipe[0], 0);
 		close_all_pipes(msh);
-	
-		if(msh->comms->infiles)
-		{
-			int pp[2];
-			int pd;
-			pipe(pp);
-			dup2(pp[0] , 0);
-			infiles_child(msh->comms, pp, &pd);
-			close(pp[0]);
-			close(pp[1]);
-			waitpid(pd, NULL, 0);
-		}
+		printf("%d , %d\n", msh->pipe[0], msh->pipe[1]);
 		// puts("");
 		// puts(msh->comms->flags[1]);
 		execve(msh->comms->com, msh->comms->flags, msh->env);
 		exit(10);
 	}
+	int ii = 0;
+	while(ii++ < 2)
+		waitpid(-1, NULL, 0);
 }
 
 void middle_child(t_minishell *msh, int idx , int *pid)

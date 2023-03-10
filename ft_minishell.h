@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/08 12:06:15 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/10 15:43:31 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_minishell
 {
 	t_comm *comms;
 	int *pipe;
+	int pipecount;
 	int pipe_nb;
 	int child_nb;
 	char **env;
@@ -71,7 +72,7 @@ void close_all_pipes(t_minishell *msh);
 
 t_comm *new_comm(char **com, int idx);
 char *get_right_path(char *str, char **env);
-void add_back_comm(t_comm **comms, t_comm *new);
+void add_back_comm(t_comm **comms, t_comm *newc);
 int get_comm_lenght(t_comm *comms);
 t_comm *ft_get_commands(t_minishell *msh, char *str, char **env);
 void ft_free_commands(t_comm *comms);
@@ -80,12 +81,14 @@ void ft_free_mat(char **mat);
 t_comm *get_right_comm(t_minishell *msh, int idx);
 
 //ft_childs
+
 void last_child(t_minishell *msh, int idx, int *pid);
 void printer_child(t_minishell *msh, int idx, int *pid);
 void middle_child(t_minishell *msh, int idx , int *pid);
 void first_child(t_minishell *msh , int *pid);
 
 //ft_args.c
+
 void ft_replace(char *str , char sign, char c, char r);
 void ft_replace_mat(char **str , char sign, char c, char r);
 void combine_rdir(char **inputs, char **outputs, char *str);
