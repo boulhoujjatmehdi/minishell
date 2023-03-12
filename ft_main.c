@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/12 14:26:44 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/12 15:58:26 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void wait_for_all(int *pids , int nb)
 	while(i <= nb)
 	{
 		waitpid(pids[i], NULL, 0);
-		// printf("watied for pids[%d] == %d\n", i , pids[i]);
+		printf("watied for pids[%d] == %d\n", i , pids[i]);
 		i++;
 	}
 }
@@ -99,7 +99,7 @@ void fork_it_for_me(t_minishell *msh)
 	i = 0;
 	j = 2;
 	k = 0;
-	pid = malloc(sizeof(int) * msh->child_nb);
+	pid = malloc(sizeof(int) * msh->pipe_nb);
 	if(msh->child_nb > 1)
 	{
 		
@@ -121,12 +121,39 @@ void fork_it_for_me(t_minishell *msh)
 		i++;
 		while(j < msh->child_nb)
 		{
-			middle_child(msh , i , &pid[i]);
+			
+			if(*msh->comms->infiles)
+			{
+				infiles_child(msh, i, k ,  &pid[k]);
+				k++;
+			}
+			middle_child(msh , i , k, &pid[k]);
 			i++;
 			j++;
+			k++;
+			if(*msh->comms->outfiles)
+			{
+				outfiles_child(msh, i, k, &pid[k]);
+				k++;
+			}
+			//this part need some work to be right
 		}
-		last_child(msh,i , k, &pid[i]);
-		
+
+		//////////////////////////////////////////////////////////////////////////////////////////
+		t_comm * com = get_right_comm(msh, i);
+		if(com->infiles)
+		{
+			infiles_child(msh, i, k ,  &pid[k]);
+			k++;
+		}
+		last_child(msh,i , k, &pid[k]);
+		k++;
+		if(*msh->comms->outfiles)
+		{
+			outfiles_child(msh, i, k, &pid[k]);
+			k++;
+		}
+		//////////////////////////////////////////////////////////////////////////////////////////
 	}
 	else
 	if(msh->child_nb == 1)
@@ -145,7 +172,7 @@ void fork_it_for_me(t_minishell *msh)
 		
 	}
 	close_all_pipes(msh);
-	wait_for_all(pid, msh->child_nb);
+	wait_for_all(pid, msh->pipe_nb);
 	free(pid);
 
 }

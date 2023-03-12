@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 12:48:00 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/09 13:07:29 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/12 14:55:17 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_comm *new_comm(char **com, int idx)
 	new->flags = com;
 	new->idx = idx;
 	new->next = NULL;
+	new->prev = NULL;
 	new->infiles = NULL;
 	new->outfiles = NULL;
 	return new;
@@ -62,14 +63,18 @@ char *get_right_path(char *str, char **env)
 void add_back_comm(t_comm **comms, t_comm *new)
 {
 	t_comm *tmp;
-
+	t_comm *prevtmp;
+	
 	tmp = *comms;
 	if (!*comms)
+	{
 		*comms = new;
+	}
 	else
 	{
 		while(tmp->next)
 			tmp = tmp->next;
+		new->prev = tmp;
 		tmp->next = new;
 	}
 }

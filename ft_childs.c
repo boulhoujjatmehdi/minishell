@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:52:48 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/12 14:40:30 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/12 15:48:30 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,25 @@ void infiles_child(t_minishell *msh,int comidx, int idx, int *pid)
 	*pid = fork();
 	if(*pid == 0)
 	{
+		t_comm *com = get_right_comm(msh, comidx);
 		// printf("mehdi bouhloujjat\n");
 		printf("%d\n",  msh->pipe[idx * 2 + 1] );
 		dup2(msh->pipe[idx * 2 + 1], 1);
+		if(com->prev)
+			dup2(msh->pipe[(idx - 1) * 2] , 0);
 		close_all_pipes(msh);
 		// printf("----=%d\n",pipe[1] );
 		int i = 0;
-		t_comm *com = get_right_comm(msh, comidx);
+		if(com->prev)
+		{			
+			char *str = get_next_line(0);
+			while(str)
+			{
+				ft_putstr_fd(str, 1);
+				str = get_next_line(0);
+			}
+
+		}
 		while(com->infiles[i])
 		{
 			int fd = open (com->infiles[i], O_RDONLY);
@@ -50,7 +62,7 @@ void outfiles_child(t_minishell *msh, int comidx, int idx, int *pid)
 			dup2(msh->pipe[idx * 2 + 1], 1);
 		
 		close_all_pipes(msh);
-		int fd = open (com->outfiles[0], O_WRONLY);
+		int fd = open (com->outfiles[0], O_WRONLY | O_TRUNC);
 		char *str = get_next_line(0);
 		while(str)
 		{
@@ -89,20 +101,18 @@ void first_child(t_minishell *msh , int idx, int *pid)
 }
 
 
-void middle_child(t_minishell *msh, int idx , int *pid)
+void middle_child(t_minishell *msh, int comidx, int idx , int *pid)
 {
-
 	t_comm *com;
 
 	*pid = fork();
 	if(*pid == 0)
 	{
-		
 		dup2(msh->pipe[(idx - 1) * 2], 0);
 		dup2(msh->pipe[idx * 2 + 1], 1);
 
 		close_all_pipes(msh);
-		com = get_right_comm(msh, idx);
+		com = get_right_comm(msh, comidx);
 		execve(com->com, com->flags, msh->env);
 	}
 }
@@ -114,14 +124,15 @@ void last_child(t_minishell *msh,int comidx,  int idx, int *pid)
 	*pid = fork();
 	if(*pid == 0)
 	{
+		com = get_right_comm(msh, comidx);
 		printf("hello from the last child number \nread from %d\n", msh->pipe[(idx - 1) * 2]);
 		// exit(idx);
 		dup2(msh->pipe[(idx - 1) * 2], 0);
-		// dup2(msh->pipe[idx * 2 + 1], 1);
+		if(*com->outfiles)
+			dup2(msh->pipe[idx * 2 + 1], 1);
 
 		close_all_pipes(msh);
-		com = get_right_comm(msh, comidx);
-		printf("*/*/*/*/**/*/*/*/ %s\n", com->com);
+		// printf("*/*/*/*/**/*/*/*/ %s\n", com->com);
 		execve(com->com, com->flags, msh->env);
 	}
 }
