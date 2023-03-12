@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/10 21:47:23 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/12 14:26:44 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ int get_nb_of_pipes(t_comm *comms)
 	while(comms)
 	{
 		if(*comms->infiles)
-		{
 			i++;
-		}
+		if(*comms->outfiles)
+			i++;
 		comms = comms->next;
 		i++;
 	}
@@ -70,6 +70,7 @@ void  open_pipes(t_minishell *msh)
 	{
 
 		pipe(&msh->pipe[i * 2]);
+		printf("(%d _-_-_ %d)\n", msh->pipe[i * 2], msh->pipe[i * 2 + 1]);
 		i++;
 
 	}
@@ -83,7 +84,7 @@ void wait_for_all(int *pids , int nb)
 	while(i <= nb)
 	{
 		waitpid(pids[i], NULL, 0);
-		printf("watied for pids[%d] == %d\n", i , pids[i]);
+		// printf("watied for pids[%d] == %d\n", i , pids[i]);
 		i++;
 	}
 }
@@ -92,27 +93,56 @@ void fork_it_for_me(t_minishell *msh)
 {
 	int i;
 	int j;
+	int k;
 	int *pid;
 	
+	i = 0;
 	j = 2;
-	i = 1;
+	k = 0;
 	pid = malloc(sizeof(int) * msh->child_nb);
 	if(msh->child_nb > 1)
 	{
-		first_child(msh, pid);
+		
+		//////////////////////////////////////////////////////////////////////////////////////////
+		puts("testme");
+		if(*msh->comms->infiles)
+		{
+			infiles_child(msh, i, k ,  pid);
+			k++;
+		}
+		first_child(msh , k,  &pid[k]);
+		k++;
+		if(*msh->comms->outfiles)
+		{
+			outfiles_child(msh, i, k, &pid[k]);
+			k++;
+		}
+		//////////////////////////////////////////////////////////////////////////////////////////
+		i++;
 		while(j < msh->child_nb)
 		{
 			middle_child(msh , i , &pid[i]);
 			i++;
 			j++;
 		}
-		last_child(msh, i, &pid[i]);
-		i++;
+		last_child(msh,i , k, &pid[i]);
+		
 	}
 	else
 	if(msh->child_nb == 1)
 	{
-		first_child(msh , pid);
+		if(*msh->comms->infiles)
+		{
+			infiles_child(msh, i, k ,  pid);
+			k++;
+		}
+		first_child(msh , k,  &pid[k]);
+		k++;
+		if(*msh->comms->outfiles)
+		{
+			outfiles_child(msh, i, k, &pid[k]);
+		}
+		
 	}
 	close_all_pipes(msh);
 	wait_for_all(pid, msh->child_nb);

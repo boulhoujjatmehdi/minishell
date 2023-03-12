@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/10 15:43:31 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/12 14:26:29 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,12 @@ t_comm *get_right_comm(t_minishell *msh, int idx);
 
 //ft_childs
 
-void last_child(t_minishell *msh, int idx, int *pid);
+void last_child(t_minishell *msh,int comidx,  int idx, int *pid);
 void printer_child(t_minishell *msh, int idx, int *pid);
 void middle_child(t_minishell *msh, int idx , int *pid);
-void first_child(t_minishell *msh , int *pid);
+void first_child(t_minishell *msh ,int idx,  int *pid);
+void infiles_child(t_minishell *msh,int comidx, int idx, int *pid);
+void outfiles_child(t_minishell *msh, int comidx, int idx, int *pid);
 
 //ft_args.c
 
