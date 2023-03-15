@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/12 15:58:26 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/15 09:44:39 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,9 @@ void initialize_data(t_minishell *msh)
 {
 	int i;
 
-	msh->pipe_nb = get_nb_of_pipes(msh->comms) - 1;
+	msh->pipe_nb = get_nb_of_pipes(msh->comms) -1 ;
 	msh->child_nb = get_comm_lenght(msh->comms);
+	// printf("*/*/*/*/*/**/*/*/*/ %d\n", msh->child_nb);
 }
 
 
@@ -70,7 +71,7 @@ void  open_pipes(t_minishell *msh)
 	{
 
 		pipe(&msh->pipe[i * 2]);
-		printf("(%d _-_-_ %d)\n", msh->pipe[i * 2], msh->pipe[i * 2 + 1]);
+		// printf("(%d _-_-_ %d)\n", msh->pipe[i * 2], msh->pipe[i * 2 + 1]);
 		i++;
 
 	}
@@ -84,7 +85,7 @@ void wait_for_all(int *pids , int nb)
 	while(i <= nb)
 	{
 		waitpid(pids[i], NULL, 0);
-		printf("watied for pids[%d] == %d\n", i , pids[i]);
+		// printf("watied for pids[%d] == %d\n", i , pids[i]);
 		i++;
 	}
 }
@@ -104,7 +105,7 @@ void fork_it_for_me(t_minishell *msh)
 	{
 		
 		//////////////////////////////////////////////////////////////////////////////////////////
-		puts("testme");
+		// puts("testme");
 		if(*msh->comms->infiles)
 		{
 			infiles_child(msh, i, k ,  pid);
@@ -121,34 +122,35 @@ void fork_it_for_me(t_minishell *msh)
 		i++;
 		while(j < msh->child_nb)
 		{
-			
-			if(*msh->comms->infiles)
+			// printf("*/*/*/***/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/**\n");
+			t_comm * com = get_right_comm(msh, i);
+			if(get_right_comm(msh, i)->infiles[0])
 			{
 				infiles_child(msh, i, k ,  &pid[k]);
 				k++;
 			}
 			middle_child(msh , i , k, &pid[k]);
-			i++;
-			j++;
 			k++;
-			if(*msh->comms->outfiles)
+			if(get_right_comm(msh, i)->outfiles[0])
 			{
 				outfiles_child(msh, i, k, &pid[k]);
 				k++;
 			}
+			i++;
+			j++;
 			//this part need some work to be right
 		}
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 		t_comm * com = get_right_comm(msh, i);
-		if(com->infiles)
+		if(*com->infiles)
 		{
 			infiles_child(msh, i, k ,  &pid[k]);
 			k++;
 		}
 		last_child(msh,i , k, &pid[k]);
 		k++;
-		if(*msh->comms->outfiles)
+		if(*com->outfiles)
 		{
 			outfiles_child(msh, i, k, &pid[k]);
 			k++;
@@ -158,6 +160,7 @@ void fork_it_for_me(t_minishell *msh)
 	else
 	if(msh->child_nb == 1)
 	{
+		// printf("////////////////////\n");
 		if(*msh->comms->infiles)
 		{
 			infiles_child(msh, i, k ,  pid);
@@ -181,6 +184,19 @@ void ft_free_msh(t_minishell msh)
 	ft_free_commands(msh.comms);
 	free(msh.pipe);
 }
+// int inter;
+// void signal_handler(int sig)
+// {
+// 	if(sig == SIGINT)
+// 	{
+// 		inter = 1;
+// 		// close(1);
+// 		puts("");
+// 		rl_forced_update_display();
+// 		rl_redisplay();
+// 		// rl_cleanup_after_signal();
+// 	}
+// }
 
 /* -----------------MAIN FUNCTION----------------- */
 int main(int ac , char **av, char **env) 
@@ -197,25 +213,25 @@ int main(int ac , char **av, char **env)
 	add_history("cat > text.txt");
 	add_history("cat < outerr >out | cat -e");
 	add_history("cat < outerr >out ");
+	add_history("cat < outerr >out | cat -e < out999 > out1 | cat ");
+	
+	
 	while(1)
 	{
-		rl_on_new_line();
-		str = readline("minishell $> ");	
+		// // rl_on_new_line();
+		// signal(SIGINT, *signal_handler);
+		str = readline("minishell $> ");
+		// str = NULL;
+		// rl_replace();
+		// puts("mehdiboulhoujjat\n");
 		add_history(str);
 		ft_get_commands(&msh, str, env);
-		// t_comm *coo = msh.comms;
-		// while(coo)
-		// {
-		// 	printf("com = %s , flag1 = -%s- , flag2 = -%s-\n", coo->com, coo->flags[1], coo->flags[2]);
-		// 	coo = coo->next;
-		// }
 		initialize_data(&msh);
 		open_pipes(&msh);
-
+		
 		fork_it_for_me(&msh);
 		ft_free_msh(msh);
 		free(str);
-		rl_redisplay();
 	}
 	return 0;
 }

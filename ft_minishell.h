@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/12 15:08:38 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/13 20:03:54 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void wait_for_all(int *pids , int nb);
 void fork_it_for_me(t_minishell *msh);
 void close_all_pipes(t_minishell *msh);
 
+//ft_utils1.c
+int get_mat_length(char **str);
 
 //ft_commands.c=
 

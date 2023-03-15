@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 12:48:00 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/12 14:55:17 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/03/15 09:50:43 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ t_comm *ft_get_commands(t_minishell *msh, char *str, char **env)
 	char **com;
 	char **inputs;
 	char **outputs;
+	char **appned;
+	char **heredoc;
 	// *inputs = NULL;
 	// *outputs = NULL;
 	com = NULL;
@@ -121,6 +123,7 @@ t_comm *ft_get_commands(t_minishell *msh, char *str, char **env)
 	{
 		inputs = ft_calloc(sizeof(char *) , 10);
 		outputs = ft_calloc(sizeof(char *) , 10);
+		
 		ft_replace(ret[i], '\'', ' ', '|');
 		combine_rdir(inputs, outputs, ret[i]);
 		com  = ft_split(ret[i], ' ');
