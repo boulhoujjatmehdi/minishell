@@ -6,11 +6,13 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:25:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/03/23 18:04:09 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/03/28 17:59:01 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"parse.h"
+
+char **spliter2(char *s);
 
 int	is_not_arg(char c)
 {
@@ -30,8 +32,6 @@ int	check_red(char c1, char c2)
 	else
 		return (1);
 }
-
-
 
 int cont(char *s)
 {
@@ -130,41 +130,53 @@ char	**spliter(char *s)
 	{
 		if (ft_has_red(new[i]) && ft_strlen(new[i]) > 2)
 		{
-			
+			spliter2(new[i]);
+			exit(0);
 		}
 		else
-			end[j] = new[i];
+		{
+			end[j] = ft_strdup(new[i]);
+			// printf("args :%s:\n", end[j]);
+			j++;
+		}
 		i++;
 	}
-	return (new);
+	return (end);
 }
 
 char	**spliter2(char *s)
 {
 	char **new;
-	char tmp[256];
-	int i, j, k, count, t, t1;
+	int i, j, k, count;
 	
 	count = cont(s);
 	new = (char **)malloc((count + 1) * sizeof(char *));
 	if (!new)
 		return (NULL);
+	k = 0;
 	i = 0;
 	j = 0;
-	k = 0;
 	while (i <= ft_strlen(s))
 	{
 		if (is_not_arg(s[i]))
 		{
-			tmp[k] = '\0';
-			new[j] = ft_strdup(tmp);
-			k = 0;
-			t = 0;
+			new[j] = malloc(1000);
+			new[j] = ft_substr(s, k, i - k);
+			printf("---%s\n", new[j]);
 			j++;
+			new[j] = malloc(1000);
+			new[j] = ft_substr(s, i, 1);
+			// exit(0);
+			// i--;
+			k = i;
 		}
-		tmp[k] = s[i];
+		if (!s[i])
+		{
+			new[j] = malloc(1000);
+			new[j] = ft_substr(s, k, i - k);
+		}
 		i++;
-		k++;
+
 	}
 	return (new);
 }
@@ -176,6 +188,7 @@ int main (int ac, char **av)
 
 	new = spliter(av[1]);
 	// exit(0);
-	while (new[i])
-		printf(":%s:\n", new[i++]);
+	// while (new[i])
+	// 	printf(":%s:\n", new[i++]);
+	return (0);
 }

@@ -1,0 +1,13 @@
+Makefile
+a.out
+cat
+ft_main.c
+ft_minishell.h
+getcwd.c
+libft
+libft.a
+output.txt
+parse.h
+parser.c
+redefine.c
+spliter.c
