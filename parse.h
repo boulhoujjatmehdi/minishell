@@ -1,3 +1,6 @@
+#ifndef PARSE_H
+# define PARSE_H
+
 #include"ft_minishell.h"
 #define	PIPE_TOKEN 1
 #define	ARG_TOKEN 2
@@ -23,5 +26,14 @@ typedef struct s_tokens
 {
 	int				token_type;
 	char			*token;
+	in_addr_t		size;
 	struct s_tokens *next;
 }	t_tokens;
+
+char	*my_strtok(char **ss);
+int	token_type(char *s);
+t_tokens	*lstlast(t_tokens *lst);
+void	addback(t_tokens **list, t_tokens *new);
+t_tokens	*lstnew(void *content);
+
+#endif

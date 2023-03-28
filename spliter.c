@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:25:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/03/28 17:59:01 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/03/28 20:48:18 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char **spliter2(char *s);
 
 int	is_not_arg(char c)
 {
-	if (c == '|' || c == '<' || c == '>')
+	if (c == '|' || c == '<' || c == '>' || c == ' ' || c == '\0')
 		return (1);
 	return (0);
 }
@@ -122,6 +122,7 @@ char	**spliter(char *s)
 	int	i, j;
 	char **new;
 	char **end;
+	char **tmp;
 
 	new = ft_split(s, ' ');
 	i = 0;
@@ -130,8 +131,15 @@ char	**spliter(char *s)
 	{
 		if (ft_has_red(new[i]) && ft_strlen(new[i]) > 2)
 		{
-			spliter2(new[i]);
-			exit(0);
+			tmp =  spliter2(new[i]);
+			int x = 0;
+			while (tmp[x])
+			{
+				end[j] = tmp[x];
+				j++;
+				x++;
+			}
+			// exit(0);
 		}
 		else
 		{
@@ -162,7 +170,7 @@ char	**spliter2(char *s)
 		{
 			new[j] = malloc(1000);
 			new[j] = ft_substr(s, k, i - k);
-			printf("---%s\n", new[j]);
+			// printf("---%s\n", new[j]);
 			j++;
 			new[j] = malloc(1000);
 			new[j] = ft_substr(s, i, 1);
@@ -181,14 +189,48 @@ char	**spliter2(char *s)
 	return (new);
 }
 
-int main (int ac, char **av)
-{
-	char **new;
-	int i = 0;
 
-	new = spliter(av[1]);
-	// exit(0);
-	// while (new[i])
-	// 	printf(":%s:\n", new[i++]);
-	return (0);
+char	*my_strtok(char **ss)
+{
+	int i = 0;
+	char *new;
+	char *s = *ss;
+	while (i <= ft_strlen(s))
+	{
+		if (!s[i] && i == 0)
+		{
+			return NULL;
+		}
+		if (is_not_arg(s[i]) && i > 0)
+		{
+			new = ft_substr(s, 0, i);
+			*ss = s + i;
+			break;
+		}
+		else if (is_not_arg(s[i]) && i == 0)
+		{
+			new = ft_substr(s, 0, 1);
+			*ss = s + 1;
+			break;
+		}
+		i++;
+	}
+	return (new);
 }
+
+
+// int main (int ac, char **av)
+// {
+// 	char *new, *s;
+// 	int i = 0;
+
+// 	s = strdup(av[1]);
+// 	new = my_strtok(&s);
+// 	while (new)
+// 	{
+// 		printf(":%s:\n", new);
+// 		new = my_strtok(&s);
+// 		// printf("\n----------:%s:\n", s);
+// 	}
+// 	return (0);
+// }
