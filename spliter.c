@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:25:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/03/28 20:48:18 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/01 07:52:45 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,7 @@ char	*my_strtok(char **ss)
 	int i = 0;
 	char *new;
 	char *s = *ss;
+
 	while (i <= ft_strlen(s))
 	{
 		if (!s[i] && i == 0)
