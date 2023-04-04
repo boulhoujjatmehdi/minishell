@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/03 21:01:23 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/04 01:30:45 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int	token_type(char *s)
 		return(ARG_TOKEN);
 }
 
+//this function puts toghater my commend table by spliting the tokens with the pipe token and
+// puting them toghater into a string ready to be processed 
 void	listing_cmd(t_tokens **list1, t_cmd **list2)
 {
 	t_tokens	*head1;
@@ -42,7 +44,7 @@ void	listing_cmd(t_tokens **list1, t_cmd **list2)
 		else
 		{
 		head2->str = ft_strjoin2(head2->str, head1->token);
-		head2->str = ft_strjoin2(head2->str, " ");
+		head2->str = ft_strjoin2(head2->str, ":");
 		head1 = head1->next;
 		}
 	}
@@ -92,7 +94,7 @@ int	input_file(char *s)
 	char *name;
 
 	i = 0;
-	name = ft_strchr1(s, '<', ' ');
+	name = ft_strchr1(s, '<', ':');
 	if (name)
 	{
 		if (name && name[0] == '<')
@@ -103,7 +105,7 @@ int	input_file(char *s)
 		else if (name && name[0] != '<')
 		{	
 			name++;
-			name = get_filename(name, ' ', ' ');
+			name = get_filename(name, ':', ':');
 			fd = open(name, O_RDONLY);
 			return fd;
 		}
@@ -118,21 +120,21 @@ int output_file(char *s)
 	char *name;
 
 	i = 0;
-	name = ft_strchr1(s, '>', ' ');
+	name = ft_strchr1(s, '>', ':');
 	if (name)
 	{
 		if (name && name[0] == '>')
 		{
-			name = ft_strchr1(s, '>', ' ');
+			name = ft_strchr1(s, '>', ':');
 			name++;
-			name = get_filename(name, ' ', ' ');
+			name = get_filename(name, ':', ':');
 			fd = open(name, O_CREAT | O_WRONLY | O_APPEND, 0644);
 			return fd;
 		}
 		else if (name && name[0] != '>')
 		{	
 			name++;
-			name = get_filename(name, ' ', ' ');
+			name = get_filename(name, ':', ':');
 			fd = open(name, O_CREAT | O_WRONLY, 0644);
 			return fd;
 		}
@@ -144,10 +146,12 @@ char	**get_cmd_opt(char *s)
 {
 	char **new;
 
-	new = ft_split(s, ' ');
+	new = ft_split(s, ':');
 	return new;	
 }
 
+//this function gets the string and processes it ato get cmd, inputfile
+// to read from and output file to write to and so on
 void	proccesing_cmd(t_cmd **list, char **env)
 {
 	t_cmd *head;
@@ -162,9 +166,7 @@ void	proccesing_cmd(t_cmd **list, char **env)
 			head->infile =	fd;
 		head->outfile = output_file(head->str);
 		while((fd = output_file(head->str)) != 1)
-		{
 			head->outfile = fd;
-		}
 		head->cmd_args = get_cmd_opt(head->str);
 		cmd = ft_strdup(head->cmd_args[0]);
 		head->cmd_path = ft_cmd_path(cmd, env);
@@ -182,6 +184,8 @@ int main(int ac, char **av, char **env)
 	s = my_strtok(&av[1]);
 	while (s)
 	{
+		
+		// printf("-%s-\n", s);
 		addback(&info, lstnew(s));
 		s = my_strtok(&av[1]);
 	}

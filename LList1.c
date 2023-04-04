@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/02 15:14:25 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/04 01:25:26 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ t_tokens	*lstlast(t_tokens *lst)
 	return (lst);
 }
 
+//this function goes through a the tokens lincked list and indexs it
 void	give_pos(t_tokens **list)
 {
 	t_tokens *head;
@@ -90,6 +91,7 @@ void	delete_node(t_tokens **head, int key)
     }
 }
 
+//this fucntion removes space tokens from the Llist
 void	del_space(t_tokens **list)
 {
 	t_tokens *head, *tmp1, *tmp2;
@@ -128,6 +130,7 @@ void	syntax_error(t_tokens **list)
 	
 }
 
+//this function checks my token Llist for the single and double redirections
 void	check_double_red(t_tokens **list)
 {
 	t_tokens *head;
