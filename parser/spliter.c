@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   spliter.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:25:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/04 01:22:13 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/05 14:31:53 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,19 @@ int	is_not_arg(char c)
 int	skip_opt(char *s, char c)
 {
 	int i;
+	int n;
 	
+	n = 0;
 	i = 0;
 	while (i <= ft_strlen(s))
 	{
 		if (s[i] == c)
+			n = i;
+		if (s[i] == '|')
 			break;
-
 		i++;
 	}
-	return (i);
+	return (n);
 }
 
 
