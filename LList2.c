@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:42 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/03 20:44:21 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/05 13:00:56 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ t_cmd	*lstnew2(void *content)
 	if (!new)
 		return (0);
 	new->str = content;
+	new->cmd_args = NULL;
+	new->cmd_path = NULL;
+	new->str = NULL;
+	new->her_doc = NULL;
 	new->next = NULL;
 	return (new);
 }

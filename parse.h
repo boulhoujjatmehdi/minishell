@@ -13,6 +13,7 @@ typedef struct s_cmd
 	char *str;
 	int infile;
 	int outfile;
+	char *her_doc;
 	char **cmd_args;
 	char *cmd_path;
 	struct s_cmd *next;

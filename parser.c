@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/04 01:30:45 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/05 13:44:58 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,30 +87,47 @@ char	*get_filename(char *s, int c, int c1)
 	return (new);
 }
 
-int	input_file(char *s)
+char	*her_doc(char *s)
+{
+	char *new;
+	char *ret;
+	new = readline(">");
+	while (ft_strncmp(new, s, ft_strlen(s)))
+		ret = new;
+	return (ret);
+}
+
+int	input_file(char *s, char **her_doc)
 {
 	int i;
 	int fd;
 	char *name;
+	char *tmp;
 
 	i = 0;
 	name = ft_strchr1(s, '<', ':');
-	if (name)
+	while (name)
 	{
 		if (name && name[0] == '<')
 		{
 			name+= 2;
+			tmp = ft_strdup(get_filename(name , ':', ':'));
+			*her_doc = ft_strjoin2(*her_doc, tmp);
+			*her_doc = ft_strjoin2(*her_doc, ":");
 			return 2;
 		}
-		else if (name && name[0] != '<')
-		{	
+		else if (name && name[0] == ':')
+		{
 			name++;
 			name = get_filename(name, ':', ':');
+			if (!name)
+				return (0);
 			fd = open(name, O_RDONLY);
 			return fd;
 		}
+		name = ft_strchr1(s, '<', ':');
 	}
-		return (0);
+	return (0);
 }
 
 int output_file(char *s)
@@ -122,8 +139,7 @@ int output_file(char *s)
 	i = 0;
 	name = ft_strchr1(s, '>', ':');
 	if (name)
-	{
-		if (name && name[0] == '>')
+	{		if (name && name[0] == '>')
 		{
 			name = ft_strchr1(s, '>', ':');
 			name++;
@@ -161,13 +177,15 @@ void	proccesing_cmd(t_cmd **list, char **env)
 	head = *list;
 	while (head)
 	{
-		head->infile = input_file(head->str);
-		while((fd = input_file(head->str)))
-			head->infile =	fd;
+		head->infile = input_file(head->str, &head->her_doc);
+		while((fd = input_file(head->str, &head->her_doc)))
+			head->infile = fd;
 		head->outfile = output_file(head->str);
 		while((fd = output_file(head->str)) != 1)
 			head->outfile = fd;
 		head->cmd_args = get_cmd_opt(head->str);
+		// printf("str == %s\n", head->str);
+		// exit(0);
 		cmd = ft_strdup(head->cmd_args[0]);
 		head->cmd_path = ft_cmd_path(cmd, env);
 		head = head->next;
@@ -184,7 +202,6 @@ int main(int ac, char **av, char **env)
 	s = my_strtok(&av[1]);
 	while (s)
 	{
-		
 		// printf("-%s-\n", s);
 		addback(&info, lstnew(s));
 		s = my_strtok(&av[1]);
@@ -196,7 +213,10 @@ int main(int ac, char **av, char **env)
 	proccesing_cmd(&head, env);
 	while (head)
 	{
-		printf("str === :%s:\ninfile %d --- outfile %d -  cmd :%s:\n", head->str, head->infile, head->outfile, head->cmd_path);
+		printf("str === :%s:\ninfile %d --- outfile %d -  cmd :%s:, here_doc --> %s\n", head->str, head->infile, head->outfile, head->cmd_path, head->her_doc);
+		int i = 0;
+		while (head->cmd_args[i])
+			printf("opts == %s\n", head->cmd_args[i++]);
 		head = head->next;
 	}
 	return (0);
