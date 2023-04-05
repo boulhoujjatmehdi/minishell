@@ -8,7 +8,6 @@
 #define RED_TOKEN 3
 #define SPACE_TOKEN 4
 
-int main_function(int ac, char **av, char **env);
 
 t_tokens	*lstnew(void *content);
 void		addback(t_tokens **list, t_tokens *new);

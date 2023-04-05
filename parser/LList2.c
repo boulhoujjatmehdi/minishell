@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LList2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:42 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/03 20:44:21 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/05 14:29:29 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ t_cmd	*lstnew2(void *content)
 	if (!new)
 		return (0);
 	new->str = content;
+	new->cmd_args = NULL;
+	new->cmd_path = NULL;
+	new->str = NULL;
+	new->her_doc = NULL;
 	new->next = NULL;
 	return (new);
 }
