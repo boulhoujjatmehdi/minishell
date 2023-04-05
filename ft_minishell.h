@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/05 13:27:57 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/05 14:08:19 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef struct s_cmd
 	char *str;
 	int infile;
 	int outfile;
-	char *herdoc;
+	char *her_doc;
 	char **cmd_args;
 	char *cmd_path;
 	struct s_cmd *next;

@@ -1,6 +1,6 @@
 
 
-SRC = libft/libft.a main.c
+SRC = libft/libft.a main.c -lreadline
 
 PRS = parser.c spliter.c	LList1.c LList2.c  cmd_path.c 
 
