@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/04 23:31:23 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/05 13:45:53 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,12 +177,11 @@ void	proccesing_cmd(t_cmd **list, char **env)
 	}
 }
 
-int main(int ac, char **av, char **env)
+int main_function(int ac, char **av, char **env)
 {
 	t_tokens	*info;
 	t_cmd		*head;
 	char *s;
-
 	head = (t_cmd *)malloc(sizeof(t_cmd));
 	s = my_strtok(&av[1]);
 	while (s)
@@ -192,6 +191,7 @@ int main(int ac, char **av, char **env)
 		addback(&info, lstnew(s));
 		s = my_strtok(&av[1]);
 	}
+	// exit(22);
 	give_pos(&info);
 	check_double_red(&info);
 	del_space(&info);
@@ -202,5 +202,10 @@ int main(int ac, char **av, char **env)
 		printf("str === :%s:\ninfile %d --- outfile %d -  heredoc :%s:\n", head->str, head->infile, head->outfile, head->herdoc);
 		head = head->next;
 	}
+
+
+	
+
+	
 	return (0);
 }

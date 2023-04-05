@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_minishell.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/03/17 16:26:14 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/05 13:27:57 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,36 @@
 #define PR_IN
 #define PR_FRST
 
+
+
+
+// imported from parser folder
+typedef struct s_cmd
+{
+	char *str;
+	int infile;
+	int outfile;
+	char *herdoc;
+	char **cmd_args;
+	char *cmd_path;
+	struct s_cmd *next;
+}	t_cmd;
+
+typedef struct s_cmd_list
+{
+	t_cmd	*current;
+	struct s_cmd_list *next;
+}	t_cmd_list;
+
+typedef struct s_tokens
+{
+	int				pos;
+	int				token_type;
+	char			*token;
+	struct s_tokens *next;
+}	t_tokens;
+
+// -------- end of imports ////////
 
 typedef struct s_comm
 {
