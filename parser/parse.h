@@ -1,37 +1,13 @@
 #ifndef PARSE_H
 # define PARSE_H
 
-#include"ft_minishell.h"
+#include"../ft_minishell.h"
 #include<fcntl.h>
 #define	PIPE_TOKEN 1
 #define	ARG_TOKEN 2
 #define RED_TOKEN 3
 #define SPACE_TOKEN 4
 
-typedef struct s_cmd
-{
-	char *str;
-	int infile;
-	int outfile;
-	char *her_doc;
-	char **cmd_args;
-	char *cmd_path;
-	struct s_cmd *next;
-}	t_cmd;
-
-typedef struct s_cmd_list
-{
-	t_cmd	*current;
-	struct s_cmd_list *next;
-}	t_cmd_list;
-
-typedef struct s_tokens
-{
-	int				pos;
-	int				token_type;
-	char			*token;
-	struct s_tokens *next;
-}	t_tokens;
 
 t_tokens	*lstnew(void *content);
 void		addback(t_tokens **list, t_tokens *new);
@@ -58,5 +34,7 @@ void	ft_cmd_not_found(char *cmd, int exit_code);
 
 char		*my_strtok(char **ss);
 int			token_type(char *s);
+
+int main_function(int ac, char **av, char **env);
 
 #endif

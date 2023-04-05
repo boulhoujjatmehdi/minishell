@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/05 13:44:58 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/05 14:34:38 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ void	proccesing_cmd(t_cmd **list, char **env)
 	}
 }
 
-int main(int ac, char **av, char **env)
+int main_function(int ac, char **av, char **env)
 {
 	t_tokens	*info;
 	t_cmd		*head;
@@ -213,7 +213,7 @@ int main(int ac, char **av, char **env)
 	proccesing_cmd(&head, env);
 	while (head)
 	{
-		printf("str === :%s:\ninfile %d --- outfile %d -  cmd :%s:, here_doc --> %s\n", head->str, head->infile, head->outfile, head->cmd_path, head->her_doc);
+		printf("**********************************************\nstr === :%s:\ninfile %d --- outfile %d -  cmd :%s:, here_doc --> %s\n", head->str, head->infile, head->outfile, head->cmd_path, head->her_doc);
 		int i = 0;
 		while (head->cmd_args[i])
 			printf("opts == %s\n", head->cmd_args[i++]);
