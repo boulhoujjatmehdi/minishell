@@ -9,6 +9,7 @@ LBT = libft/libft.a
 all: $(LBT)
 	gcc $(addprefix parser/, $(PRS)) $(SRC)
 
+
 $(LBT): 
 	make -C libft
 	make -C libft clean
