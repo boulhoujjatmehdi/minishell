@@ -13,4 +13,11 @@ all: $(LBT)
 $(LBT): 
 	make -C libft
 	make -C libft clean
-	make -C libft clean
+
+run: clear	all	
+	./a.out
+
+clear:
+	clear
+ex:
+	clear && ./a.out

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/05 14:34:38 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/06 15:17:46 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,32 +192,25 @@ void	proccesing_cmd(t_cmd **list, char **env)
 	}
 }
 
-int main_function(int ac, char **av, char **env)
+t_cmd *main_function(int ac, char *str, char **env)
 {
 	t_tokens	*info;
 	t_cmd		*head;
 	char *s;
-
-	head = (t_cmd *)malloc(sizeof(t_cmd));
-	s = my_strtok(&av[1]);
+	info = NULL;
+	head = (t_cmd *)ft_calloc(sizeof(t_cmd), 1);
+	s = my_strtok(&str);
 	while (s)
 	{
-		// printf("-%s-\n", s);
+
 		addback(&info, lstnew(s));
-		s = my_strtok(&av[1]);
+		s = my_strtok(&str);
 	}
 	give_pos(&info);
 	check_double_red(&info);
 	del_space(&info);
 	listing_cmd(&info, &head);
 	proccesing_cmd(&head, env);
-	while (head)
-	{
-		printf("**********************************************\nstr === :%s:\ninfile %d --- outfile %d -  cmd :%s:, here_doc --> %s\n", head->str, head->infile, head->outfile, head->cmd_path, head->her_doc);
-		int i = 0;
-		while (head->cmd_args[i])
-			printf("opts == %s\n", head->cmd_args[i++]);
-		head = head->next;
-	}
-	return (0);
+
+	return (head);
 }

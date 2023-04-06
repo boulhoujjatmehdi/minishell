@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/05 14:29:15 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/06 14:07:03 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ t_tokens	*lstnew(void *content)
 void	addback(t_tokens **list, t_tokens *new)
 {
 	t_tokens	*temp;
-
-	if (!(*list))
+	if (!*list)
 		*list = new;
 	else
 	{
