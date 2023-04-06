@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LList1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/05 14:29:15 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/06 21:53:05 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,15 +92,16 @@ void	delete_node(t_tokens **head, int key)
 }
 
 //this fucntion removes space tokens from the Llist
-void	del_space(t_tokens **list)
+void	del_space_empty(t_tokens **list)
 {
-	t_tokens *head, *tmp1, *tmp2;
+	t_tokens *head;
 	
 	head = *list;
 	while (head)
 	{
-		if (head->token_type == 4)
+		if (head->token_type == 4 || !ft_strncmp(head->token, "", 1))
 		{
+			printf("here---:%s:-- %d\n", head->token, head->pos);
 			delete_node(list, head->pos);
 			head = head->next;
 		}
@@ -115,16 +116,29 @@ void	syntax_error(t_tokens **list)
 	
 	head = *list;
 	give_pos(list);
-	while (head)
+	while (head->next)
 	{
+		// if (head->token_type == 1 && !head->next)  to be handled later 
 		if (head->token_type == 1 && head->pos == 0)
 		{
 			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
 			exit(0);
 		}
-		// if (head->token_type == 1 && !head->next)  to be handled later 
-		// if ()
-		
+		if (head->token_type == 1 && head->next->token_type == 1)
+		{
+			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
+			exit(0);			
+		}
+		if (head->token_type == 1 && head->next->token_type == 3)
+		{
+			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
+			exit(0);			
+		}
+		if (head->token_type == 3 && !head->next)
+		{
+			printf("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
+			exit(0);			
+		}
 		head = head->next;
 	}
 	

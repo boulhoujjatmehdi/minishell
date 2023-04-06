@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/05 14:34:38 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/06 21:35:21 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,7 @@ void	proccesing_cmd(t_cmd **list, char **env)
 	head = *list;
 	while (head)
 	{
+		printf("here str == --%s--\n", head->str);
 		head->infile = input_file(head->str, &head->her_doc);
 		while((fd = input_file(head->str, &head->her_doc)))
 			head->infile = fd;
@@ -208,7 +209,7 @@ int main_function(int ac, char **av, char **env)
 	}
 	give_pos(&info);
 	check_double_red(&info);
-	del_space(&info);
+	del_space_empty(&info);
 	listing_cmd(&info, &head);
 	proccesing_cmd(&head, env);
 	while (head)
