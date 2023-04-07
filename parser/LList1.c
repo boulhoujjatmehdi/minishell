@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/06 21:53:05 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/07 00:57:59 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	give_pos(t_tokens **list)
 	t_tokens *head;
 	int i;
 	
-	i = 0;
+	i = 1;
 	head = *list;
 	while (head)
 	{
@@ -92,18 +92,60 @@ void	delete_node(t_tokens **head, int key)
 }
 
 //this fucntion removes space tokens from the Llist
-void	del_space_empty(t_tokens **list)
+void	del_space(t_tokens **list)
 {
 	t_tokens *head;
 	
 	head = *list;
+	give_pos(list);
 	while (head)
 	{
-		if (head->token_type == 4 || !ft_strncmp(head->token, "", 1))
+		if (head->token_type == 4)
 		{
-			printf("here---:%s:-- %d\n", head->token, head->pos);
 			delete_node(list, head->pos);
 			head = head->next;
+		}
+		else
+			head = head->next;
+	}
+}
+
+//this fucntion removes empty tokens from the Llist that need to be removed
+void	del_empty(t_tokens **list)
+{
+	t_tokens *head;
+	
+	head = *list;
+	give_pos(list);
+	while (head->next)
+	{
+		if (!ft_strncmp(head->token, "", 1) && head->next->token_type == 2)
+		{
+			delete_node(list, head->pos);
+			head= head->next;
+		}
+		else
+			head = head->next;
+	}
+}
+
+void	adjest(t_tokens **list)
+{
+	t_tokens *head;
+	int tmp1;
+	char	*tmp;
+
+	head = *list;
+	while (head->next)
+	{
+		// puts(head->token);
+		if (head->token_type == 2 && head->next->token_type == 2)
+		{
+			tmp = ft_strdup(head->token);
+			head->next->token = ft_strjoin2(tmp, head->next->token);
+			tmp1 = head->pos;
+			head = head->next;
+			delete_node(list, tmp1);
 		}
 		else
 			head = head->next;
@@ -150,6 +192,7 @@ void	check_double_red(t_tokens **list)
 	t_tokens *head;
 
 	head = *list;
+	give_pos(list);
 	while (head->next)
 	{
 		if (!ft_strncmp("<", head->token, 2) && !ft_strncmp("<", head->next->token, 2))

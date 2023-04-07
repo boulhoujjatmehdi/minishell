@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/06 21:35:21 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/07 20:06:57 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,18 @@ void	listing_cmd(t_tokens **list1, t_cmd **list2)
 {
 	t_tokens	*head1;
 	t_cmd		*head2;
+	char *tmp;
 
 	head1 = *list1;
 	head2 = *list2;	
 	while (head1)
 	{
+		if (!ft_strncmp(head1->token, "", 1))
+		{
+			tmp = head1->token;
+			head1->token = ft_strdup("|");
+			free(tmp);
+		}
 		if (head1->token_type == 1)
 		{
 			addback2(list2, lstnew2(NULL));
@@ -105,6 +112,8 @@ int	input_file(char *s, char **her_doc)
 	char *tmp;
 
 	i = 0;
+	if (!s)
+		return(0);
 	name = ft_strchr1(s, '<', ':');
 	while (name)
 	{
@@ -137,6 +146,8 @@ int output_file(char *s)
 	char *name;
 
 	i = 0;
+	if (!s)
+		return (1);
 	name = ft_strchr1(s, '>', ':');
 	if (name)
 	{		if (name && name[0] == '>')
@@ -161,7 +172,6 @@ int output_file(char *s)
 char	**get_cmd_opt(char *s)
 {
 	char **new;
-
 	new = ft_split(s, ':');
 	return new;	
 }
@@ -177,7 +187,7 @@ void	proccesing_cmd(t_cmd **list, char **env)
 	head = *list;
 	while (head)
 	{
-		printf("here str == --%s--\n", head->str);
+		cmd = NULL;
 		head->infile = input_file(head->str, &head->her_doc);
 		while((fd = input_file(head->str, &head->her_doc)))
 			head->infile = fd;
@@ -185,10 +195,20 @@ void	proccesing_cmd(t_cmd **list, char **env)
 		while((fd = output_file(head->str)) != 1)
 			head->outfile = fd;
 		head->cmd_args = get_cmd_opt(head->str);
-		// printf("str == %s\n", head->str);
-		// exit(0);
-		cmd = ft_strdup(head->cmd_args[0]);
+		if (head->cmd_args != NULL)
+			cmd = ft_strdup(head->cmd_args[0]);
 		head->cmd_path = ft_cmd_path(cmd, env);
+		head = head->next;
+	}
+}
+
+void print(t_tokens **list)
+{
+	t_tokens *head;
+	head = *list;
+	while (head)
+	{
+		printf("token = -%s-\n", head->token);
 		head = head->next;
 	}
 }
@@ -199,7 +219,9 @@ int main_function(int ac, char **av, char **env)
 	t_cmd		*head;
 	char *s;
 
-	head = (t_cmd *)malloc(sizeof(t_cmd));
+	info = NULL;
+	head = NULL;
+	head = (t_cmd *)calloc(sizeof(t_cmd), 1);
 	s = my_strtok(&av[1]);
 	while (s)
 	{
@@ -207,16 +229,19 @@ int main_function(int ac, char **av, char **env)
 		addback(&info, lstnew(s));
 		s = my_strtok(&av[1]);
 	}
-	give_pos(&info);
 	check_double_red(&info);
-	del_space_empty(&info);
-	listing_cmd(&info, &head);
+	del_empty(&info);
+	adjest(&info);
+	// print(&info);
+	del_space(&info);
+	syntax_error(&info);
+	listing_cmd(&info, &head); 
 	proccesing_cmd(&head, env);
 	while (head)
 	{
 		printf("**********************************************\nstr === :%s:\ninfile %d --- outfile %d -  cmd :%s:, here_doc --> %s\n", head->str, head->infile, head->outfile, head->cmd_path, head->her_doc);
 		int i = 0;
-		while (head->cmd_args[i])
+		while (head->cmd_args && head->cmd_args[i])
 			printf("opts == %s\n", head->cmd_args[i++]);
 		head = head->next;
 	}

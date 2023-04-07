@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:25:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/06 21:48:57 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/07 00:43:52 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,15 @@ int	skip_opt(char *s, char c)
 	
 	n = 0;
 	i = 0;
-	while (i <= ft_strlen(s))
+	while (s[i])
 	{
 		if (s[i] == c)
-			n = i;
-		if (s[i] == '|')
 			break;
+		if (s[i] == '|')
+			i = -1;
 		i++;
 	}
-	return (n);
+	return (i);
 }
 
 

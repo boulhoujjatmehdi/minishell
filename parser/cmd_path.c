@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 20:39:36 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/03 20:40:27 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/07 02:24:22 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ char	*ft_cmd_path(char *cmd, char *env[])
 	int		l;
 
 	l = 0;
+	if (!cmd)
+		return NULL;
 	cmd_path = NULL;
 	if (ft_strchr(cmd, '/') || cmd[0] == '.')
 	{
@@ -91,7 +93,11 @@ char	*ft_cmd_path2(char *cmd, char *env[], int l)
 	while (paths[i] && (access(paths[i], F_OK) == -1))
 		i++;
 	if (!paths[i] || l == 1)
+	{
+		if (!ft_strncmp(cmd, "|", 2))
+			ft_cmd_not_found("", 127);
 		ft_cmd_not_found(cmd, 127);
+	}
 	else
 		cmd_path = ft_strdup(paths[i]);
 	free(cmd);

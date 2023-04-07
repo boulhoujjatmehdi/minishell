@@ -14,7 +14,9 @@ void		addback(t_tokens **list, t_tokens *new);
 t_tokens	*lstlast(t_tokens *lst);
 void	give_pos(t_tokens **list);
 void	delete_node(t_tokens **head, int key);
-void	del_space_empty(t_tokens **list);
+void	del_space(t_tokens **list);
+void	del_empty(t_tokens **list);
+void	adjest(t_tokens **list);
 void	syntax_error(t_tokens **list);
 void	check_double_red(t_tokens **list);
 
