@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/07 20:06:57 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/07 20:47:42 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,11 +119,12 @@ int	input_file(char *s, char **her_doc)
 	{
 		if (name && name[0] == '<')
 		{
-			name+= 2;
+			name = ft_strchr1(s, '<', ':');
+			name++;
 			tmp = ft_strdup(get_filename(name , ':', ':'));
 			*her_doc = ft_strjoin2(*her_doc, tmp);
 			*her_doc = ft_strjoin2(*her_doc, ":");
-			return 2;
+			return -2;
 		}
 		else if (name && name[0] == ':')
 		{
