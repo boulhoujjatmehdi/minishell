@@ -4,6 +4,7 @@
 		"unistd.h": "c",
 		"parse.h": "c",
 		"__config": "c",
-		"libft.h": "c"
+		"libft.h": "c",
+		"exec.h": "c"
 	}
 }

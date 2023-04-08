@@ -4,10 +4,12 @@ SRC = libft/libft.a main.c -lreadline
 
 PRS = parser.c spliter.c	LList1.c LList2.c  cmd_path.c 
 
+EXE = exec.c
+
 LBT = libft/libft.a
 
 all: $(LBT)
-	gcc $(addprefix parser/, $(PRS)) $(SRC)
+	cc $(addprefix parser/, $(PRS)) $(addprefix EXEC/, $(EXE)) $(SRC)
 
 
 $(LBT): 
