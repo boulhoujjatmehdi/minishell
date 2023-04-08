@@ -4,7 +4,7 @@ SRC = libft/libft.a main.c -lreadline
 
 PRS = parser.c spliter.c	LList1.c LList2.c  cmd_path.c 
 
-EXE = exec.c
+EXE = exec.c gets.c
 
 LBT = libft/libft.a
 
