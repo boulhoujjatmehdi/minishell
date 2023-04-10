@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/10 17:39:49 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/10 20:56:52 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,9 +160,26 @@ void	syntax_error(t_tokens **list)
 	
 	head = *list;
 	give_pos(list);
+	if ((head->token_type == 3 || head->token_type == 1) && !head->next)
+	{
+		printf("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
+		exit(0);
+	}
 	while (head->next)
 	{
 		// if (head->token_type == 1 && !head->next)  to be handled later 
+		if (head->token_type == 3 && head->next->token_type == 3)
+		{
+			printf("minishell: syntax error near unexpected token `"); // to be changed to stderr
+			printf("%s", head->next->token); // to be changed to stderr
+			printf("'\n"); // to be changed to stderr
+			exit(0);			
+		}
+		if (head->token_type == 3 && head->next->token_type == 1)
+		{
+			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
+			exit(0);
+		}
 		if (head->token_type == 1 && head->pos == 1)
 		{
 			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
@@ -171,17 +188,17 @@ void	syntax_error(t_tokens **list)
 		if (head->token_type == 1 && head->next->token_type == 1)
 		{
 			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
-			exit(0);			
+			exit(0);
 		}
 		if (head->token_type == 1 && head->next->token_type == 3)
 		{
 			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
-			exit(0);			
+			exit(0);
 		}
 		if (head->token_type == 3 && !head->next)
 		{
 			printf("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
-			exit(0);			
+			exit(0);
 		}
 		head = head->next;
 	}

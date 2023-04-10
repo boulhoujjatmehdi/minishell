@@ -30,6 +30,7 @@ char	*ft_strjoin2(char *s1, char *s2);
 void	free_cmd(t_cmd **list);
 
 char	**ft_get_paths(char *env[]);
+void	ft_no_file_diractory(char *file_name, int exit_code);
 char	*ft_env(char **env);
 char	*ft_cmd_path(char *cmd, char *env[]);
 char	*ft_cmd_path2(char *cmd, char *env[], int l);

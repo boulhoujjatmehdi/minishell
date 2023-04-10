@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/10 17:47:38 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/10 21:24:47 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,28 +186,24 @@ char	**get_cmd_opt(char *s)
 
 //this function gets the string and processes it ato get cmd, inputfile
 // to read from and output file to write to and so on
-void	proccesing_cmd(t_cmd **list, char **env)
+void	proccesing_cmd(t_cmd *node, char **env)
 {
 	t_cmd *head;
 	int fd;
 	char	*cmd;
-	
-	head = *list;
-	while (head)
-	{
-		cmd = NULL;
-		head->infile = input_file(head->str, &head->her_doc);
-		while((fd = input_file(head->str, &head->her_doc)))
-			head->infile = fd;
-		head->outfile = output_file(head->str);
-		while((fd = output_file(head->str)) != 1)
-			head->outfile = fd;
-		head->cmd_args = get_cmd_opt(head->str);
-		if (head->cmd_args != NULL)
-			cmd = ft_strdup(head->cmd_args[0]);
-		head->cmd_path = ft_cmd_path(cmd, env);
-		head = head->next;
-	}
+
+	head = node;
+	cmd = NULL;
+	head->infile = input_file(head->str, &head->her_doc);
+	while((fd = input_file(head->str, &head->her_doc)))
+		head->infile = fd;
+	head->outfile = output_file(head->str);
+	while((fd = output_file(head->str)) != 1)
+		head->outfile = fd;
+	head->cmd_args = get_cmd_opt(head->str);
+	if (head->cmd_args != NULL)
+		cmd = ft_strdup(head->cmd_args[0]);
+	head->cmd_path = ft_cmd_path(cmd, env);
 }
 
 void print(t_tokens **list)
@@ -225,6 +221,7 @@ int main_function(int ac, char **av, char **env)
 {
 	t_tokens	*info;
 	t_cmd		*head;
+	t_cmd *tmp;
 	char *s;
 
 	info = NULL;
@@ -243,10 +240,15 @@ int main_function(int ac, char **av, char **env)
 	// print(&info);
 	del_space(&info);
 	syntax_error(&info);
+	// puts("here");
 	listing_cmd(&info, &head); 
 	free_token(&info);
-	proccesing_cmd(&head, env);
-	free_cmd(&head);
+	tmp = head;
+	while (tmp)
+	{
+		proccesing_cmd(tmp, env);
+		tmp = tmp->next;
+	}
 	while (head)
 	{
 		printf("**********************************************\nstr === :%s:\ninfile %d --- outfile %d -  cmd :%s:, here_doc --> %s\n", head->str, head->infile, head->outfile, head->cmd_path, head->her_doc);
@@ -255,6 +257,7 @@ int main_function(int ac, char **av, char **env)
 			printf("opts == %s\n", head->cmd_args[i++]);
 		head = head->next;
 	}
+	// free_cmd(&head);
 	while (1)
 		;
 	return (0);

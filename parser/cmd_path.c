@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 20:39:36 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/07 02:24:22 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/10 20:33:46 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ char	*ft_cmd_path(char *cmd, char *env[])
 				ft_permision(cmd, 126);
 		}
 	}
+	if (l == 1)
+		ft_no_file_diractory(cmd, 127);
 	cmd_path = ft_cmd_path2(cmd, env, l);
 	return (cmd_path);
 }
@@ -92,7 +94,7 @@ char	*ft_cmd_path2(char *cmd, char *env[], int l)
 	i = 0;
 	while (paths[i] && (access(paths[i], F_OK) == -1))
 		i++;
-	if (!paths[i] || l == 1)
+	if (!paths[i])
 	{
 		if (!ft_strncmp(cmd, "|", 2))
 			ft_cmd_not_found("", 127);
@@ -122,6 +124,15 @@ void	ft_cmd_not_found(char *cmd, int exit_code)
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(cmd, 2);
 	ft_putstr_fd(": command not found", 2);
+	ft_putchar_fd('\n', 2);
+	exit(exit_code);
+}
+
+void	ft_no_file_diractory(char *file_name, int exit_code)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(file_name, 2);
+	ft_putstr_fd(": No such file or directory", 2);
 	ft_putchar_fd('\n', 2);
 	exit(exit_code);
 }
