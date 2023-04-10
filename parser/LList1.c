@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/07 00:57:59 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/10 17:39:49 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void	delete_node(t_tokens **head, int key)
     {
         temp = *head;    
         *head = (*head)->next;
+		free(temp->token);
         free(temp);
 	}
     else
@@ -82,6 +83,7 @@ void	delete_node(t_tokens **head, int key)
             {
                 temp = current->next;
                 current->next = current->next->next;
+				free(temp->token);
                 free(temp);
                 break;
             }
@@ -161,7 +163,7 @@ void	syntax_error(t_tokens **list)
 	while (head->next)
 	{
 		// if (head->token_type == 1 && !head->next)  to be handled later 
-		if (head->token_type == 1 && head->pos == 0)
+		if (head->token_type == 1 && head->pos == 1)
 		{
 			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
 			exit(0);
@@ -183,13 +185,13 @@ void	syntax_error(t_tokens **list)
 		}
 		head = head->next;
 	}
-	
 }
 
 //this function checks my token Llist for the single and double redirections
 void	check_double_red(t_tokens **list)
 {
 	t_tokens *head;
+	char *tmp;
 
 	head = *list;
 	give_pos(list);
@@ -198,14 +200,31 @@ void	check_double_red(t_tokens **list)
 		if (!ft_strncmp("<", head->token, 2) && !ft_strncmp("<", head->next->token, 2))
 		{
 			delete_node(list, head->next->pos);
+			tmp = head->token;
 			head->token = ft_strdup("<<");
+			free(tmp);
 		}
 		else if (!ft_strncmp(">", head->token, 2) && !ft_strncmp(">", head->next->token, 2))
 		{
 			delete_node(list, head->next->pos);
+			tmp = head->token;
 			head->token = ft_strdup(">>");
+			free(tmp);
 		}
 		else
 			head = head->next;
 	}
+}
+
+void	free_token(t_tokens **list)
+{
+	t_tokens *head;
+
+	head = *list;
+	while (head)
+	{
+		delete_node(list, head->pos);
+		head = head->next;
+	}
+	// *list = NULL;
 }

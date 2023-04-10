@@ -19,13 +19,15 @@ void	del_empty(t_tokens **list);
 void	adjest(t_tokens **list);
 void	syntax_error(t_tokens **list);
 void	check_double_red(t_tokens **list);
+void	free_token(t_tokens **list);
 
 t_cmd	*lstnew2(void *content);
 void	addback2(t_cmd **list, t_cmd *new);
 t_cmd	*lstlast2(t_cmd *lst);
-// void	delete_node2(t_cmd **head, int key);
+void	delete_node2(t_cmd **head, int key);
 size_t	ft_strlen2(char *s);
 char	*ft_strjoin2(char *s1, char *s2);
+void	free_cmd(t_cmd **list);
 
 char	**ft_get_paths(char *env[]);
 char	*ft_env(char **env);

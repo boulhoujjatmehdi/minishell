@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/07 20:47:42 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/10 17:47:38 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ int	token_type(char *s)
 		return(ARG_TOKEN);
 }
 
-//this function puts toghater my commend table by spliting the tokens with the pipe token and
-// puting them toghater into a string ready to be processed 
+//this function puts together my commend table by spliting the tokens with the pipe token and
+// puting them together into a string ready to be processed 
 void	listing_cmd(t_tokens **list1, t_cmd **list2)
 {
 	t_tokens	*head1;
@@ -46,6 +46,7 @@ void	listing_cmd(t_tokens **list1, t_cmd **list2)
 		{
 			addback2(list2, lstnew2(NULL));
 			head1 = head1->next;
+			// head2->tmp = ft_strdup(head2->str);
 			head2 = head2->next;
 		}
 		else
@@ -121,9 +122,12 @@ int	input_file(char *s, char **her_doc)
 		{
 			name = ft_strchr1(s, '<', ':');
 			name++;
-			tmp = ft_strdup(get_filename(name , ':', ':'));
+			name = get_filename(name , ':', ':');
+			tmp = ft_strdup(name);
 			*her_doc = ft_strjoin2(*her_doc, tmp);
 			*her_doc = ft_strjoin2(*her_doc, ":");
+			free(tmp);
+			free (name);
 			return -2;
 		}
 		else if (name && name[0] == ':')
@@ -133,6 +137,7 @@ int	input_file(char *s, char **her_doc)
 			if (!name)
 				return (0);
 			fd = open(name, O_RDONLY);
+			free (name);
 			return fd;
 		}
 		name = ft_strchr1(s, '<', ':');
@@ -157,6 +162,7 @@ int output_file(char *s)
 			name++;
 			name = get_filename(name, ':', ':');
 			fd = open(name, O_CREAT | O_WRONLY | O_APPEND, 0644);
+			free (name);
 			return fd;
 		}
 		else if (name && name[0] != '>')
@@ -164,6 +170,7 @@ int output_file(char *s)
 			name++;
 			name = get_filename(name, ':', ':');
 			fd = open(name, O_CREAT | O_WRONLY, 0644);
+			free (name);
 			return fd;
 		}
 	}
@@ -209,7 +216,7 @@ void print(t_tokens **list)
 	head = *list;
 	while (head)
 	{
-		printf("token = -%s-\n", head->token);
+		printf("token = -%s-,  token_type %d\n", head->token, head->token_type);
 		head = head->next;
 	}
 }
@@ -237,7 +244,9 @@ int main_function(int ac, char **av, char **env)
 	del_space(&info);
 	syntax_error(&info);
 	listing_cmd(&info, &head); 
+	free_token(&info);
 	proccesing_cmd(&head, env);
+	free_cmd(&head);
 	while (head)
 	{
 		printf("**********************************************\nstr === :%s:\ninfile %d --- outfile %d -  cmd :%s:, here_doc --> %s\n", head->str, head->infile, head->outfile, head->cmd_path, head->her_doc);
@@ -246,5 +255,7 @@ int main_function(int ac, char **av, char **env)
 			printf("opts == %s\n", head->cmd_args[i++]);
 		head = head->next;
 	}
+	while (1)
+		;
 	return (0);
 }

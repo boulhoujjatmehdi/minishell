@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/05 14:51:01 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/10 17:25:07 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 // imported from parser folder
 typedef struct s_cmd
 {
+	int key;
 	char *tmp;
 	char *str;
 	int infile;
