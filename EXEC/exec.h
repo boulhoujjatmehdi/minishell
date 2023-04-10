@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 14:30:48 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/10 14:54:54 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/10 21:48:38 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "../ft_minishell.h"
 
 
-int main_function_exec(t_cmd *comms);
+int main_function_exec(t_cmd *comms , char **env);
 //exec.c
 void close_all_pipes(t_minishell *msh);
 

@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/08 13:39:08 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/10 21:53:02 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,29 @@ int	token_type(char *s)
 		return(ARG_TOKEN);
 }
 
-//this function puts toghater my commend table by spliting the tokens with the pipe token and
-// puting them toghater into a string ready to be processed 
+//this function puts together my commend table by spliting the tokens with the pipe token and
+// puting them together into a string ready to be processed 
 void	listing_cmd(t_tokens **list1, t_cmd **list2)
 {
 	t_tokens	*head1;
 	t_cmd		*head2;
+	char *tmp;
 
 	head1 = *list1;
 	head2 = *list2;	
 	while (head1)
 	{
+		if (!ft_strncmp(head1->token, "", 1))
+		{
+			tmp = head1->token;
+			head1->token = ft_strdup("|");
+			free(tmp);
+		}
 		if (head1->token_type == 1)
 		{
 			addback2(list2, lstnew2(NULL));
 			head1 = head1->next;
+			// head2->tmp = ft_strdup(head2->str);
 			head2 = head2->next;
 		}
 		else
@@ -105,6 +113,8 @@ int	input_file(char *s, char **her_doc)
 	char *tmp;
 
 	i = 0;
+	if (!s)
+		return(0);
 	name = ft_strchr1(s, '<', ':');
 	while (name)
 	{
@@ -112,9 +122,12 @@ int	input_file(char *s, char **her_doc)
 		{
 			name = ft_strchr1(s, '<', ':');
 			name++;
-			tmp = ft_strdup(get_filename(name , ':', ':'));
+			name = get_filename(name , ':', ':');
+			tmp = ft_strdup(name);
 			*her_doc = ft_strjoin2(*her_doc, tmp);
 			*her_doc = ft_strjoin2(*her_doc, ":");
+			free(tmp);
+			free (name);
 			return -2;
 		}
 		else if (name && name[0] == ':')
@@ -124,6 +137,7 @@ int	input_file(char *s, char **her_doc)
 			if (!name)
 				return (0);
 			fd = open(name, O_RDONLY);
+			free (name);
 			return fd;
 		}
 		name = ft_strchr1(s, '<', ':');
@@ -138,6 +152,8 @@ int output_file(char *s)
 	char *name;
 
 	i = 0;
+	if (!s)
+		return (1);
 	name = ft_strchr1(s, '>', ':');
 	if (name)
 	{		if (name && name[0] == '>')
@@ -146,6 +162,7 @@ int output_file(char *s)
 			name++;
 			name = get_filename(name, ':', ':');
 			fd = open(name, O_CREAT | O_WRONLY | O_APPEND, 0644);
+			free (name);
 			return fd;
 		}
 		else if (name && name[0] != '>')
@@ -153,6 +170,7 @@ int output_file(char *s)
 			name++;
 			name = get_filename(name, ':', ':');
 			fd = open(name, O_CREAT | O_WRONLY, 0644);
+			free (name);
 			return fd;
 		}
 	}
@@ -162,33 +180,39 @@ int output_file(char *s)
 char	**get_cmd_opt(char *s)
 {
 	char **new;
-
 	new = ft_split(s, ':');
 	return new;	
 }
 
 //this function gets the string and processes it ato get cmd, inputfile
 // to read from and output file to write to and so on
-void	proccesing_cmd(t_cmd **list, char **env)
+void	proccesing_cmd(t_cmd *node, char **env)
 {
 	t_cmd *head;
 	int fd;
 	char	*cmd;
-	
+
+	head = node;
+	cmd = NULL;
+	head->infile = input_file(head->str, &head->her_doc);
+	while((fd = input_file(head->str, &head->her_doc)))
+		head->infile = fd;
+	head->outfile = output_file(head->str);
+	while((fd = output_file(head->str)) != 1)
+		head->outfile = fd;
+	head->cmd_args = get_cmd_opt(head->str);
+	if (head->cmd_args != NULL)
+		cmd = ft_strdup(head->cmd_args[0]);
+	head->cmd_path = ft_cmd_path(cmd, env);
+}
+
+void print(t_tokens **list)
+{
+	t_tokens *head;
 	head = *list;
 	while (head)
 	{
-		head->infile = input_file(head->str, &head->her_doc);
-		while((fd = input_file(head->str, &head->her_doc)))
-			head->infile = fd;
-		head->outfile = output_file(head->str);
-		while((fd = output_file(head->str)) != 1)
-			head->outfile = fd;
-		head->cmd_args = get_cmd_opt(head->str);
-		// printf("str == %s\n", head->str);
-		// exit(0);
-		cmd = ft_strdup(head->cmd_args[0]);
-		head->cmd_path = ft_cmd_path(cmd, env);
+		printf("token = -%s-,  token_type %d\n", head->token, head->token_type);
 		head = head->next;
 	}
 }
@@ -197,21 +221,28 @@ t_cmd *main_function(int ac, char *str, char **env)
 {
 	t_tokens	*info;
 	t_cmd		*head;
+	t_cmd *tmp;
+
 	char *s;
 	info = NULL;
-	head = (t_cmd *)ft_calloc(sizeof(t_cmd), 1);
-	s = my_strtok(&str);
+	head = NULL;
+	head = (t_cmd *)calloc(sizeof(t_cmd), 1);
+	s = my_strtok( &str);
 	while (s)
 	{
-
+		// printf("-%s-\n", s);
 		addback(&info, lstnew(s));
 		s = my_strtok(&str);
 	}
-	give_pos(&info);
 	check_double_red(&info);
+	del_empty(&info);
+	adjest(&info);
+	// print(&info);
 	del_space(&info);
-	listing_cmd(&info, &head);
-	proccesing_cmd(&head, env);
+	syntax_error(&info);
+	// puts("here");
+	listing_cmd(&info, &head); 
+	// proccesing_cmd(&head, env);
 
 	return (head);
 }

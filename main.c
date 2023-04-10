@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/10 17:43:24 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/10 21:48:20 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int main(int ac, char **av, char **env)
 		rl_redisplay();
         add_history(str);
         head = main_function(ac, str, env);
-        main_function_exec(head);
+        main_function_exec(head , env);
         
         
 

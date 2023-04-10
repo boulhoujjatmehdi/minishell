@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/10 20:45:38 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/10 21:55:39 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ void initialize_data(t_minishell *msh)
 								// printf("*/*/*/*/*/**/*/*/*/ %d\n", msh->child_nb);
 }
 
-int main_function_exec(t_cmd *comms)
+int main_function_exec(t_cmd *comms , char **env)
 {
     t_minishell *msh;
 
@@ -169,19 +169,20 @@ int main_function_exec(t_cmd *comms)
     
     initialize_data(msh);
     open_pipes(msh);
-	fork_it_for_me(msh);
-
-    // t_cmd *head = msh->comms;
-    // puts("hello from mainFunctionExec");
-    // while (head)
-    // {
-    //     puts("**********************************************************************************************************");
-    //     printf("str === :%s:\ninfile %d --- outfile %d ---  cmd :%s:, here_doc --> %s\n", head->str, head->infile, head->outfile, head->cmd_path, head->her_doc);
-    //     int i = 0;
-    //     while (head->cmd_args[i])
-    //         printf("opts == %s\n", head->cmd_args[i++]);
-    //     head = head->next;
-    // }
+	// fork_it_for_me(msh);
+	
+    t_cmd *head = msh->comms;
+    puts("hello from mainFunctionExec");
+    while (head)
+    {
+		proccesing_cmd(head , env);
+        puts("**********************************************************************************************************");
+        printf("str === :%s:\ninfile %d --- outfile %d ---  cmd :%s:, here_doc --> %s\n", head->str, head->infile, head->outfile, head->cmd_path, head->her_doc);
+        int i = 0;
+        while (head->cmd_args[i])
+            printf("opts == %s\n", head->cmd_args[i++]);
+        head = head->next;
+    }
 
 
     

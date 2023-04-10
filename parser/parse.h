@@ -15,17 +15,22 @@ t_tokens	*lstlast(t_tokens *lst);
 void	give_pos(t_tokens **list);
 void	delete_node(t_tokens **head, int key);
 void	del_space(t_tokens **list);
+void	del_empty(t_tokens **list);
+void	adjest(t_tokens **list);
 void	syntax_error(t_tokens **list);
 void	check_double_red(t_tokens **list);
+void	free_token(t_tokens **list);
 
 t_cmd	*lstnew2(void *content);
 void	addback2(t_cmd **list, t_cmd *new);
 t_cmd	*lstlast2(t_cmd *lst);
-// void	delete_node2(t_cmd **head, int key);
+void	delete_node2(t_cmd **head, int key);
 size_t	ft_strlen2(char *s);
 char	*ft_strjoin2(char *s1, char *s2);
+void	free_cmd(t_cmd **list);
 
 char	**ft_get_paths(char *env[]);
+void	ft_no_file_diractory(char *file_name, int exit_code);
 char	*ft_env(char **env);
 char	*ft_cmd_path(char *cmd, char *env[]);
 char	*ft_cmd_path2(char *cmd, char *env[], int l);
@@ -35,6 +40,7 @@ void	ft_cmd_not_found(char *cmd, int exit_code);
 char		*my_strtok(char **ss);
 int			token_type(char *s);
 
-t_cmd *main_function(int ac, char *str, char **env);
+t_cmd *main_function(int ac, char *av, char **env);
+void	proccesing_cmd(t_cmd *node, char **env);
 
 #endif

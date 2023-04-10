@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LList1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/06 14:07:03 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/10 20:56:52 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ t_tokens	*lstnew(void *content)
 void	addback(t_tokens **list, t_tokens *new)
 {
 	t_tokens	*temp;
-	if (!*list)
+
+	if (!(*list))
 		*list = new;
 	else
 	{
@@ -52,7 +53,7 @@ void	give_pos(t_tokens **list)
 	t_tokens *head;
 	int i;
 	
-	i = 0;
+	i = 1;
 	head = *list;
 	while (head)
 	{
@@ -71,6 +72,7 @@ void	delete_node(t_tokens **head, int key)
     {
         temp = *head;    
         *head = (*head)->next;
+		free(temp->token);
         free(temp);
 	}
     else
@@ -81,6 +83,7 @@ void	delete_node(t_tokens **head, int key)
             {
                 temp = current->next;
                 current->next = current->next->next;
+				free(temp->token);
                 free(temp);
                 break;
             }
@@ -93,9 +96,10 @@ void	delete_node(t_tokens **head, int key)
 //this fucntion removes space tokens from the Llist
 void	del_space(t_tokens **list)
 {
-	t_tokens *head, *tmp1, *tmp2;
+	t_tokens *head;
 	
 	head = *list;
+	give_pos(list);
 	while (head)
 	{
 		if (head->token_type == 4)
@@ -108,46 +112,136 @@ void	del_space(t_tokens **list)
 	}
 }
 
+//this fucntion removes empty tokens from the Llist that need to be removed
+void	del_empty(t_tokens **list)
+{
+	t_tokens *head;
+	
+	head = *list;
+	give_pos(list);
+	while (head->next)
+	{
+		if (!ft_strncmp(head->token, "", 1) && head->next->token_type == 2)
+		{
+			delete_node(list, head->pos);
+			head= head->next;
+		}
+		else
+			head = head->next;
+	}
+}
+
+void	adjest(t_tokens **list)
+{
+	t_tokens *head;
+	int tmp1;
+	char	*tmp;
+
+	head = *list;
+	while (head->next)
+	{
+		// puts(head->token);
+		if (head->token_type == 2 && head->next->token_type == 2)
+		{
+			tmp = ft_strdup(head->token);
+			head->next->token = ft_strjoin2(tmp, head->next->token);
+			tmp1 = head->pos;
+			head = head->next;
+			delete_node(list, tmp1);
+		}
+		else
+			head = head->next;
+	}
+}
+
 void	syntax_error(t_tokens **list)
 {
 	t_tokens *head;
 	
 	head = *list;
 	give_pos(list);
-	while (head)
+	if ((head->token_type == 3 || head->token_type == 1) && !head->next)
 	{
-		if (head->token_type == 1 && head->pos == 0)
+		printf("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
+		exit(0);
+	}
+	while (head->next)
+	{
+		// if (head->token_type == 1 && !head->next)  to be handled later 
+		if (head->token_type == 3 && head->next->token_type == 3)
+		{
+			printf("minishell: syntax error near unexpected token `"); // to be changed to stderr
+			printf("%s", head->next->token); // to be changed to stderr
+			printf("'\n"); // to be changed to stderr
+			exit(0);			
+		}
+		if (head->token_type == 3 && head->next->token_type == 1)
 		{
 			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
 			exit(0);
 		}
-		// if (head->token_type == 1 && !head->next)  to be handled later 
-		// if ()
-		
+		if (head->token_type == 1 && head->pos == 1)
+		{
+			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
+			exit(0);
+		}
+		if (head->token_type == 1 && head->next->token_type == 1)
+		{
+			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
+			exit(0);
+		}
+		if (head->token_type == 1 && head->next->token_type == 3)
+		{
+			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
+			exit(0);
+		}
+		if (head->token_type == 3 && !head->next)
+		{
+			printf("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
+			exit(0);
+		}
 		head = head->next;
 	}
-	
 }
 
 //this function checks my token Llist for the single and double redirections
 void	check_double_red(t_tokens **list)
 {
 	t_tokens *head;
+	char *tmp;
 
 	head = *list;
+	give_pos(list);
 	while (head->next)
 	{
 		if (!ft_strncmp("<", head->token, 2) && !ft_strncmp("<", head->next->token, 2))
 		{
 			delete_node(list, head->next->pos);
+			tmp = head->token;
 			head->token = ft_strdup("<<");
+			free(tmp);
 		}
 		else if (!ft_strncmp(">", head->token, 2) && !ft_strncmp(">", head->next->token, 2))
 		{
 			delete_node(list, head->next->pos);
+			tmp = head->token;
 			head->token = ft_strdup(">>");
+			free(tmp);
 		}
 		else
 			head = head->next;
 	}
+}
+
+void	free_token(t_tokens **list)
+{
+	t_tokens *head;
+
+	head = *list;
+	while (head)
+	{
+		delete_node(list, head->pos);
+		head = head->next;
+	}
+	// *list = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/10 15:08:14 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/10 21:34:11 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 // imported from parser folder
 typedef struct s_cmd
 {
+	int key;
 	char *tmp;
 	char *str;
 	int infile;
