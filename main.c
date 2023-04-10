@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/08 14:50:28 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/10 17:43:24 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int main(int ac, char **av, char **env)
     char *str;
     add_history("cat <infile > boulhoujjat <<here -ls -la ");
     add_history("cat <infile > boulhoujjat <<here -ls -la | ls -la | cat -e");
+    add_history("cat << here");
     while(1)
     {
         str = readline("minishell->");

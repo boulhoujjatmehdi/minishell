@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/08 16:36:20 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/10 15:08:14 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,4 +102,5 @@ typedef struct s_minishell
 
 #include "EXEC/exec.h"
 #include "parser/parse.h"
+#include "./other_src/get_next_line.h"
 #endif

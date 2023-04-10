@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 18:35:07 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/08 19:33:53 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/10 15:53:07 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,6 @@ t_cmd *get_right_comm(t_minishell *msh, int idx)
 		if(i == idx)
 			return tmp;
 	}
-	return NULL;
+	
+	return tmp;
 }
