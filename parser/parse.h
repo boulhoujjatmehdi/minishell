@@ -40,6 +40,7 @@ void	ft_cmd_not_found(char *cmd, int exit_code);
 char		*my_strtok(char **ss);
 int			token_type(char *s);
 
-int main_function(int ac, char **av, char **env);
+t_cmd *main_function(int ac, char *av, char **env);
+void	proccesing_cmd(t_cmd *node, char **env);
 
 #endif

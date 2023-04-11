@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_minishell.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/10 17:25:07 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/11 20:20:46 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@
 // imported from parser folder
 typedef struct s_cmd
 {
+	char *cmd_path;
+	char **cmd_args;
+	// char *her_doc;
+	int infile;
+	int outfile;
 	int key;
 	char *tmp;
 	char *str;
-	int infile;
-	int outfile;
-	char *her_doc;
-	char **cmd_args;
-	char *cmd_path;
 	struct s_cmd *next;
 }	t_cmd;
 
@@ -62,15 +62,30 @@ typedef struct s_comm
 {
 	int idx;
 	char *com;
+	int begin_com;
 	char **flags;
-	int nxt;
+	int red;
+	char **infiles;
+	char **heredoc;
+	// int *in_her_ranks;
+	char **outfiles;
+	char **append;
 	struct s_comm *next;
+	struct s_comm *prev;
 }t_comm;
+
 typedef struct s_minishell
 {
-	t_comm *comms;
+	t_cmd *comms;
 	int *pipe;
+	int pipecount;
 	int pipe_nb;
+	int child_nb;
+	char **env;
 }t_minishell;
+///////////////////
 
+#include "EXEC/exec.h"
+#include "parser/parse.h"
+#include "./other_src/get_next_line.h"
 #endif

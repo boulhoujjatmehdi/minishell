@@ -4,11 +4,24 @@ SRC = libft/libft.a main.c -lreadline
 
 PRS = parser.c spliter.c	LList1.c LList2.c  cmd_path.c 
 
+EXE = exec.c gets.c childs.c
+
+OTH = get_next_line.c get_next_line_utils.c
+
 LBT = libft/libft.a
 
 all: $(LBT)
-	gcc $(addprefix parser/, $(PRS)) $(SRC)
+	cc  $(addprefix parser/, $(PRS)) $(addprefix EXEC/, $(EXE))   $(addprefix other_src/, $(OTH)) $(SRC) -o minishell
+
 
 $(LBT): 
 	make -C libft
 	make -C libft clean
+
+run: clear	all	
+	./minishell
+
+clear:
+	clear
+ex:
+	clear && ./minishell
