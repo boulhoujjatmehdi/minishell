@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/10 23:28:06 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/11 21:13:20 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,27 @@ char	*ft_strchr1(char *s, int c, int c1)
 	return ((char *)(s + i));
 }
 
+char	*ft_strchr2(char *s, int c, int c1)
+{
+	int	i;
+	unsigned char	cc;
+
+	cc = c;
+	i = 0;
+	while (i <= (int)ft_strlen(s))
+	{
+		if (s[i] == cc && s[i + 1] && s[i + 1] == cc)
+		{
+			s[i] = c1;
+			s[i + 1] = c1;
+			i+= 2;
+			return ((char *)s + i);
+		}
+		i++;
+	}
+	return (0);
+}
+
 char	*get_filename(char *s, int c, int c1)
 {
 	char *new;
@@ -95,55 +116,98 @@ char	*get_filename(char *s, int c, int c1)
 	return (new);
 }
 
-char	*her_doc(char *s)
-{
-	char *new;
-	char *ret;
-	new = readline(">");
-	while (ft_strncmp(new, s, ft_strlen(s)))
-		ret = new;
-	return (ret);
-}
 
-int	input_file(char *s, char **her_doc)
+int	ft_strrchr1(const char *s, int c)
 {
-	int i;
-	int fd;
-	char *name;
-	char *tmp;
+	int	i;
 
-	i = 0;
-	if (!s)
-		return(0);
-	name = ft_strchr1(s, '<', ':');
-	while (name)
+	i = ft_strlen(s);
+	while (i >= 0)
 	{
-		if (name && name[0] == '<')
-		{
-			name = ft_strchr1(s, '<', ':');
-			name++;
-			name = get_filename(name , ':', ':');
-			tmp = ft_strdup(name);
-			*her_doc = ft_strjoin2(*her_doc, tmp);
-			*her_doc = ft_strjoin2(*her_doc, ":");
-			free(tmp);
-			free (name);
-			return -2;
-		}
-		else if (name && name[0] == ':')
-		{
-			name++;
-			name = get_filename(name, ':', ':');
-			if (!name)
-				return (0);
-			fd = open(name, O_RDONLY);
-			free (name);
-			return fd;
-		}
-		name = ft_strchr1(s, '<', ':');
+		if (s[i] == (char )c)
+			return (i);
+		i--;
 	}
 	return (0);
 }
+
+int	get_here_doc(char *name)
+{
+	int fd, len;
+	char *str;
+
+	len = ft_strlen(name);
+	fd = open(".tmp.txt", O_CREAT | O_WRONLY | O_TRUNC, 0777);
+	str = readline(">");
+	while(ft_strncmp(name, str, len))
+	{
+		ft_putstr_fd(str,fd );
+		ft_putstr_fd("\n" , fd);
+		str =readline(">");
+	}
+	close(fd);
+	return (fd);
+}
+void	file_errors(char *name, int key)
+{
+	if (access(name, F_OK) == -1)
+		ft_no_file_diractory(name, 1);
+	if (access(name, R_OK) == -1 && key == 0)
+		ft_permision(name, 1);
+	if (access(name, W_OK) == -1 && key == 1)
+		ft_permision(name, 1);
+}
+
+int	input_file(char *s)
+{
+	int i;
+	int fd1, fd2, t;
+	char *name;
+	char *tmp;
+	int	last;
+
+	i = 0;
+	t = 0;
+	fd1 = 0;
+	fd2 = 0;
+	if (!s)
+		return(0);
+	last = ft_strrchr1(s, '<');
+	if (s[last - 1] == '<')
+		t = 1;
+	name = ft_strchr2(s, '<', ':');
+	while (name)
+	{
+		if (fd2 != 0)
+			close(fd2);
+		name++;
+		name = get_filename(name , ':', ':');
+		fd2 = get_here_doc(name);
+		free (name);
+		fd2 = open(".tmp.txt", O_RDONLY);
+		name = ft_strchr2(s, '<', ':');
+	}
+	name = ft_strchr1(s, '<', ':');
+	while(name)
+	{
+		if (fd1 != 0)
+			close(fd1);
+		name++;
+		name = get_filename(name, ':', ':');
+		if (!name)
+			return (0);
+		fd1 = open(name, O_RDONLY);
+		if (fd1 == -1)
+			file_errors(name, 0);
+		free (name);
+		name = ft_strchr1(s, '<', ':');
+	}
+	if (t == 1)
+		return (fd2);
+	return (fd1);
+}
+
+
 
 int output_file(char *s)
 {
@@ -156,12 +220,15 @@ int output_file(char *s)
 		return (1);
 	name = ft_strchr1(s, '>', ':');
 	if (name)
-	{		if (name && name[0] == '>')
+	{
+		if (name && name[0] == '>')
 		{
 			name = ft_strchr1(s, '>', ':');
 			name++;
 			name = get_filename(name, ':', ':');
 			fd = open(name, O_CREAT | O_WRONLY | O_APPEND, 0644);
+			if (fd == -1)
+				file_errors(name, 1);
 			free (name);
 			return fd;
 		}
@@ -170,16 +237,19 @@ int output_file(char *s)
 			name++;
 			name = get_filename(name, ':', ':');
 			fd = open(name, O_CREAT | O_WRONLY, 0644);
+			if (fd == -1)
+				file_errors(name, 1);
 			free (name);
 			return fd;
 		}
 	}
-		return (1);
+	return (1);
 }
 
 char	**get_cmd_opt(char *s)
 {
 	char **new;
+	// printf("str ===%s\n", s);
 	new = ft_split(s, ':');
 	return new;	
 }
@@ -191,21 +261,22 @@ void	proccesing_cmd(t_cmd *node, char **env)
 	t_cmd *head;
 	int fd;
 	char	*cmd;
+
 	head = node;
 	cmd = NULL;
-	head->infile = input_file(head->str, &head->her_doc);
-	while((fd = input_file(head->str, &head->her_doc)))
-		head->infile = fd;
+	head->infile = input_file(head->str);
 	head->outfile = output_file(head->str);
 	while((fd = output_file(head->str)) != 1)
+	{
+		close(head->outfile);
 		head->outfile = fd;
+	}
 	head->cmd_args = get_cmd_opt(head->str);
-	if (head->cmd_args != NULL)
+	// printf("argss   %s\n", head->cmd_args[0]);
+	if (*head->cmd_args != NULL)
 		cmd = ft_strdup(head->cmd_args[0]);
 	head->cmd_path = ft_cmd_path(cmd, env);
 }
-
-
 
 void print(t_tokens **list)
 {
@@ -223,8 +294,8 @@ t_cmd *main_function(int ac, char *str, char **env)
 	t_tokens	*info;
 	t_cmd		*head;
 	t_cmd *tmp;
-
 	char *s;
+
 	info = NULL;
 	head = NULL;
 	head = (t_cmd *)calloc(sizeof(t_cmd), 1);
@@ -243,7 +314,7 @@ t_cmd *main_function(int ac, char *str, char **env)
 	syntax_error(&info);
 	// puts("here");
 	listing_cmd(&info, &head); 
-	// proccesing_cmd(&head, env);
-
+	free_token(&info);
+	tmp = head;
 	return (head);
 }

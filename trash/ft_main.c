@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/02/27 21:10:08 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/11 21:15:09 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ void	ft_pipe(int *fd, int *fd2)
 		dup2(fd[0], 0);
 		dup2(fd2[1], 1);
 		i = read(fd[0], buffer, 500);
-		puts("mehdi\n");
 		while(i>0)
 		{
 			write(fd2[1], "390 test\nlkdjfka d\nklfjadjsfklajsd\n", 35);
@@ -133,7 +132,6 @@ void funct(t_comm *com, char **env, int token , int file_descriptors[2][2] , int
 	int *fd2;
 	fd = file_descriptors[0];
 	fd2 = file_descriptors[1];
-	// printf("%d __ %d __ %d __%d\n", fd[0], fd[1] , fd2[0], fd2[1]);
 	*piid = fork();
 	if(!*piid)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LList2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:42 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/10 17:39:46 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/11 20:16:59 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ t_cmd	*lstnew2(void *content)
 	new->cmd_args = NULL;
 	new->cmd_path = NULL;
 	new->str = NULL;
-	new->her_doc = NULL;
 	new->next = NULL;
 	return (new);
 }
@@ -62,7 +61,6 @@ void	delete_node2(t_cmd **head, int key)
         *head = (*head)->next;
 		// free(temp->tmp);
 		free(temp->str);
-		free(temp->her_doc);
 		free(temp->cmd_path);
 		i = 0;
 		while (temp->cmd_args && temp->cmd_args[i])
@@ -80,7 +78,6 @@ void	delete_node2(t_cmd **head, int key)
         		*head = (*head)->next;
 				// free(temp->tmp);
 				free(temp->str);
-				free(temp->her_doc);
 				free(temp->cmd_path);
 				i = 0;
 				while (temp->cmd_args && temp->cmd_args[i])

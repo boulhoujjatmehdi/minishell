@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/11 14:21:17 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/11 21:13:59 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void wait_for_all(int *pids , int nb)
 	{
 		int status= 0;
 		waitpid(pids[i], &status, 0);
-		printf("watied for pids[%d] == %d || status = %d\n", i , pids[i] ,status >> 8);
+		// printf("waited for pids[%d] == %d || status = %d\n", i , pids[i] ,status >> 8);
 		i++;
 	}
 }
