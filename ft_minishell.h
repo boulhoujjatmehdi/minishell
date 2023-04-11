@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/10 17:25:07 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/11 20:02:58 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ typedef struct s_cmd
 	char *str;
 	int infile;
 	int outfile;
-	char *her_doc;
 	char **cmd_args;
 	char *cmd_path;
 	struct s_cmd *next;

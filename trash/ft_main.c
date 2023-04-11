@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_main.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:02:55 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/02/27 21:10:08 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/11 17:09:29 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,11 +371,69 @@ int main(int ac , char **av, char **env)
 
 
 
+int	get_here_doc(char *name)
+{
+	int fd;
+	char *str;
+
+	fd = open(".tmp.txt", O_CREAT | O_WRONLY | O_TRUNC, 0777);
+	str =readline(">");
+	while(strcmp(name, str))
+	{
+		ft_putstr_fd(str,fd );
+		ft_putstr_fd("\n" , fd);
+		str =readline(">");
+	}
+	close(fd);
+	return (fd);
+}
 
 
+int	input_file(char *s)
+{
+	int i;
+	int fd;
+	char *name;
+	char *tmp;
 
-
-
+	i = 0;
+	if (!s)
+		return(0);
+	name = ft_strchr1(s, '<', ':');
+	printf("name == %s\n", name);
+	while (name)
+	{
+		if (name && name[0] == '<')
+		{
+			name = ft_strchr1(s, '<', ':');
+			name++;
+			name = get_filename(name , ':', ':');
+			fd = get_here_doc(name);
+			fd = open(".tmp.txt", O_RDONLY);
+			if (fd == -1)
+				file_errors(".tmp.txt", 0);
+			free (name);
+			puts("hello l22222");
+			return fd;
+		}
+		else if (name && name[0] == ':')
+		{
+			puts("hello ll44444");
+			name++;
+			name = get_filename(name, ':', ':');
+			if (!name)
+				return (0);
+			fd = open(name, O_RDONLY);
+			if (fd == -1)
+				file_errors(name, 0);
+			free (name);
+			return fd;
+		}
+		name = ft_strchr1(s, '<', ':');
+	}
+	puts("hello llllll");
+	return (0);
+}
 
 
 

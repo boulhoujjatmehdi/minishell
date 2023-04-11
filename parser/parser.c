@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/10 23:20:20 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/11 20:03:21 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,27 @@ char	*ft_strchr1(char *s, int c, int c1)
 	return ((char *)(s + i));
 }
 
+char	*ft_strchr2(char *s, int c, int c1)
+{
+	int	i;
+	unsigned char	cc;
+
+	cc = c;
+	i = 0;
+	while (i <= (int)ft_strlen(s))
+	{
+		if (s[i] == cc && s[i + 1] && s[i + 1] == cc)
+		{
+			s[i] = c1;
+			s[i + 1] = c1;
+			i+= 2;
+			return ((char *)s + i);
+		}
+		i++;
+	}
+	return (0);
+}
+
 char	*get_filename(char *s, int c, int c1)
 {
 	char *new;
@@ -95,46 +116,87 @@ char	*get_filename(char *s, int c, int c1)
 	return (new);
 }
 
-int	input_file(char *s, char **her_doc)
-{
-	int i;
-	int fd;
-	char *name;
-	char *tmp;
 
-	i = 0;
-	if (!s)
-		return(0);
-	name = ft_strchr1(s, '<', ':');
-	while (name)
+int	ft_strrchr1(const char *s, int c)
+{
+	int	i;
+
+	i = ft_strlen(s);
+	while (i >= 0)
 	{
-		if (name && name[0] == '<')
-		{
-			name = ft_strchr1(s, '<', ':');
-			name++;
-			name = get_filename(name , ':', ':');
-			tmp = ft_strdup(name);
-			*her_doc = ft_strjoin2(*her_doc, tmp);
-			*her_doc = ft_strjoin2(*her_doc, ":");
-			free(tmp);
-			free (name);
-			return -2;
-		}
-		else if (name && name[0] == ':')
-		{
-			name++;
-			name = get_filename(name, ':', ':');
-			if (!name)
-				return (0);
-			fd = open(name, O_RDONLY);
-			if (fd == -1)
-				file_errors(name, 0);
-			free (name);
-			return fd;
-		}
-		name = ft_strchr1(s, '<', ':');
+		if (s[i] == (char )c)
+			return (i);
+		i--;
 	}
 	return (0);
+}
+
+int	get_here_doc(char *name)
+{
+	int fd, len;
+	char *str;
+
+	len = ft_strlen(name);
+	fd = open(".tmp.txt", O_CREAT | O_WRONLY | O_TRUNC, 0777);
+	str = readline(">");
+	while(ft_strncmp(name, str, len))
+	{
+		ft_putstr_fd(str,fd );
+		ft_putstr_fd("\n" , fd);
+		str =readline(">");
+	}
+	close(fd);
+	return (fd);
+}
+
+
+int	input_file(char *s)
+{
+	int i;
+	int fd1, fd2, t;
+	char *name;
+	char *tmp;
+	int	last;
+
+	i = 0;
+	t = 0;
+	fd1 = 0;
+	fd2 = 0;
+	if (!s)
+		return(0);
+	last = ft_strrchr1(s, '<');
+	if (s[last - 1] == '<')
+		t = 1;
+	name = ft_strchr2(s, '<', ':');
+	while (name)
+	{
+		if (fd2 != 0)
+			close(fd2);
+		name++;
+		name = get_filename(name , ':', ':');
+		fd2 = get_here_doc(name);
+		free (name);
+		fd2 = open(".tmp.txt", O_RDONLY);
+		name = ft_strchr2(s, '<', ':');
+	}
+	name = ft_strchr1(s, '<', ':');
+	while(name)
+	{
+		if (fd1 != 0)
+			close(fd1);
+		name++;
+		name = get_filename(name, ':', ':');
+		if (!name)
+			return (0);
+		fd1 = open(name, O_RDONLY);
+		if (fd1 == -1)
+			file_errors(name, 0);
+		free (name);
+		name = ft_strchr1(s, '<', ':');
+	}
+	if (t == 1)
+		return (fd2);
+	return (fd1);
 }
 
 void	file_errors(char *name, int key)
@@ -187,6 +249,7 @@ int output_file(char *s)
 char	**get_cmd_opt(char *s)
 {
 	char **new;
+	// printf("str ===%s\n", s);
 	new = ft_split(s, ':');
 	return new;	
 }
@@ -201,14 +264,16 @@ void	proccesing_cmd(t_cmd *node, char **env)
 
 	head = node;
 	cmd = NULL;
-	head->infile = input_file(head->str, &head->her_doc);
-	while((fd = input_file(head->str, &head->her_doc)))
-		head->infile = fd;
+	head->infile = input_file(head->str);
 	head->outfile = output_file(head->str);
 	while((fd = output_file(head->str)) != 1)
+	{
+		close(head->outfile);
 		head->outfile = fd;
+	}
 	head->cmd_args = get_cmd_opt(head->str);
-	if (head->cmd_args != NULL)
+	// printf("argss   %s\n", head->cmd_args[0]);
+	if (*head->cmd_args != NULL)
 		cmd = ft_strdup(head->cmd_args[0]);
 	head->cmd_path = ft_cmd_path(cmd, env);
 }
@@ -247,7 +312,6 @@ int main_function(int ac, char **av, char **env)
 	// print(&info);
 	del_space(&info);
 	syntax_error(&info);
-	// puts("here");
 	listing_cmd(&info, &head); 
 	free_token(&info);
 	tmp = head;
@@ -258,14 +322,12 @@ int main_function(int ac, char **av, char **env)
 	}
 	while (head)
 	{
-		printf("**********************************************\nstr === :%s:\ninfile %d --- outfile %d -  cmd :%s:, here_doc --> %s\n", head->str, head->infile, head->outfile, head->cmd_path, head->her_doc);
+		printf("**********************************************\nstr === :%s:\ninfile %d --- outfile %d -  cmd :%s:\n", head->str, head->infile, head->outfile, head->cmd_path);
 		int i = 0;
 		while (head->cmd_args && head->cmd_args[i])
 			printf("opts == %s\n", head->cmd_args[i++]);
 		head = head->next;
 	}
 	// free_cmd(&head);
-	while (1)
-		;
 	return (0);
 }
