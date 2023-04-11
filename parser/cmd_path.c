@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 20:39:36 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/11 13:47:31 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/11 14:14:02 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char	*ft_cmd_path(char *cmd, char *env[])
 		if (access(cmd, F_OK) == 0)
 		{
 			if (access(cmd, X_OK) == 0)
-				return (cmd);
+				return(cmd);
 			else
 				ft_permision(cmd, 126);
 		}

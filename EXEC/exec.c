@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/11 13:34:12 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/11 14:21:17 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void fork_it_for_me(t_minishell *msh)
 	i = 0;
 	j = 2;
 	k = 0;
-	pid = malloc(sizeof(int) * msh->pipe_nb);
+	pid = ft_calloc(sizeof(int) , msh->pipe_nb);
 	if(msh->child_nb > 1)
 	{
 		
@@ -140,7 +140,7 @@ void  open_pipes(t_minishell *msh)
 	int i;
 
 	i = 0;
-	msh->pipe = malloc (sizeof(int) * (msh->pipe_nb + 1) * 2  );
+	msh->pipe = ft_calloc (sizeof(int) * 2 , (msh->pipe_nb + 1));
 
 	if(!msh->pipe)
 	{
