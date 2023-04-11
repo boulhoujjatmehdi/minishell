@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/10 21:24:47 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/10 23:20:20 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,16 +95,6 @@ char	*get_filename(char *s, int c, int c1)
 	return (new);
 }
 
-char	*her_doc(char *s)
-{
-	char *new;
-	char *ret;
-	new = readline(">");
-	while (ft_strncmp(new, s, ft_strlen(s)))
-		ret = new;
-	return (ret);
-}
-
 int	input_file(char *s, char **her_doc)
 {
 	int i;
@@ -137,12 +127,24 @@ int	input_file(char *s, char **her_doc)
 			if (!name)
 				return (0);
 			fd = open(name, O_RDONLY);
+			if (fd == -1)
+				file_errors(name, 0);
 			free (name);
 			return fd;
 		}
 		name = ft_strchr1(s, '<', ':');
 	}
 	return (0);
+}
+
+void	file_errors(char *name, int key)
+{
+	if (access(name, F_OK) == -1)
+		ft_no_file_diractory(name, 1);
+	if (access(name, R_OK) == -1 && key == 0)
+		ft_permision(name, 1);
+	if (access(name, W_OK) == -1 && key == 1)
+		ft_permision(name, 1);
 }
 
 int output_file(char *s)
@@ -156,12 +158,15 @@ int output_file(char *s)
 		return (1);
 	name = ft_strchr1(s, '>', ':');
 	if (name)
-	{		if (name && name[0] == '>')
+	{
+		if (name && name[0] == '>')
 		{
 			name = ft_strchr1(s, '>', ':');
 			name++;
 			name = get_filename(name, ':', ':');
 			fd = open(name, O_CREAT | O_WRONLY | O_APPEND, 0644);
+			if (fd == -1)
+				file_errors(name, 1);
 			free (name);
 			return fd;
 		}
@@ -170,11 +175,13 @@ int output_file(char *s)
 			name++;
 			name = get_filename(name, ':', ':');
 			fd = open(name, O_CREAT | O_WRONLY, 0644);
+			if (fd == -1)
+				file_errors(name, 1);
 			free (name);
 			return fd;
 		}
 	}
-		return (1);
+	return (1);
 }
 
 char	**get_cmd_opt(char *s)

@@ -37,6 +37,7 @@ char	*ft_cmd_path2(char *cmd, char *env[], int l);
 void	ft_permision(char *cmd, int exit_code);
 void	ft_cmd_not_found(char *cmd, int exit_code);
 
+void	file_errors(char *name, int key);
 char		*my_strtok(char **ss);
 int			token_type(char *s);
 
