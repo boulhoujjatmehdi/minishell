@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/10 21:34:11 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/11 13:20:31 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@
 // imported from parser folder
 typedef struct s_cmd
 {
+	char *cmd_path;
+	char **cmd_args;
+	char *her_doc;
+	int infile;
+	int outfile;
 	int key;
 	char *tmp;
 	char *str;
-	int infile;
-	int outfile;
-	char *her_doc;
-	char **cmd_args;
-	char *cmd_path;
 	struct s_cmd *next;
 }	t_cmd;
 
@@ -58,22 +58,6 @@ typedef struct s_tokens
 
 // -------- end of imports ////////
 
-// typedef struct s_comm
-// {
-// 	int idx;
-// 	char *com;
-// 	char **flags;
-// 	int nxt;
-// 	struct s_comm *next;
-// }t_comm;
-// typedef struct s_minishell
-// {
-// 	t_comm *comms;
-// 	int *pipe;
-// 	int pipe_nb;
-// }t_minishell;
-
-////////////////////////
 typedef struct s_comm
 {
 	int idx;

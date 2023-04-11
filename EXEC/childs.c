@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 14:52:15 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/10 20:46:06 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/11 13:51:58 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,17 +75,25 @@ void first_child(t_minishell *msh , int idx, int *pid)
 	*pid = fork();
 	if(*pid == 0)
 	{
-		// printf("--FIRST %d - %d \n", idx , getpid());
-		// printf("hello from the first child \nread from %d\nwrite on %d\n", msh->pipe[0], msh->pipe[idx * 2 + 1]);
-		// exit(11);
+		// puts(msh->env[0]);
+		// printf("heool");
 		t_cmd *com = get_right_comm(msh , 0);
+		proccesing_cmd(com, msh->env);
+		printf("~~~~~~~~~ cmd = %s | infile = %d | outfile = %d\n", com->cmd_path , com->infile , com->outfile);
 		// if(msh->child_nb > 1 || com->outfiles[0] || com->append[0])
 		// 	dup2(msh->pipe[idx * 2 + 1], 1);
-		if(com->infile > 0 || com->infile == -2)
-			dup2(msh->pipe[0], 0);
-		close_all_pipes(msh);
-		execve(msh->comms->cmd_path, msh->comms->cmd_args, msh->env);
-		exit(10);
+		// if(com->infile > 0 || com->infile == -2)
+		// 	dup2(msh->pipe[0], 0);
+		// close_all_pipes(msh);
+		// execve(msh->comms->cmd_path, msh->comms->cmd_args, msh->env);
+		if(com->infile == -1)
+		{
+			// perror("infile not found");
+			ft_putstr_fd("testexit.\n", 2);
+			exit(127);
+		}
+			
+		exit(0);
 	}
 
 }

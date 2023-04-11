@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 18:35:07 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/10 15:53:07 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/11 13:15:10 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,10 @@ int get_nb_of_pipes(t_cmd *comms)
 	{
 		if(comms->infile > 0 || comms->infile == -2)
 			i++;
-
 		i++;
 		comms = comms->next;
 	}
 	return i;
-	
 }
 
 t_cmd *get_right_comm(t_minishell *msh, int idx)

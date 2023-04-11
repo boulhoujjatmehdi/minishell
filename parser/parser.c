@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/10 21:53:02 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/10 23:28:06 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,6 @@ void	proccesing_cmd(t_cmd *node, char **env)
 	t_cmd *head;
 	int fd;
 	char	*cmd;
-
 	head = node;
 	cmd = NULL;
 	head->infile = input_file(head->str, &head->her_doc);
@@ -205,6 +204,8 @@ void	proccesing_cmd(t_cmd *node, char **env)
 		cmd = ft_strdup(head->cmd_args[0]);
 	head->cmd_path = ft_cmd_path(cmd, env);
 }
+
+
 
 void print(t_tokens **list)
 {
