@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-		"ft_minishell.h": "c",
-		"unistd.h": "c",
-		"parse.h": "c",
-		"__config": "c",
-		"libft.h": "c"
-	}
-}
