@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 14:30:48 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/13 14:05:42 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/12 21:47:51 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,5 @@ int get_nb_of_pipes(t_cmd *comms);
 t_cmd *get_right_comm(t_minishell *msh, int idx);
 
 //childs.c
-void child_forked(t_minishell *msh , int idx, int *pid);
+void child_forked(t_minishell *msh , int idx, int *pid , int *pp);
 #endif

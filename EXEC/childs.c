@@ -6,13 +6,13 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 14:52:15 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/13 14:05:18 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/12 23:27:32 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-void child_forked(t_minishell *msh , int idx, int *pid)
+void child_forked(t_minishell *msh , int idx, int *pid , int *pp)
 {
 	t_cmd *com;
 
