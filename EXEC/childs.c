@@ -6,28 +6,57 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 14:52:15 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/11 21:14:21 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/04/13 14:05:18 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-void first_child(t_minishell *msh , int idx, int *pid)
+void child_forked(t_minishell *msh , int idx, int *pid)
 {
 	t_cmd *com;
 
 	*pid = fork();
 	if(*pid == 0)
 	{
-		com = get_right_comm(msh , 0);
+		t_cmd *com = get_right_comm(msh , idx);
 		proccesing_cmd(com, msh->env);
-	
+
+		if(com->next)
+			dup2(msh->pipe[idx * 2 + 1], 1);
+		if(com->outfile != 1)
+		{
+			dup2(com->outfile, 1);
+			if(com->next)
+				ft_putstr_fd("\n",msh->pipe[idx * 2 + 1]);
+		}
+
+
+
+
+
+		if(idx > 0)
+		{
+			dup2(msh->pipe[(idx - 1) * 2], 0);
+			if(com->infile > 0) // in case of 
+				read(0, NULL, 1);
+		}
 		if(com->infile > 0)
 			dup2(com->infile, 0);
-		if(com->outfile != 1)
-			dup2(com->outfile, 1);
-		if(execve(msh->comms->cmd_path, msh->comms->cmd_args, msh->env) == -1)
-			exit(12);
-	}
+		
 
+
+
+
+		
+		close_all_pipes(msh);
+		execve(com->cmd_path, com->cmd_args, msh->env);
+		exit(10);
+	}
+	if(*pid)
+	{
+		// int status;
+		// // waitpid(*pid ,&status,0);
+		// printf("~~~~~~~~~%d\n", status);
+	}
 }

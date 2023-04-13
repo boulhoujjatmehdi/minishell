@@ -43,4 +43,8 @@ int			token_type(char *s);
 t_cmd *main_function(int ac, char *av, char **env);
 void	proccesing_cmd(t_cmd *node, char **env);
 
+
+
+
+
 #endif

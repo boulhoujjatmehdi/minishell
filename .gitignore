@@ -4,3 +4,6 @@ minishell
 libftprintf.a
 output.txt
 *.txt
+
+.DS_Store
+mini-ms-tester/
