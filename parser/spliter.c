@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:25:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/07 00:43:52 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/04/27 20:27:04 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,34 @@ int	skip_opt(char *s, char c)
 	int n;
 	
 	n = 0;
-	i = 0;
+	i = 1;
 	while (s[i])
 	{
 		if (s[i] == c)
 			break;
-		if (s[i] == '|')
-			i = -1;
 		i++;
 	}
 	return (i);
+}
+
+int	get_env_var(char *s)
+{
+	int	i;
+
+	i = 1;
+	while (s[i])
+	{
+		if (!ft_isalnum(s[i]))
+			break ;
+		i++;
+	}
+	return (i);
+}
+
+void	quote_error(char start, char end)
+{
+	if (start != end)
+		exit(1);
 }
 
 
@@ -50,15 +68,23 @@ char	*my_strtok(char **ss)
 	// puts("here");
 	while (i <= ft_strlen(s))
 	{
-		//when i reack the end of the string
+		//when i reach the end of the string
 		if (!s[i] && i == 0)
 			return NULL;
+		if (s[i] == '$')
+		{
+			i = get_env_var(s);
+			new = ft_substr(s, 0, i);
+			*ss = s + i;
+			break ;
+		}
 		//here the case of quotes in my string
 		if ((s[i] == '\'' || s[i] == '\"') && i == 0)
 		{
-			i = skip_opt(s + 1, s[i]);
-			new = ft_substr(s, 1, i);
-			*ss = s + i + 2;
+			i = skip_opt(s, s[i]) + 1;
+			new = ft_substr(s, 0, i);
+			quote_error(new [0], new[i - 1]);
+			*ss = s + i;
 			break;
 		}
 		//whne i have an ARG token
@@ -79,7 +105,6 @@ char	*my_strtok(char **ss)
 	}
 	return (new);
 }
-
 
 // int main (int ac, char **av)
 // {

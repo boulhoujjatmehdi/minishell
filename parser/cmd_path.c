@@ -3,14 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_path.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 20:39:36 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/12 12:43:07 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/02 14:13:53 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"parse.h"
+
+int check_builtins(char *cmd)
+{
+	if (!ft_strncmp(cmd, "pwd", 4))
+		return (1);
+	else if (!ft_strncmp(cmd, "export", 7))
+		return (1);
+	else if(!ft_strncmp(cmd, "exit", 5))
+		return (1);
+	else if(!ft_strncmp(cmd, "cd", 3))
+		return (1);
+	else if(!ft_strncmp(cmd, "env", 4))
+		return (1);
+	else if(!ft_strncmp(cmd, "unset", 6))
+		return (1);
+	else
+		return (0);
+}
+
 
 char	**ft_get_paths(char *env[])
 {
@@ -94,7 +113,7 @@ char	*ft_cmd_path2(char *cmd, char *env[], int l)
 	i = 0;
 	while (paths[i] && (access(paths[i], F_OK) == -1))
 		i++;
-	if (!paths[i])
+	if (!paths[i] && !check_builtins(cmd))
 	{
 		if (!ft_strncmp(cmd, "|", 2))
 			ft_cmd_not_found("", 127);
@@ -122,7 +141,10 @@ void	ft_permision(char *cmd, int exit_code)
 void	ft_cmd_not_found(char *cmd, int exit_code)
 {
 	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(cmd, 2);
+	if (ft_strncmp("\\", cmd, 2) == 0)
+		ft_putstr_fd("", 2);
+	else
+		ft_putstr_fd(cmd, 2);
 	ft_putstr_fd(": command not found", 2);
 	ft_putchar_fd('\n', 2);
 	exit(exit_code);
