@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/12 23:16:55 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/02 13:27:51 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,15 @@ void fork_it_for_me(t_minishell *msh)
 	j = 2;
 	k = 0;
 	pid = ft_calloc(sizeof(int) , msh->pipe_nb);
-	
-		int pp[2];
 		while(k < msh->child_nb)
 		{
-			pipe(pp);
-			child_forked(msh , k,  &pid[k] , pp);
+			child_forked(msh , k,  &pid[k]);
 			k++;
 		}
-		close(pp[0]);
-		close(pp[1]);
 	close_all_pipes(msh);
 	wait_for_all(pid, msh->pipe_nb);
 	free(pid);
 }
-
 
 void  open_pipes(t_minishell *msh)
 {
@@ -103,12 +97,26 @@ int main_function_exec(t_cmd *comms , char **env)
 	msh->env = env;
     msh->comms = comms;
 				// printf("~~~~~~~~~~%d , %d\n", msh->child_nb , msh->pipe_nb);
-    
+	
     initialize_data(msh);
     open_pipes(msh);
 	
 	fork_it_for_me(msh);
 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // t_cmd *head = msh->comms;
     // puts("hello from mainFunctionExec");
     // while (head)

@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.h                                             :+:      :+:    :+:   */
+/*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/08 14:30:48 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/02 13:19:28 by eboulhou         ###   ########.fr       */
+/*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
+/*   Updated: 2023/05/02 13:38:59 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXEC_H
-# define EXEC_H
-
-#include "../ft_minishell.h"
+#include "exec.h"
 
 
-int main_function_exec(t_cmd *comms , char **env);
-//exec.c
-void close_all_pipes(t_minishell *msh);
+int ft_echo(t_cmd *com)
+{
+    char **to_print;
 
-
-//gets.c
-int get_comm_lenght(t_cmd *comms);
-int get_nb_of_pipes(t_cmd *comms);
-t_cmd *get_right_comm(t_minishell *msh, int idx);
-
-//childs.c
-void child_forked(t_minishell *msh , int idx, int *pid);
-#endif
+    to_print = com->cmd_args;
+    while(to_print)
+    {
+        printf("%s ", *to_print);
+        to_print++;
+    }
+    printf("\n");
+    return 0;
+}
