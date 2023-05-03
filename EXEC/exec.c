@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/02 13:27:51 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/02 17:14:45 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,11 @@ int main_function_exec(t_cmd *comms , char **env)
 	msh->env = env;
     msh->comms = comms;
 				// printf("~~~~~~~~~~%d , %d\n", msh->child_nb , msh->pipe_nb);
-	
     initialize_data(msh);
     open_pipes(msh);
-	
+
 	fork_it_for_me(msh);
-	
+
 
 
 

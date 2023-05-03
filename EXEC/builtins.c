@@ -26,3 +26,4 @@ int ft_echo(t_cmd *com)
     printf("\n");
     return 0;
 }
+int export(int )

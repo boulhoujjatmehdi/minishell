@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/04/10 20:56:52 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/01 15:54:14 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,9 @@ void	del_empty(t_tokens **list)
 	}
 }
 
+
+
+
 void	adjest(t_tokens **list)
 {
 	t_tokens *head;
@@ -140,7 +143,6 @@ void	adjest(t_tokens **list)
 	head = *list;
 	while (head->next)
 	{
-		// puts(head->token);
 		if (head->token_type == 2 && head->next->token_type == 2)
 		{
 			tmp = ft_strdup(head->token);
@@ -148,6 +150,24 @@ void	adjest(t_tokens **list)
 			tmp1 = head->pos;
 			head = head->next;
 			delete_node(list, tmp1);
+		}
+		else if ((head->token_type == 2 && head->next->token_type == 6) || \
+(head->token_type == 6 && head->next->token_type == 2))
+		{
+			tmp = ft_strdup(head->token);
+			head->next->token = ft_strjoin2(tmp, head->next->token);
+			tmp1 = head->pos;
+			head = head->next;
+			delete_node(list, tmp1);
+		}
+		else if ((head->token_type == 2 && head->next->token_type == 7) || \
+(head->token_type == 7 && head->next->token_type == 2))
+		{
+			tmp = ft_strdup(head->token);
+			head->next->token = ft_strjoin2(tmp, head->next->token);
+			tmp1 = head->pos;
+			head = head->next;
+			delete_node(list, tmp1);			
 		}
 		else
 			head = head->next;
@@ -167,7 +187,11 @@ void	syntax_error(t_tokens **list)
 	}
 	while (head->next)
 	{
-		// if (head->token_type == 1 && !head->next)  to be handled later 
+		if (head->next->token_type == 1 && !head->next->next)
+		{
+			printf("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
+			exit(0);
+		}
 		if (head->token_type == 3 && head->next->token_type == 3)
 		{
 			printf("minishell: syntax error near unexpected token `"); // to be changed to stderr
@@ -244,4 +268,31 @@ void	free_token(t_tokens **list)
 		head = head->next;
 	}
 	// *list = NULL;
+}
+
+char	*ft_joinchar(char *s, char c)
+{
+	size_t	size;
+	size_t	i;
+	size_t	j2;
+	char	*new;
+
+	if (!s)
+		return (NULL);
+	size = ft_strlen2(s) + 1;
+	new = (char *)malloc((size + 1) * sizeof(char));
+	if (!s)
+		return (0);
+	i = 0;
+	j2 = 0;
+	while (s[i])
+	{
+		new[i] = s[i];
+		i++;
+	}
+	new[i] = c;
+	i++;
+	new[i] = '\0';
+	free(s);
+	return (new);
 }
