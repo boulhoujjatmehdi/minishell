@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/02 14:51:07 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/03 16:07:48 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_tokens	*lstnew(void *content)
 		return (0);
 	new_t_list->token = content;
 	new_t_list->token_type = token_type(content);
+	new_t_list->prev = NULL;
 	new_t_list->next = NULL;
 	return (new_t_list);
 }
@@ -35,6 +36,7 @@ void	addback(t_tokens **list, t_tokens *new)
 	{
 		temp = lstlast (*list);
 		temp->next = new;
+		new->prev = temp;
 	}
 }
 
@@ -121,18 +123,24 @@ void	del_empty(t_tokens **list)
 	give_pos(list);
 	while (head->next)
 	{
-		if (!ft_strncmp(head->token, "", 1) && head->next->token_type == 2)
+		if (!ft_strncmp(head->token, "", 1) && head->pos == 1)
+			head= head->next;
+		else if (head->token_type == 1 && !ft_strncmp(head->next->token, "", 1))
+			head= head->next;
+		else if (!ft_strncmp(head->token, "", 1))
 		{
 			delete_node(list, head->pos);
-			head= head->next;
+			head = head->next;
 		}
-		else
+		else 
 			head = head->next;
 	}
+	if (!ft_strncmp(head->token, "", 1) && head->pos != 1 && head->prev->token_type != 1)
+	{
+		delete_node(list, head->pos);
+		head = head->next;
+	}
 }
-
-
-
 
 void	adjest(t_tokens **list)
 {
@@ -167,7 +175,7 @@ void	adjest(t_tokens **list)
 			head->next->token = ft_strjoin2(tmp, head->next->token);
 			tmp1 = head->pos;
 			head = head->next;
-			delete_node(list, tmp1);			
+			delete_node(list, tmp1);
 		}
 		else
 			head = head->next;

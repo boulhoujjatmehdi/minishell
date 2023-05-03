@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_minishell.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/12 15:19:15 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/03 16:00:21 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_tokens
 	int				pos;
 	int				token_type;
 	char			*token;
+	struct s_tokens *prev;
 	struct s_tokens *next;
 }	t_tokens;
 
