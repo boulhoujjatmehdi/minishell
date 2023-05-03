@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/03 16:10:05 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/03 16:14:03 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -375,7 +375,6 @@ void	check_env(t_tokens **list, char **env)
 	char		*tmp;
 	int l;
 	t_tokens 	*head;
-	
 
 	head = *list;
 	while (head)

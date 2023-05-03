@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/03 16:07:48 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/03 16:32:18 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,47 +190,47 @@ void	syntax_error(t_tokens **list)
 	give_pos(list);
 	if ((head->token_type == 3 || head->token_type == 1) && !head->next)
 	{
-		printf("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
-		exit(0);
+		perror("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
+		exit(258);
 	}
 	while (head->next)
 	{
 		if (head->next->token_type == 1 && !head->next->next)
 		{
-			printf("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
-			exit(0);
+			perror("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
+			exit(258);
 		}
 		if (head->token_type == 3 && head->next->token_type == 3)
 		{
-			printf("minishell: syntax error near unexpected token `"); // to be changed to stderr
-			printf("%s", head->next->token); // to be changed to stderr
-			printf("'\n"); // to be changed to stderr
-			exit(0);			
+			perror("minishell: syntax error near unexpected token `"); // to be changed to stderr
+			ft_putstr_fd(head->next->token, 2); // to be changed to stderr
+			ft_putstr_fd("'\n", 2); // to be changed to stderr
+			exit(258);			
 		}
 		if (head->token_type == 3 && head->next->token_type == 1)
 		{
-			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
-			exit(0);
+			perror("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
+			exit(258);
 		}
 		if (head->token_type == 1 && head->pos == 1)
 		{
-			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
-			exit(0);
+			perror("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
+			exit(258);
 		}
 		if (head->token_type == 1 && head->next->token_type == 1)
 		{
-			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
-			exit(0);
+			perror("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
+			exit(258);
 		}
 		if (head->token_type == 1 && head->next->token_type == 3)
 		{
-			printf("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
-			exit(0);
+			perror("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
+			exit(258);
 		}
 		if (head->token_type == 3 && !head->next)
 		{
-			printf("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
-			exit(0);
+			perror("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
+			exit(258);
 		}
 		head = head->next;
 	}
