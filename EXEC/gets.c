@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 18:35:07 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/11 13:15:10 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/03 17:18:06 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,13 @@ t_cmd *get_right_comm(t_minishell *msh, int idx)
 	}
 	
 	return tmp;
+}
+
+void fill_env_list(t_list **lenv, char **env)
+{
+	while(*env)
+	{
+		ft_lstadd_back(lenv, ft_lstnew(ft_strdup(*env)));
+		env++;
+	}
 }

@@ -7,15 +7,18 @@ OBJ = ft_atoi.o ft_isascii.o ft_memcmp.o  ft_strchr.o  ft_strncmp.o ft_toupper.o
 BOBJ = ft_lstnew_bonus.o ft_lstadd_front_bonus.o ft_lstsize_bonus.o ft_lstadd_back_bonus.o ft_lstlast_bonus.o ft_lstdelone_bonus.o ft_lstclear_bonus.o ft_lstmap_bonus.o\
 	ft_lstiter_bonus.o
 
-%.o: %.c 
-	$(CC) -c $< $(CFLAGS)
 
 all:$(NAME)
 
 $(NAME):$(OBJ)
 	ar -rc $(NAME) $(OBJ)
-bonus:$(BOBJ)
-	ar -rc $(NAME) $(BOBJ)
+
+bonus:$(OBJ) $(BOBJ)
+	ar -rc $(NAME) $(OBJ) $(BOBJ)
+
+%.o: %.c 
+	$(CC) -c $< $(CFLAGS)
+
 clean:
 	rm -f *.o
 fclean:clean
