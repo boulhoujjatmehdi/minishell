@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/02 14:04:47 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/02 16:32:48 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	listing_cmd(t_tokens **list1, t_cmd **list2)
 		else
 		{
 		head2->str = ft_strjoin2(head2->str, head1->token);
-		head2->str = ft_joinchar(head2->str, ';');
+		head2->str = ft_joinchar(head2->str, 1);
 		head1 = head1->next;
 		}
 	}
@@ -181,32 +181,32 @@ int	input_file(char *s)
 	last = ft_strrchr1(s, '<');
 	if (s[last - 1] == '<')
 		t = 1;
-	name = ft_strchr2(s, '<', ';');
+	name = ft_strchr2(s, '<', 1);
 	while (name)
 	{
 		if (fd2 != 0)
 			close(fd2);
 		name++;
-		name = get_filename(name , ';', ';');
+		name = get_filename(name , ';', 1);
 		fd2 = get_here_doc(name);
 		free (name);
 		fd2 = open(".tmp.txt", O_RDONLY);
-		name = ft_strchr2(s, '<', ';');
+		name = ft_strchr2(s, '<', 1);
 	}
-	name = ft_strchr1(s, '<', ';');
+	name = ft_strchr1(s, '<', 1);
 	while(name)
 	{
 		if (fd1 != 0)
 			close(fd1);
 		name++;
-		name = get_filename(name, ';', ';');
+		name = get_filename(name, 1, 1);
 		if (!name)
 			return (0);
 		fd1 = open(name, O_RDONLY);
 		if (fd1 == -1)
 			file_errors(name, 0);
 		free (name);
-		name = ft_strchr1(s, '<', ';');
+		name = ft_strchr1(s, '<', 1);
 	}
 	if (t == 1)
 		return (fd2);
@@ -222,14 +222,14 @@ int output_file(char *s)
 	i = 0;
 	if (!s)
 		return (1);
-	name = ft_strchr1(s, '>', ';');
+	name = ft_strchr1(s, '>', 1);
 	if (name)
 	{
 		if (name && name[0] == '>')
 		{
-			name = ft_strchr1(s, '>', ';');
+			name = ft_strchr1(s, '>', 1);
 			name++;
-			name = get_filename(name, ';', ';');
+			name = get_filename(name, 1, 1);
 			fd = open(name, O_CREAT | O_WRONLY | O_APPEND, 0644);
 			if (fd == -1)
 				file_errors(name, 1);
@@ -239,7 +239,7 @@ int output_file(char *s)
 		else if (name && name[0] != '>')
 		{	
 			name++;
-			name = get_filename(name, ';', ';');
+			name = get_filename(name, 1, 1);
 			fd = open(name, O_CREAT | O_WRONLY, 0644);
 			if (fd == -1)
 				file_errors(name, 1);
@@ -253,7 +253,7 @@ int output_file(char *s)
 char	**get_cmd_opt(char *s)
 {
 	char **new;
-	new = ft_split(s, ';');
+	new = ft_split(s, 1);
 	return new;	
 }
 
@@ -421,9 +421,9 @@ t_cmd *main_function(int ac, char *str, char **env)
 	}
 	check_double_red(&info);
 	check_env(&info, env);
+	del_empty(&info);
 	// print(&info);
 	// exit(0);
-	del_empty(&info);
 	adjest(&info);
 	del_space(&info);
 	syntax_error(&info);
