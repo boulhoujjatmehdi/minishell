@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/04 17:50:20 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/04 19:24:40 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,11 +284,24 @@ void	proccesing_cmd(t_cmd *node, char **env)
 void print(t_tokens **list)
 {
 	t_tokens *head;
-	head = lstlast(*list);
+	head = *list;
 	while (head)
 	{
 		printf("token     =     -%s-,              token_type %d\n", head->token, head->token_type);
-		head = head->prev;
+		head = head->next;
+	}
+}
+
+void print2(t_cmd **list)
+{
+	t_cmd *head;
+	head = *list;
+	char **new;
+	new = ft_split(head->str, 1);
+	while (*new)
+	{
+		printf("cmd_path  =     -%s-,              cmd_args = :%s:\n", head->cmd_path, *new);
+		new++;
 	}
 }
 
@@ -302,19 +315,39 @@ int	env_len(char *s)
 	return (i + 1);
 }
 
+char	*env_var(char *s)
+{
+	int i;
+	char *var;
+
+	var = (char *)malloc(env_len(s) * sizeof(char ) + 1);
+	if (!var)
+		return NULL;
+	i = 0;
+	while(s[i] != '=')
+	{
+		var[i] = s[i];
+		i++;	
+	}
+	var[i] = '\0';
+	return (var);
+}
+
 char	*get_assos(char *s, t_list **env)
 {
 	int len;
 	int size;
 	char *new;
+	char *tmp;
 	t_list *head;
 
 	head = *env;
 	while (head->content)
 	{
-		// puts(head->content);
-		if (ft_strncmp(s, head->content, ft_strlen(s)+1) == 0)
+		tmp = env_var(head->content);
+		if (ft_strncmp(s, tmp, ft_strlen(tmp) + 1) == 0)
 			break ;
+		free(tmp);
 		head = head->next;
 	}
 	if (!head->content)
@@ -333,7 +366,7 @@ char	*ft_replace(char *from, int *l, t_list **env)
 
 	i = 1;
 	*l = 0;
-	while (ft_isalnum(from[i]))
+	while (from[i] && (ft_isalnum(from[i]) || from[i] == '_'))
 		i++;
 	*l = i;
 	env1 = ft_substr(from, 1, i - 1);
@@ -424,9 +457,9 @@ t_cmd *main_function(int ac, char *str, t_list **env)
 	del_space(&info);
 	syntax_error(&info);
 	// exit(100);
-	// puts("head->str");
 	del_empty(&info);
 	listing_cmd(&info, &head); 
+	// print2(&head);
 	free_token(&info);
 	return (head);
 }
