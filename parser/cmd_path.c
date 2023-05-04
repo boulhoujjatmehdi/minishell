@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 20:39:36 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/03 14:31:37 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/04 17:07:12 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	*ft_env(char **env)
 	return (path);
 }
 
-char	*ft_cmd_path(char *cmd, char *env[])
+char	*ft_cmd_path(char *cmd, char *env[], t_cmd *node)
 {
 	char	*cmd_path;
 	int		l;
@@ -90,16 +90,16 @@ char	*ft_cmd_path(char *cmd, char *env[])
 			if (access(cmd, X_OK) == 0)
 				return(cmd);
 			else
-				ft_permision(cmd, 126);
+				ft_permision(cmd, 126, node);
 		}
 	}
 	if (l == 1)
-		ft_no_file_diractory(cmd, 127);
-	cmd_path = ft_cmd_path2(cmd, env, l);
+		ft_no_file_diractory(cmd, 127, node);
+	cmd_path = ft_cmd_path2(cmd, env, l, node);
 	return (cmd_path);
 }
 
-char	*ft_cmd_path2(char *cmd, char *env[], int l)
+char	*ft_cmd_path2(char *cmd, char *env[], int l, t_cmd *node)
 {
 	char	**paths;
 	char	*cmd_path;
@@ -118,8 +118,8 @@ char	*ft_cmd_path2(char *cmd, char *env[], int l)
 	if (!paths[i])
 	{
 		if (!ft_strncmp(cmd, "\\", 2))
-			ft_cmd_not_found("", 127);
-		ft_cmd_not_found(cmd, 127);
+			ft_cmd_not_found("", 127, node);
+		ft_cmd_not_found(cmd, 127, node);
 	}
 	else
 		cmd_path = ft_strdup(paths[i]);
@@ -131,32 +131,29 @@ char	*ft_cmd_path2(char *cmd, char *env[], int l)
 	return (cmd_path);
 }
 
-void	ft_permision(char *cmd, int exit_code)
+void	ft_permision(char *cmd, int exit_code, t_cmd *node)
 {
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": Permission denied", 2);
-	ft_putchar_fd('\n', 2);
-	exit(exit_code);
+	node->exit_msg = ft_strjoin2(node->exit_msg, "minishell: ");
+	node->exit_msg = ft_strjoin2(node->exit_msg, cmd);
+	node->exit_msg = ft_strjoin2(node->exit_msg, ": Permission denied\n");
+	node->exit_stat = exit_code;
 }
 
-void	ft_cmd_not_found(char *cmd, int exit_code)
+void	ft_cmd_not_found(char *cmd, int exit_code, t_cmd *node)
 {
-	ft_putstr_fd("minishell: ", 2);
+	node->exit_msg = ft_strjoin2(node->exit_msg, "minishell: ");
 	if (ft_strncmp("\\", cmd, 2) == 0)
-		ft_putstr_fd("", 2);
+		node->exit_msg = ft_strjoin2(node->exit_msg, cmd);
 	else
-		ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": command not found", 2);
-	ft_putchar_fd('\n', 2);
-	exit(exit_code);
+		node->exit_msg = ft_strjoin2(node->exit_msg, cmd);
+	node->exit_msg = ft_strjoin2(node->exit_msg, ": command not found\n");
+	node->exit_stat = exit_code;
 }
 
-void	ft_no_file_diractory(char *file_name, int exit_code)
+void	ft_no_file_diractory(char *file_name, int exit_code, t_cmd *node)
 {
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(file_name, 2);
-	ft_putstr_fd(": No such file or directory", 2);
-	ft_putchar_fd('\n', 2);
-	exit(exit_code);
+	node->exit_msg = ft_strjoin2(node->exit_msg, "minishell: ");
+	node->exit_msg = ft_strjoin2(node->exit_msg, file_name);
+	node->exit_msg = ft_strjoin2(node->exit_msg, ": No such file or directory\n");
+	node->exit_stat = exit_code;
 }

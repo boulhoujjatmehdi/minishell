@@ -3,16 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   childs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 14:52:15 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/12 23:27:32 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/04 17:30:58 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-void child_forked(t_minishell *msh , int idx, int *pid , int *pp)
+int export(t_minishell msh , t_cmd *cmd)
+{
+	ft_lstadd_back(msh.lenv, ft_lstnew(cmd->cmd_args[1]));
+	int i;
+	i = 0;
+	// i = ft_strnstr_mod(cmd->cmd_args[1], "=");
+	// printf("%d=======\n", i);
+
+	return 0;
+}
+
+
+void check_builtis(t_cmd *cmd , t_minishell *msh)
+{
+	if(!ft_strncmp(cmd->cmd_path, "export", 7))
+	{
+		export(*msh, cmd);
+		exit(110);
+	}
+}
+
+void child_forked(t_minishell *msh , int idx, int *pid)
 {
 	t_cmd *com;
 
@@ -20,8 +41,21 @@ void child_forked(t_minishell *msh , int idx, int *pid , int *pp)
 	if(*pid == 0)
 	{
 		t_cmd *com = get_right_comm(msh , idx);
-		proccesing_cmd(com, msh->env);
 
+		// printf("***%s**\n", com->cmd_path);
+		// exit(99);
+		msh->env = ft_calloc(sizeof(char*), ft_lstsize(*msh->lenv));
+		t_list *tmp = *msh->lenv;
+		int i =0;
+		while(tmp)
+		{
+			if(tmp->content)
+				msh->env[i] = tmp->content;
+			tmp = tmp->next;
+			i++;
+		}
+		proccesing_cmd(com, msh->env);
+		check_builtis(com ,msh);
 		if(com->next)
 			dup2(msh->pipe[idx * 2 + 1], 1);
 		if(com->outfile != 1)
@@ -31,14 +65,10 @@ void child_forked(t_minishell *msh , int idx, int *pid , int *pp)
 				ft_putstr_fd("\n",msh->pipe[idx * 2 + 1]);
 		}
 
-
-
-
-
 		if(idx > 0)
 		{
 			dup2(msh->pipe[(idx - 1) * 2], 0);
-			if(com->infile > 0) // in case of 
+			if(com->infile > 0)
 				read(0, NULL, 1);
 		}
 		if(com->infile > 0)

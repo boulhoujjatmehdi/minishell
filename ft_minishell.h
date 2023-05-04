@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/03 16:00:21 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/04 16:50:50 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,9 @@ typedef struct s_cmd
 	int infile;
 	int outfile;
 	int key;
-	char *tmp;
 	char *str;
+	char *exit_msg;
+	int	exit_stat;
 	struct s_cmd *next;
 }	t_cmd;
 
@@ -82,6 +83,7 @@ typedef struct s_minishell
 	int pipe_nb;
 	int child_nb;
 	char **env;
+	t_list **lenv;
 }t_minishell;
 ///////////////////
 

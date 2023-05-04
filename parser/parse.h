@@ -34,17 +34,17 @@ char	*ft_strjoin2(char *s1, char *s2);
 void	free_cmd(t_cmd **list);
 
 char	**ft_get_paths(char *env[]);
-void	ft_no_file_diractory(char *file_name, int exit_code);
 char	*ft_env(char **env);
-char	*ft_cmd_path(char *cmd, char *env[]);
-char	*ft_cmd_path2(char *cmd, char *env[], int l);
-void	ft_permision(char *cmd, int exit_code);
-void	ft_cmd_not_found(char *cmd, int exit_code);
+char	*ft_cmd_path(char *cmd, char *env[], t_cmd *node);
+char	*ft_cmd_path2(char *cmd, char *env[], int l, t_cmd *node);
+void	ft_no_file_diractory(char *file_name, int exit_code, t_cmd *node);
+void	ft_permision(char *cmd, int exit_code, t_cmd *node);
+void	ft_cmd_not_found(char *cmd, int exit_code, t_cmd *node);
 
 char		*my_strtok(char **ss);
 int			token_type(char *s);
 
-t_cmd *main_function(int ac, char *av, char **env);
+t_cmd *main_function(int ac, char *av, t_list **env);
 void	proccesing_cmd(t_cmd *node, char **env);
 
 // void	join_nodes(t_tokens **list, t_tokens *node1, t_tokens *node2)

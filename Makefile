@@ -15,8 +15,8 @@ all: $(LBT)
 
 
 $(LBT): 
-	make -C libft
-	make -C libft clean
+	make -C libft bonus
+	# make -C libft clean
 
 run: clear	all	
 	./minishell

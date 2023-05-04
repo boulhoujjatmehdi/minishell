@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/03 16:14:03 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/04 17:50:20 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	listing_cmd(t_tokens **list1, t_cmd **list2)
 		{
 			addback2(list2, lstnew2(NULL));
 			head1 = head1->next;
-			// head2->tmp = ft_strdup(head2->str);
 			head2 = head2->next;
 		}
 		else
@@ -154,24 +153,26 @@ int	get_here_doc(char *name)
 	close(fd);
 	return (fd);
 }
-void	file_errors(char *name, int key)
+void	file_errors(char *name, int key, t_cmd *node)
 {
 	if (access(name, F_OK) == -1)
-		ft_no_file_diractory(name, 1);
+		ft_no_file_diractory(name, 1, node);
 	if (access(name, R_OK) == -1 && key == 0)
-		ft_permision(name, 1);
+		ft_permision(name, 1, node);
 	if (access(name, W_OK) == -1 && key == 1)
-		ft_permision(name, 1);
+		ft_permision(name, 1, node);
 }
 
-int	input_file(char *s)
+int	input_file(t_cmd *node)
 {
 	int i;
 	int fd1, fd2, t;
 	char *name;
 	char *tmp;
+	char *s;
 	int	last;
 
+	s = node->str;
 	i = 0;
 	t = 0;
 	fd1 = 0;
@@ -204,7 +205,7 @@ int	input_file(char *s)
 			return (0);
 		fd1 = open(name, O_RDONLY);
 		if (fd1 == -1)
-			file_errors(name, 0);
+			file_errors(name, 0, node);
 		free (name);
 		name = ft_strchr1(s, '<', 1);
 	}
@@ -213,12 +214,14 @@ int	input_file(char *s)
 	return (fd1);
 }
 
-int output_file(char *s)
+int output_file(t_cmd *node)
 {
 	int i;
 	int fd;
 	char *name;
+	char *s;
 
+	s = node->str;
 	i = 0;
 	if (!s)
 		return (1);
@@ -232,7 +235,7 @@ int output_file(char *s)
 			name = get_filename(name, 1, 1);
 			fd = open(name, O_CREAT | O_WRONLY | O_APPEND, 0644);
 			if (fd == -1)
-				file_errors(name, 1);
+				file_errors(name, 1, node);
 			free (name);
 			return fd;
 		}
@@ -242,7 +245,7 @@ int output_file(char *s)
 			name = get_filename(name, 1, 1);
 			fd = open(name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 			if (fd == -1)
-				file_errors(name, 1);
+				file_errors(name, 1, node);
 			free (name);
 			return fd;
 		}
@@ -261,24 +264,21 @@ char	**get_cmd_opt(char *s)
 // to read from and output file to write to and so on
 void	proccesing_cmd(t_cmd *node, char **env)
 {
-	t_cmd *head;
 	int fd;
 	char	*cmd;
 
-	head = node;
 	cmd = NULL;
-	// printf("+%s+\n", head->str);
-	head->infile = input_file(head->str);
-	head->outfile = output_file(head->str);
-	while((fd = output_file(head->str)) != 1)
+	node->infile = input_file(node);
+	node->outfile = output_file(node);
+	while((fd = output_file(node)) != 1)
 	{
-		close(head->outfile);
-		head->outfile = fd;
+		close(node->outfile);
+		node->outfile = fd;
 	}
-	head->cmd_args = get_cmd_opt(head->str);
-	if (*head->cmd_args != NULL)
-		cmd = ft_strdup(head->cmd_args[0]);
-	head->cmd_path = ft_cmd_path(cmd, env);
+	node->cmd_args = get_cmd_opt(node->str);
+	if (*node->cmd_args != NULL)
+		cmd = ft_strdup(node->cmd_args[0]);
+	node->cmd_path = ft_cmd_path(cmd, env, node);
 }
 
 void print(t_tokens **list)
@@ -302,29 +302,30 @@ int	env_len(char *s)
 	return (i + 1);
 }
 
-char	*get_assos(char *s, char **env)
+char	*get_assos(char *s, t_list **env)
 {
-	int i;
 	int len;
 	int size;
 	char *new;
-	
-	i = 0;
-	while (env[i])
+	t_list *head;
+
+	head = *env;
+	while (head->content)
 	{
-		if (ft_strncmp(s, env[i], ft_strlen(s)) == 0)
+		// puts(head->content);
+		if (ft_strncmp(s, head->content, ft_strlen(s)+1) == 0)
 			break ;
-		i++;
+		head = head->next;
 	}
-	if (!env[i])
-		return (NULL);
-	len = env_len(env[i]);
-	size = ft_strlen(env[i]) - len;
-	new = ft_substr(env[i], len, size);
+	if (!head->content)
+		return (ft_strdup(""));
+	len = env_len(head->content);
+	size = ft_strlen(head->content) - len;
+	new = ft_substr(head->content, len, size);
 	return (new);
 }
 
-char	*ft_replace(char *from, int *l, char **env)
+char	*ft_replace(char *from, int *l, t_list **env)
 {
 	char	*new;
 	char	*env1;
@@ -340,7 +341,7 @@ char	*ft_replace(char *from, int *l, char **env)
 	return (new);
 }
 
-void	swap_env(t_tokens *node, char **env)
+void	swap_env(t_tokens *node, t_list **env)
 {
 	int i;
 	int l;
@@ -370,7 +371,7 @@ void	swap_env(t_tokens *node, char **env)
 	node->token = new;
 }
 
-void	check_env(t_tokens **list, char **env)
+void	check_env(t_tokens **list, t_list **env)
 {
 	char		*tmp;
 	int l;
@@ -402,13 +403,12 @@ void	check_env(t_tokens **list, char **env)
 	}
 }
 
-t_cmd *main_function(int ac, char *str, char **env)
+t_cmd *main_function(int ac, char *str, t_list **env)
 {
 	t_tokens	*info;
 	t_cmd		*head;
 	t_cmd *tmp;
 	char *s;
-
 	info = NULL;
 	head = NULL;
 	head = (t_cmd *)calloc(sizeof(t_cmd), 1);
@@ -423,6 +423,8 @@ t_cmd *main_function(int ac, char *str, char **env)
 	adjest(&info);
 	del_space(&info);
 	syntax_error(&info);
+	// exit(100);
+	// puts("head->str");
 	del_empty(&info);
 	listing_cmd(&info, &head); 
 	free_token(&info);
