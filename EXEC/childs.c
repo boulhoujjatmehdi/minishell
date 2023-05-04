@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 14:52:15 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/04 13:57:32 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/04 15:23:20 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,16 @@ void child_forked(t_minishell *msh , int idx, int *pid)
 			dup2(com->infile, 0);
 		
 
+		msh->env = ft_calloc(sizeof(char*), ft_lstsize(*msh->lenv));
+		t_list *tmp = *msh->lenv;
+		int i =0;
+		while(tmp)
+		{
+			if(tmp->content)
+				msh->env[i] = tmp->content;
+			tmp = tmp->next;
+			i++;
+		}
 
 
 
