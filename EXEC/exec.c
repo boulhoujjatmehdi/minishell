@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/03 18:56:11 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/04 14:33:46 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void wait_for_all(int *pids , int nb)
 	{
 		int status= 0;
 		waitpid(pids[i], &status, 0);
-		printf("exit %d\n", status>>8);
+		// printf("exit %d\n", status>>8);
 		i++;
 	}
 }
@@ -91,15 +91,14 @@ void initialize_data(t_minishell *msh)
 								// printf("*/*/*/*/*/**/*/*/*/ %d\n", msh->child_nb);
 }
 
-int main_function_exec(t_cmd *comms , char **env)
+int main_function_exec(t_cmd *comms , t_list **lenv)
 {
     t_minishell *msh;
     msh = ft_calloc(sizeof(t_minishell), 1);
-	msh->env = env;
-	t_list *lenv;
-
-
+	msh->lenv = lenv;
+	msh->env=ft_calloc(sizeof(char*), 1);
     msh->comms = comms;
+
     initialize_data(msh);
     open_pipes(msh);
 

@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 18:35:07 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/03 17:18:06 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/04 14:03:13 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,16 @@ void fill_env_list(t_list **lenv, char **env)
 		ft_lstadd_back(lenv, ft_lstnew(ft_strdup(*env)));
 		env++;
 	}
+}
+
+char *get_path_line(t_list *lenv)
+{
+    while(lenv)
+    {
+        if(ft_strncmp(lenv->content, "PATH=", 5))
+        {
+            return(lenv->content);
+        }
+    }
+    return "";
 }

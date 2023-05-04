@@ -6,23 +6,13 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/03 18:57:53 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/04 14:33:21 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minishell.h"
 
-char *get_path_line(t_list *lenv)
-{
-    while(lenv)
-    {
-        if(ft_strncmp(lenv->content, "PATH=", 5))
-        {
-            return(lenv->content);
-        }
-    }
-    return "PATH=";
-}
+
 
 int main(int ac, char **av, char **env)
 {
@@ -30,10 +20,10 @@ int main(int ac, char **av, char **env)
     t_list  *lenv;
     char *str;
     lenv = NULL;
-	// fill_env_list(&lenv, env);
-    
+	fill_env_list(&lenv, env);
     add_history("cat <out | cat -e");
     add_history("cat <out <<eof | cat -e");
+    add_history("echo $PATH");
     while(1)
     {
         str = readline("minishell->");
@@ -45,10 +35,10 @@ int main(int ac, char **av, char **env)
         // env[1] = 0;
         // char **sstr = ft_calloc(sizeof(char*), 2);
         // sstr[0] = ft_strdup(get_path_line(lenv));
-
+        // if(!sstr[0])
+        //     sstr[0] = ft_calloc(sizeof(char *), 1);
         head = main_function(ac, str, env);
-        
-        main_function_exec(head , env);
+        main_function_exec(head , &lenv);
         
         
 

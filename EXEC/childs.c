@@ -6,27 +6,30 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 14:52:15 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/03 18:57:12 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/04 13:57:32 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-int export(t_minishell msh , t_cmd cmd)
+int export(t_minishell msh , t_cmd *cmd)
 {
-	
-
+	ft_lstadd_back(msh.lenv, ft_lstnew(cmd->cmd_args[1]));
+	int i;
+	i = 0;
+	// i = ft_strnstr_mod(cmd->cmd_args[1], "=");
+	// printf("%d=======\n", i);
 
 	return 0;
 }
 
 
-void check_builtis(t_cmd *cmd)
+void check_builtis(t_cmd *cmd , t_minishell *msh)
 {
 	if(!ft_strncmp(cmd->cmd_path, "export", 7))
 	{
-		ft_putstr_fd("get in export function with suxess\n", 2);
-		
+		export(*msh, cmd);
+		exit(110);
 	}
 }
 
@@ -39,11 +42,10 @@ void child_forked(t_minishell *msh , int idx, int *pid)
 	{
 		t_cmd *com = get_right_comm(msh , idx);
 
+		// printf("***%s**\n", com->cmd_path);
+		// exit(99);
 		proccesing_cmd(com, msh->env);
-		printf("mehdi\n");
-		exit(12);
-		printf("com-path = %s\ncom-args = %s\n", com->cmd_path , com->cmd_args[1]);
-		check_builtis(com);
+		check_builtis(com ,msh);
 		if(com->next)
 			dup2(msh->pipe[idx * 2 + 1], 1);
 		if(com->outfile != 1)
@@ -53,16 +55,11 @@ void child_forked(t_minishell *msh , int idx, int *pid)
 				ft_putstr_fd("\n",msh->pipe[idx * 2 + 1]);
 		}
 
-
-
-
-
 		if(idx > 0)
 		{
 			dup2(msh->pipe[(idx - 1) * 2], 0);
-			if(com->infile > 0) // in case of 
+			if(com->infile > 0)
 				read(0, NULL, 1);
-			
 		}
 		if(com->infile > 0)
 			dup2(com->infile, 0);

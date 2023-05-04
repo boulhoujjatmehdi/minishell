@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/02 16:32:48 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/04 14:01:56 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ int	get_here_doc(char *name)
 	char *str;
 
 	len = ft_strlen(name);
-	fd = open(".tmp.txt", O_CREAT | O_WRONLY | O_TRUNC, 0777);
+	fd = open(".tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777);
 	str = readline(">");
 	while(ft_strncmp(name, str, len))
 	{
@@ -187,10 +187,10 @@ int	input_file(char *s)
 		if (fd2 != 0)
 			close(fd2);
 		name++;
-		name = get_filename(name , ';', 1);
+		name = get_filename(name , 1, 1);
 		fd2 = get_here_doc(name);
 		free (name);
-		fd2 = open(".tmp.txt", O_RDONLY);
+		fd2 = open(".tmp", O_RDONLY);
 		name = ft_strchr2(s, '<', 1);
 	}
 	name = ft_strchr1(s, '<', 1);
@@ -240,7 +240,7 @@ int output_file(char *s)
 		{	
 			name++;
 			name = get_filename(name, 1, 1);
-			fd = open(name, O_CREAT | O_WRONLY, 0644);
+			fd = open(name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 			if (fd == -1)
 				file_errors(name, 1);
 			free (name);
@@ -284,11 +284,11 @@ void	proccesing_cmd(t_cmd *node, char **env)
 void print(t_tokens **list)
 {
 	t_tokens *head;
-	head = *list;
+	head = lstlast(*list);
 	while (head)
 	{
 		printf("token     =     -%s-,              token_type %d\n", head->token, head->token_type);
-		head = head->next;
+		head = head->prev;
 	}
 }
 
@@ -375,7 +375,6 @@ void	check_env(t_tokens **list, char **env)
 	char		*tmp;
 	int l;
 	t_tokens 	*head;
-	
 
 	head = *list;
 	while (head)
@@ -409,7 +408,6 @@ t_cmd *main_function(int ac, char *str, char **env)
 	t_cmd		*head;
 	t_cmd *tmp;
 	char *s;
-
 	info = NULL;
 	head = NULL;
 	head = (t_cmd *)calloc(sizeof(t_cmd), 1);
@@ -421,12 +419,11 @@ t_cmd *main_function(int ac, char *str, char **env)
 	}
 	check_double_red(&info);
 	check_env(&info, env);
-	del_empty(&info);
-	// print(&info);
-	// exit(0);
 	adjest(&info);
 	del_space(&info);
 	syntax_error(&info);
+	// exit(100);
+	del_empty(&info);
 	listing_cmd(&info, &head); 
 	free_token(&info);
 	return (head);

@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/04/12 15:19:15 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/03 20:29:05 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_tokens
 	int				pos;
 	int				token_type;
 	char			*token;
+	struct s_tokens *prev;
 	struct s_tokens *next;
 }	t_tokens;
 
@@ -81,6 +82,7 @@ typedef struct s_minishell
 	int pipe_nb;
 	int child_nb;
 	char **env;
+	t_list **lenv;
 }t_minishell;
 ///////////////////
 
