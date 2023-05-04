@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/04 14:33:21 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/04 16:12:29 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int main(int ac, char **av, char **env)
         // sstr[0] = ft_strdup(get_path_line(lenv));
         // if(!sstr[0])
         //     sstr[0] = ft_calloc(sizeof(char *), 1);
-        head = main_function(ac, str, env);
+        head = main_function(ac, str, &lenv);
         main_function_exec(head , &lenv);
         
         

@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 14:52:15 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/04 15:23:20 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/04 19:31:49 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ int export(t_minishell msh , t_cmd *cmd)
 	ft_lstadd_back(msh.lenv, ft_lstnew(cmd->cmd_args[1]));
 	int i;
 	i = 0;
-	// i = ft_strnstr_mod(cmd->cmd_args[1], "=");
-	// printf("%d=======\n", i);
 
 	return 0;
 }
@@ -44,6 +42,16 @@ void child_forked(t_minishell *msh , int idx, int *pid)
 
 		// printf("***%s**\n", com->cmd_path);
 		// exit(99);
+		msh->env = ft_calloc(sizeof(char*), ft_lstsize(*msh->lenv));
+		t_list *tmp = *msh->lenv;
+		int i =0;
+		while(tmp)
+		{
+			if(tmp->content)
+				msh->env[i] = tmp->content;
+			tmp = tmp->next;
+			i++;
+		}
 		proccesing_cmd(com, msh->env);
 		check_builtis(com ,msh);
 		if(com->next)
@@ -65,16 +73,6 @@ void child_forked(t_minishell *msh , int idx, int *pid)
 			dup2(com->infile, 0);
 		
 
-		msh->env = ft_calloc(sizeof(char*), ft_lstsize(*msh->lenv));
-		t_list *tmp = *msh->lenv;
-		int i =0;
-		while(tmp)
-		{
-			if(tmp->content)
-				msh->env[i] = tmp->content;
-			tmp = tmp->next;
-			i++;
-		}
 
 
 
