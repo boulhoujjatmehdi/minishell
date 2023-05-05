@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_path.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 20:39:36 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/04 17:07:12 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/05 17:00:36 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,12 @@ char	*ft_env(char **env)
 	while (env[i])
 	{
 		if (ft_strncmp("PATH=", env[i], 5) == 0)
+		{
 			break ;
+		}
 		i++;
 	}
+	// puts(env[i]);
 	if (env[i])
 	{
 		free(path);

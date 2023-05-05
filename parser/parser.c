@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/04 19:24:40 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/05 16:00:33 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,10 +157,11 @@ void	file_errors(char *name, int key, t_cmd *node)
 {
 	if (access(name, F_OK) == -1)
 		ft_no_file_diractory(name, 1, node);
-	if (access(name, R_OK) == -1 && key == 0)
+	else if (access(name, R_OK) == -1 && key == 0)
 		ft_permision(name, 1, node);
-	if (access(name, W_OK) == -1 && key == 1)
+	else if (access(name, W_OK) == -1 && key == 1)
 		ft_permision(name, 1, node);
+
 }
 
 int	input_file(t_cmd *node)

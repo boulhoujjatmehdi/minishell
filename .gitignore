@@ -7,3 +7,4 @@ output.txt
 .tmp
 .DS_Store
 mini-ms-tester/
+.vscode

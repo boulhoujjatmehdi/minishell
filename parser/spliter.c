@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   spliter.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:25:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/04 19:03:09 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/05 16:04:27 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,3 +121,30 @@ char	*my_strtok(char **ss)
 // 	}
 // 	return (0);
 // }
+
+char	*ft_joinchar(char *s, char c)
+{
+	size_t	size;
+	size_t	i;
+	size_t	j2;
+	char	*new;
+
+	if (!s)
+		return (NULL);
+	size = ft_strlen2(s) + 1;
+	new = (char *)malloc((size + 1) * sizeof(char));
+	if (!s)
+		return (0);
+	i = 0;
+	j2 = 0;
+	while (s[i])
+	{
+		new[i] = s[i];
+		i++;
+	}
+	new[i] = c;
+	i++;
+	new[i] = '\0';
+	free(s);
+	return (new);
+}

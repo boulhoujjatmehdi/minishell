@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/04 16:12:29 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/05 16:39:46 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minishell.h"
 
-
+int g_exit = 0;
 
 int main(int ac, char **av, char **env)
 {
@@ -40,8 +40,12 @@ int main(int ac, char **av, char **env)
         head = main_function(ac, str, &lenv);
         main_function_exec(head , &lenv);
         
-        
-
+        // t_list *tmp = lenv;
+        // while(tmp)
+        // {
+        //     printf("%s\n======", tmp->content);
+        //     tmp = tmp->next;
+        // }
 
 
 

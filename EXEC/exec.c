@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/04 19:26:31 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/05 16:49:58 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
+extern int g_exit;
 void wait_for_all(int *pids , int nb)
 {
 	int i;
@@ -37,8 +38,6 @@ void close_all_pipes(t_minishell *msh)
 		}
 }
 
-
-
 void fork_it_for_me(t_minishell *msh)
 {
 	int i;
@@ -52,7 +51,17 @@ void fork_it_for_me(t_minishell *msh)
 	pid = ft_calloc(sizeof(int) , msh->pipe_nb);
 		while(k < msh->child_nb)
 		{
-			child_forked(msh , k,  &pid[k]);
+			t_cmd *com = get_right_comm(msh , k);
+			proccesing_cmd(com, msh->env);
+			// exit(22);
+			// printf("------%d------\n", com->exit_stat);
+			if(com->exit_msg)
+			{
+				ft_putstr_fd(com->exit_msg, 2);
+			}
+			else if(!check_builtis(com, msh))
+				child_forked(msh , k,  &pid[k]);
+			// printf("======%s=====\n", com->exit_msg);
 			k++;
 		}
 	close_all_pipes(msh);
@@ -96,8 +105,20 @@ int main_function_exec(t_cmd *comms , t_list **lenv)
     t_minishell *msh;
     msh = ft_calloc(sizeof(t_minishell), 1);
 	msh->lenv = lenv;
-	msh->env=ft_calloc(sizeof(char*), 1);
+	// msh->env=ft_calloc(sizeof(char*), 1);
     msh->comms = comms;
+
+
+	msh->env = ft_calloc(sizeof(char*), ft_lstsize(*msh->lenv));
+	t_list *tmp = *msh->lenv;
+	int i =0;
+	while(tmp)
+	{
+		if(tmp->content)
+			msh->env[i] = tmp->content;
+		tmp = tmp->next;
+		i++;
+	}
 
     initialize_data(msh);
     open_pipes(msh);
