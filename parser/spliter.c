@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   spliter.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:25:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/08 16:12:08 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/08 16:48:50 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,9 @@ char	*my_strtok(char **ss)
 		{
 			i = skip_opt(s, s[i]) + 1;
 			new = ft_substr(s, 0, i);
-			quote_error(new [0], new[i - 1]);
 			*ss = s + i;
+			if (quote_error(new [0], new[i - 1]) == 1)
+				return (ft_strdup("SSYY"));
 			break;
 		}
 		//whne i have an ARG token

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/08 16:07:43 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/08 18:24:20 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,7 +302,7 @@ void print(t_tokens **list)
 	head = *list;
 	while (head)
 	{
-		printf("token     =     -%s-,              token_type %d\n", head->token, head->token_type);
+		printf("token     =     -%s-,  token_type %d,    position %d\n", head->token, head->token_type, head->pos);
 		head = head->next;
 	}
 }
@@ -451,14 +451,19 @@ t_cmd *main_function(int ac, char *str, t_list **env)
 {
 	t_tokens	*info;
 	t_cmd		*head;
-	t_cmd *tmp;
 	char *s;
+
 	info = NULL;
 	head = NULL;
 	head = (t_cmd *)calloc(sizeof(t_cmd), 1);
 	s = my_strtok(&str);
 	while (s)
 	{
+		if (!ft_strncmp(s, "SSYY", ft_strlen(s) + 1))
+		{
+			free_token(&info);
+			return (NULL);
+		}
 		addback(&info, lstnew(s));
 		s = my_strtok(&str);
 	}
@@ -466,11 +471,13 @@ t_cmd *main_function(int ac, char *str, t_list **env)
 	check_env(&info, env);
 	adjest(&info);
 	del_space(&info);
-	syntax_error(&info);
-	// exit(100);
+	if (syntax_error(&info) == 1)
+	{
+		free_token(&info);
+		return (NULL);
+	}
 	del_empty(&info);
 	listing_cmd(&info, &head); 
-	// print2(&head);
 	free_token(&info);
 	return (head);
 }
