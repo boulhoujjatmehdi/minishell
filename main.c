@@ -6,13 +6,28 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/05 16:39:46 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/08 15:58:01 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minishell.h"
 
 int g_exit = 0;
+int g_fork = 0;
+
+void signal_handler(int sig)
+{
+	if(sig == SIGINT)
+	{
+        waitpid(-1, NULL, 0);
+        g_fork = 1;
+		rl_redisplay();
+		ft_putstr_fd("  \n",1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
 
 int main(int ac, char **av, char **env)
 {
@@ -21,25 +36,21 @@ int main(int ac, char **av, char **env)
     char *str;
     lenv = NULL;
 	fill_env_list(&lenv, env);
-    add_history("cat <out | cat -e");
     add_history("cat <out <<eof | cat -e");
     add_history("echo $PATH");
+    add_history("cat -e <<eof");
     while(1)
     {
+
+        
+        signal(SIGINT, *signal_handler);
         str = readline("minishell->");
         if(str== NULL)
 			exit(0);
-		rl_redisplay();
         add_history(str);
-        // env[0] = get_path_line(lenv);
-        // env[1] = 0;
-        // char **sstr = ft_calloc(sizeof(char*), 2);
-        // sstr[0] = ft_strdup(get_path_line(lenv));
-        // if(!sstr[0])
-        //     sstr[0] = ft_calloc(sizeof(char *), 1);
         head = main_function(ac, str, &lenv);
         main_function_exec(head , &lenv);
-        
+        // mainfunctiongoto:
         // t_list *tmp = lenv;
         // while(tmp)
         // {
@@ -48,9 +59,6 @@ int main(int ac, char **av, char **env)
         // }
 
 
-
-
-        
         // while (head)
         // {
         //     puts("**********************************************************************************************************");
@@ -62,3 +70,33 @@ int main(int ac, char **av, char **env)
         // }
     }
 }
+
+
+
+
+// fd[1]   * file.txt
+// 1       * stdout
+
+// dup2(fd[1], 1);
+
+// 1       * file.txt
+
+// 1
+// -------------------
+// fd0             fd
+// -------------------
+
+
+
+
+
+// fd[0]   * file.txt
+// 0       * stdin
+
+
+// dup2(fd[0], 0);
+
+// 0       * file.txt
+
+
+// ft_putstr_fd("mehdi", 1);

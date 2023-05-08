@@ -6,11 +6,12 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/05 16:00:33 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/08 16:04:07 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"parse.h"
+
 
 int	token_type(char *s)
 {
@@ -141,16 +142,27 @@ int	get_here_doc(char *name)
 	int fd, len;
 	char *str;
 
-	len = ft_strlen(name);
-	fd = open(".tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777);
-	str = readline(">");
-	while(ft_strncmp(name, str, len))
+	int pid = fork();
+	if(pid == 0)
 	{
-		ft_putstr_fd(str,fd );
-		ft_putstr_fd("\n" , fd);
-		str =readline(">");
+		signal(SIGINT, SIG_DFL);
+		len = ft_strlen(name);
+		fd = open(".tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777);
+		str = readline(">");
+			while(ft_strncmp(name, str, len+1))
+			{
+				ft_putstr_fd(str,fd);
+				ft_putstr_fd("\n", fd);
+				str =readline(">");
+			}
+		close(fd);
+		exit(0);
 	}
-	close(fd);
+	int status;
+	waitpid(pid, &status, 0);
+	if(status)
+		return(-2);
+
 	return (fd);
 }
 void	file_errors(char *name, int key, t_cmd *node)
@@ -191,6 +203,8 @@ int	input_file(t_cmd *node)
 		name++;
 		name = get_filename(name , 1, 1);
 		fd2 = get_here_doc(name);
+		if(fd2 == -2)
+			node->ctr_c = 1;
 		free (name);
 		fd2 = open(".tmp", O_RDONLY);
 		name = ft_strchr2(s, '<', 1);

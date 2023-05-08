@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/05 16:21:42 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/06 13:43:12 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <string.h>
 #include <curses.h>
 #include <stdio.h>
+#include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -27,6 +28,8 @@
 #define PR_PIPE
 #define PR_IN
 #define PR_FRST
+
+void rl_replace_line (const char *, int);
 
 // imported from parser folder
 typedef struct s_cmd
@@ -39,7 +42,9 @@ typedef struct s_cmd
 	char *str;
 	char *exit_msg;
 	int	exit_stat;
+	int ctr_c;
 	struct s_cmd *next;
+	
 }	t_cmd;
 
 typedef struct s_cmd_list
@@ -87,8 +92,12 @@ typedef struct s_minishell
 }t_minishell;
 ///////////////////
 
+
 // int g_exit = 0;
 #include "EXEC/exec.h"
 #include "parser/parse.h"
 #include "./other_src/get_next_line.h"
+
+void signal_handler(int sig);
+
 #endif

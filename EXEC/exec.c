@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/05 16:49:58 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/08 15:47:02 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void close_all_pipes(t_minishell *msh)
 		{
 			close(msh->pipe[ii]);
 			close(msh->pipe[ii + 1]);
+			exit(55);
 			ii += 2;
 		}
 }
@@ -48,6 +49,7 @@ void fork_it_for_me(t_minishell *msh)
 	i = 0;
 	j = 2;
 	k = 0;
+	int stat = 1;
 	pid = ft_calloc(sizeof(int) , msh->pipe_nb);
 		while(k < msh->child_nb)
 		{
@@ -55,13 +57,28 @@ void fork_it_for_me(t_minishell *msh)
 			proccesing_cmd(com, msh->env);
 			// exit(22);
 			// printf("------%d------\n", com->exit_stat);
-			if(com->exit_msg)
+			
+			// ft_putnbr_fd(com->infile, 2);
+			
+			// exit(com->infile);
+			if(com->ctr_c == 1)
 			{
+				stat = 0;
+			}
+			// printf("%d\n",com->ctr_c);
+			// fflush(stdout);
+			// exit(11);
+			// ft_putstr_fd(ft_itoa(com->ctr_c), 2);
+			// ft_putstr_fd(ft_itoa(), 2);
+			if(stat && com->exit_msg)
+			{
+				// printf("-%s-\n", com->exit_msg,2);
 				ft_putstr_fd(com->exit_msg, 2);
 			}
-			else if(!check_builtis(com, msh))
+			else if(stat && !check_builtis(com, msh))
 				child_forked(msh , k,  &pid[k]);
 			// printf("======%s=====\n", com->exit_msg);
+			// mehdi:
 			k++;
 		}
 	close_all_pipes(msh);
