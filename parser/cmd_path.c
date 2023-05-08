@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 20:39:36 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/04 17:07:12 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/08 18:36:39 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,6 @@ char	*ft_env(char **env)
 	char	*path;
 
 	i = 0;
-	path = ft_strdup("/usr/local/sbin:/usr/local/bin:/\
-	/usr/sbin:/usr/bin:/sbin:/bin");
 	while (env[i])
 	{
 		if (ft_strncmp("PATH=", env[i], 5) == 0)
@@ -64,10 +62,9 @@ char	*ft_env(char **env)
 		i++;
 	}
 	if (env[i])
-	{
-		free(path);
 		path = ft_strdup(env[i] + 5);
-	}
+	else
+		path = ft_strdup("");
 	return (path);
 }
 
@@ -119,7 +116,8 @@ char	*ft_cmd_path2(char *cmd, char *env[], int l, t_cmd *node)
 	{
 		if (!ft_strncmp(cmd, "\\", 2))
 			ft_cmd_not_found("", 127, node);
-		ft_cmd_not_found(cmd, 127, node);
+		else
+			ft_cmd_not_found(cmd, 127, node);
 	}
 	else
 		cmd_path = ft_strdup(paths[i]);
@@ -142,10 +140,7 @@ void	ft_permision(char *cmd, int exit_code, t_cmd *node)
 void	ft_cmd_not_found(char *cmd, int exit_code, t_cmd *node)
 {
 	node->exit_msg = ft_strjoin2(node->exit_msg, "minishell: ");
-	if (ft_strncmp("\\", cmd, 2) == 0)
-		node->exit_msg = ft_strjoin2(node->exit_msg, cmd);
-	else
-		node->exit_msg = ft_strjoin2(node->exit_msg, cmd);
+	node->exit_msg = ft_strjoin2(node->exit_msg, cmd);
 	node->exit_msg = ft_strjoin2(node->exit_msg, ": command not found\n");
 	node->exit_stat = exit_code;
 }

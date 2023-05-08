@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"get_next_line.h": "c",
+		"exec.h": "c",
+		"parse.h": "c"
+	}
+}

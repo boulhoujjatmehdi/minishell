@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:25:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/04 19:03:09 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/08 16:48:50 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,21 @@ int	get_env_var(char *s)
 	i = 1;
 	while (s[i])
 	{
-		if (!ft_isalnum(s[i]) && s[i] != '_')
+		if (is_not_arg(s[i]))
 			break ;
 		i++;
 	}
 	return (i);
 }
 
-void	quote_error(char start, char end)
+int	quote_error(char start, char end)
 {
 	if (start != end)
-		exit(1);
+	{
+		ft_putstr_fd("minishell: syntax error \n", 2);
+		return (1);
+	}
+	return (0);
 }
 
 
@@ -83,8 +87,9 @@ char	*my_strtok(char **ss)
 		{
 			i = skip_opt(s, s[i]) + 1;
 			new = ft_substr(s, 0, i);
-			quote_error(new [0], new[i - 1]);
 			*ss = s + i;
+			if (quote_error(new [0], new[i - 1]) == 1)
+				return (ft_strdup("SSYY"));
 			break;
 		}
 		//whne i have an ARG token
@@ -106,18 +111,29 @@ char	*my_strtok(char **ss)
 	return (new);
 }
 
-// int main (int ac, char **av)
-// {
-// 	char *new, *s;
-// 	int i = 0;
+char	*ft_joinchar(char *s, char c)
+{
+	size_t	size;
+	size_t	i;
+	size_t	j2;
+	char	*new;
 
-// 	s = strdup(av[1]);
-// 	new = my_strtok(&s);
-// 	while (new)
-// 	{
-// 		printf(":%s:\n", new);
-// 		new = my_strtok(&s);
-// 		// printf("\n----------:%s:\n", s);
-// 	}
-// 	return (0);
-// }
+	if (!s)
+		return (NULL);
+	size = ft_strlen2(s) + 1;
+	new = (char *)malloc((size + 1) * sizeof(char));
+	if (!s)
+		return (0);
+	i = 0;
+	j2 = 0;
+	while (s[i])
+	{
+		new[i] = s[i];
+		i++;
+	}
+	new[i] = c;
+	i++;
+	new[i] = '\0';
+	free(s);
+	return (new);
+}

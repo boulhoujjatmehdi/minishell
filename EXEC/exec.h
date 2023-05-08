@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 14:30:48 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/04 12:33:09 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/08 15:57:47 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,15 @@ int get_comm_lenght(t_cmd *comms);
 int get_nb_of_pipes(t_cmd *comms);
 t_cmd *get_right_comm(t_minishell *msh, int idx);
 void fill_env_list(t_list **lenv, char **env);
-char *get_path_line(t_list *lenv);
+// char *get_path_line(t_list *lenv);
+char *get_from_env(t_list *lenv, char *str, int n);
+
 //childs.c
 void child_forked(t_minishell *msh , int idx, int *pid);
 
+
+//builtins.c
+int check_builtis(t_cmd *cmd , t_minishell *msh);
+int ft_export(t_minishell msh , t_cmd *cmd);
+int ft_echo(t_cmd *cmd);
 #endif

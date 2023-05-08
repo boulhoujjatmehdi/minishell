@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/03 16:32:18 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/08 18:23:50 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,34 +65,57 @@ void	give_pos(t_tokens **list)
 	}
 }
 
-void	delete_node(t_tokens **head, int key)
-{
-    t_tokens *temp;
-    t_tokens *current  = *head;
+// void	delete_node(t_tokens **head, int key)
+// {
+//     t_tokens *temp;
+//     t_tokens *current  = *head;
 
-    if((*head)->pos == key)
-    {
-        temp = *head;    
-        *head = (*head)->next;
-		free(temp->token);
-        free(temp);
-	}
-    else
-    {
-        while(current->next)
-        {
-            if(current->next->pos == key)
-            {
-                temp = current->next;
-                current->next = current->next->next;
-				free(temp->token);
-                free(temp);
-                break;
-            }
-            else
-                current = current->next;
-        }
+//     if((*head)->pos == key)
+//     {
+//         temp = *head;    
+//         *head = (*head)->next;
+// 		free(temp->token);
+//         free(temp);
+// 	}
+//     else
+//     {
+//         while(current->next)
+//         {
+//             if(current->next->pos == key)
+//             {
+//                 temp = current->next;
+				
+//                 current->next = current->next->next;
+// 				free(temp->token);
+//                 free(temp);
+//                 break;
+//             }
+//             else
+//                 current = current->next;
+//         }
+//     }
+// }
+
+void delete_node(t_tokens** head, int key) {
+    t_tokens	*current;
+    // t_tokens	*temp;
+
+	current = *head;
+    while (current != NULL && current->pos != key) {
+        current = current->next;
     }
+    if (current == NULL)
+        return;
+    if (current->prev != NULL) {
+        current->prev->next = current->next;
+    } else {
+        *head = current->next;
+    }
+    if (current->next != NULL) {
+        current->next->prev = current->prev;
+    }
+	free(current->token);
+    free(current);
 }
 
 //this fucntion removes space tokens from the Llist
@@ -121,12 +144,12 @@ void	del_empty(t_tokens **list)
 	
 	head = *list;
 	give_pos(list);
-	while (head->next)
+	while (head)
 	{
 		if (!ft_strncmp(head->token, "", 1) && head->pos == 1)
-			head= head->next;
-		else if (head->token_type == 1 && !ft_strncmp(head->next->token, "", 1))
-			head= head->next;
+			head = head->next;
+		else if (!ft_strncmp(head->token, "", 1) && head->pos != 1 && head->prev->token_type == 1)
+			head = head->next;
 		else if (!ft_strncmp(head->token, "", 1))
 		{
 			delete_node(list, head->pos);
@@ -134,11 +157,6 @@ void	del_empty(t_tokens **list)
 		}
 		else 
 			head = head->next;
-	}
-	if (!ft_strncmp(head->token, "", 1) && head->pos != 1 && head->prev->token_type != 1)
-	{
-		delete_node(list, head->pos);
-		head = head->next;
 	}
 }
 
@@ -182,7 +200,7 @@ void	adjest(t_tokens **list)
 	}
 }
 
-void	syntax_error(t_tokens **list)
+int	syntax_error(t_tokens **list)
 {
 	t_tokens *head;
 	
@@ -190,50 +208,50 @@ void	syntax_error(t_tokens **list)
 	give_pos(list);
 	if ((head->token_type == 3 || head->token_type == 1) && !head->next)
 	{
-		perror("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
-		exit(258);
+		ft_putstr_fd("minishell: syntax error\n", 2);
+		return (1);
 	}
-	while (head->next)
+	while (head)
 	{
-		if (head->next->token_type == 1 && !head->next->next)
+		if (head->token_type == 3 && head->next)
 		{
-			perror("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
-			exit(258);
+			ft_putstr_fd("minishell: syntax error\n", 2);
+			return (1);
+		}
+		if (head->token_type == 1 && !head->next)
+		{
+			ft_putstr_fd("minishell: syntax error\n", 2);
+			return (1);
 		}
 		if (head->token_type == 3 && head->next->token_type == 3)
 		{
-			perror("minishell: syntax error near unexpected token `"); // to be changed to stderr
-			ft_putstr_fd(head->next->token, 2); // to be changed to stderr
-			ft_putstr_fd("'\n", 2); // to be changed to stderr
-			exit(258);			
+			ft_putstr_fd("minishell: syntax error\n", 2);
+			return (1);			
 		}
 		if (head->token_type == 3 && head->next->token_type == 1)
 		{
-			perror("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
-			exit(258);
+			ft_putstr_fd("minishell: syntax error\n", 2);
+			return (1);
 		}
-		if (head->token_type == 1 && head->pos == 1)
+		if (head->token_type == 1 && (head->pos == 1 || !head->next))
 		{
-			perror("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
-			exit(258);
+			ft_putstr_fd("minishell: syntax error\n", 2);
+			return (1);
 		}
 		if (head->token_type == 1 && head->next->token_type == 1)
 		{
-			perror("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
-			exit(258);
+			ft_putstr_fd("minishell: syntax error\n", 2);
+			return (1);
 		}
-		if (head->token_type == 1 && head->next->token_type == 3)
-		{
-			perror("minishell: syntax error near unexpected token `|'\n"); // to be changed to stderr
-			exit(258);
-		}
-		if (head->token_type == 3 && !head->next)
-		{
-			perror("minishell: syntax error near unexpected token `newline'\n"); // to be changed to stderr
-			exit(258);
-		}
+		// if (head->token_type == 1 && head->next->token_type == 3)
+		// {
+		// 	ft_putstr_fd("minishell: syntax error\n", 2);
+		// 	return (1);
+		// }
+		// if (head->token_type == 3 && !head->next)
 		head = head->next;
 	}
+	return (0);
 }
 
 //this function checks my token Llist for the single and double redirections
@@ -278,29 +296,3 @@ void	free_token(t_tokens **list)
 	// *list = NULL;
 }
 
-char	*ft_joinchar(char *s, char c)
-{
-	size_t	size;
-	size_t	i;
-	size_t	j2;
-	char	*new;
-
-	if (!s)
-		return (NULL);
-	size = ft_strlen2(s) + 1;
-	new = (char *)malloc((size + 1) * sizeof(char));
-	if (!s)
-		return (0);
-	i = 0;
-	j2 = 0;
-	while (s[i])
-	{
-		new[i] = s[i];
-		i++;
-	}
-	new[i] = c;
-	i++;
-	new[i] = '\0';
-	free(s);
-	return (new);
-}

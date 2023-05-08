@@ -6,12 +6,13 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/04 19:26:31 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/08 17:38:16 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
+extern int g_exit;
 void wait_for_all(int *pids , int nb)
 {
 	int i;
@@ -33,11 +34,10 @@ void close_all_pipes(t_minishell *msh)
 		{
 			close(msh->pipe[ii]);
 			close(msh->pipe[ii + 1]);
+			// exit(55);
 			ii += 2;
 		}
 }
-
-
 
 void fork_it_for_me(t_minishell *msh)
 {
@@ -49,10 +49,36 @@ void fork_it_for_me(t_minishell *msh)
 	i = 0;
 	j = 2;
 	k = 0;
+	int stat = 1;
 	pid = ft_calloc(sizeof(int) , msh->pipe_nb);
 		while(k < msh->child_nb)
 		{
-			child_forked(msh , k,  &pid[k]);
+			t_cmd *com = get_right_comm(msh , k);
+			proccesing_cmd(com, msh->env);
+			// exit(22);
+			// printf("------%d------\n", com->exit_stat);
+			
+			// ft_putnbr_fd(com->infile, 2);
+			
+			// exit(com->infile);
+			if(com->ctr_c == 1)
+			{
+				stat = 0;
+			}
+			// printf("%d\n",com->ctr_c);
+			// fflush(stdout);
+			// exit(11);
+			// ft_putstr_fd(ft_itoa(com->ctr_c), 2);
+			// ft_putstr_fd(ft_itoa(), 2);
+			if(stat && com->exit_msg)
+			{
+				// printf("-%s-\n", com->exit_msg,2);
+				ft_putstr_fd(com->exit_msg, 2);
+			}
+			else if(stat && !check_builtis(com, msh))
+				child_forked(msh , k,  &pid[k]);
+			// printf("======%s=====\n", com->exit_msg);
+			// mehdi:
 			k++;
 		}
 	close_all_pipes(msh);
@@ -96,8 +122,20 @@ int main_function_exec(t_cmd *comms , t_list **lenv)
     t_minishell *msh;
     msh = ft_calloc(sizeof(t_minishell), 1);
 	msh->lenv = lenv;
-	msh->env=ft_calloc(sizeof(char*), 1);
+	// msh->env=ft_calloc(sizeof(char*), 1);
     msh->comms = comms;
+
+
+	msh->env = ft_calloc(sizeof(char*), ft_lstsize(*msh->lenv));
+	t_list *tmp = *msh->lenv;
+	int i =0;
+	while(tmp)
+	{
+		if(tmp->content)
+			msh->env[i] = tmp->content;
+		tmp = tmp->next;
+		i++;
+	}
 
     initialize_data(msh);
     open_pipes(msh);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gets.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 18:35:07 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/04 16:40:55 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/08 15:57:35 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,16 @@ void fill_env_list(t_list **lenv, char **env)
 	ft_lstadd_back(lenv, ft_lstnew(NULL));
 }
 
-char *get_path_line(t_list *lenv)
+
+char *get_from_env(t_list *lenv, char *str, int n)
 {
     while(lenv)
     {
-        if(ft_strncmp(lenv->content, "PATH=", 5))
+        if(!ft_strncmp(lenv->content, "HOME=", n))
         {
             return(lenv->content);
         }
+		lenv = lenv->next;
     }
     return "";
 }

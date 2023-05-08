@@ -20,7 +20,7 @@ void	delete_node(t_tokens **head, int key);
 void	del_space(t_tokens **list);
 void	del_empty(t_tokens **list);
 void	adjest(t_tokens **list);
-void	syntax_error(t_tokens **list);
+int		syntax_error(t_tokens **list);
 void	check_double_red(t_tokens **list);
 void	free_token(t_tokens **list);
 char	*ft_joinchar(char *s, char c);
@@ -46,7 +46,7 @@ int			token_type(char *s);
 
 t_cmd *main_function(int ac, char *av, t_list **env);
 void	proccesing_cmd(t_cmd *node, char **env);
-
+void print(t_tokens **list);
 // void	join_nodes(t_tokens **list, t_tokens *node1, t_tokens *node2)
 // {
 // 	char	*tmp;

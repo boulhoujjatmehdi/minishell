@@ -6,11 +6,12 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/04 19:24:40 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/08 18:24:20 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"parse.h"
+
 
 int	token_type(char *s)
 {
@@ -141,26 +142,38 @@ int	get_here_doc(char *name)
 	int fd, len;
 	char *str;
 
-	len = ft_strlen(name);
-	fd = open(".tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777);
-	str = readline(">");
-	while(ft_strncmp(name, str, len))
+	int pid = fork();
+	if(pid == 0)
 	{
-		ft_putstr_fd(str,fd );
-		ft_putstr_fd("\n" , fd);
-		str =readline(">");
+		signal(SIGINT, SIG_DFL);
+		len = ft_strlen(name);
+		fd = open(".tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777);
+		str = readline(">");
+			while(ft_strncmp(name, str, len+1))
+			{
+				ft_putstr_fd(str,fd);
+				ft_putstr_fd("\n", fd);
+				str =readline(">");
+			}
+		close(fd);
+		exit(0);
 	}
-	close(fd);
+	int status;
+	waitpid(pid, &status, 0);
+	if(status)
+		return(-2);
+
 	return (fd);
 }
 void	file_errors(char *name, int key, t_cmd *node)
 {
 	if (access(name, F_OK) == -1)
 		ft_no_file_diractory(name, 1, node);
-	if (access(name, R_OK) == -1 && key == 0)
+	else if (access(name, R_OK) == -1 && key == 0)
 		ft_permision(name, 1, node);
-	if (access(name, W_OK) == -1 && key == 1)
+	else if (access(name, W_OK) == -1 && key == 1)
 		ft_permision(name, 1, node);
+
 }
 
 int	input_file(t_cmd *node)
@@ -190,6 +203,8 @@ int	input_file(t_cmd *node)
 		name++;
 		name = get_filename(name , 1, 1);
 		fd2 = get_here_doc(name);
+		if(fd2 == -2)
+			node->ctr_c = 1;
 		free (name);
 		fd2 = open(".tmp", O_RDONLY);
 		name = ft_strchr2(s, '<', 1);
@@ -287,7 +302,7 @@ void print(t_tokens **list)
 	head = *list;
 	while (head)
 	{
-		printf("token     =     -%s-,              token_type %d\n", head->token, head->token_type);
+		printf("token     =     -%s-,  token_type %d,    position %d\n", head->token, head->token_type, head->pos);
 		head = head->next;
 	}
 }
@@ -421,11 +436,7 @@ void	check_env(t_tokens **list, t_list **env)
 			swap_env(head, env);
 		}
 		else if (head->token_type == 5)
-		{
-			tmp = head->token;
-			head->token = ft_replace(tmp, &l, env);
-			free(tmp);
-		}
+			swap_env(head, env);
 		else if (head->token_type == 7)
 		{
 			tmp = head->token;
@@ -440,14 +451,19 @@ t_cmd *main_function(int ac, char *str, t_list **env)
 {
 	t_tokens	*info;
 	t_cmd		*head;
-	t_cmd *tmp;
 	char *s;
+
 	info = NULL;
 	head = NULL;
 	head = (t_cmd *)calloc(sizeof(t_cmd), 1);
 	s = my_strtok(&str);
 	while (s)
 	{
+		if (!ft_strncmp(s, "SSYY", ft_strlen(s) + 1))
+		{
+			free_token(&info);
+			return (NULL);
+		}
 		addback(&info, lstnew(s));
 		s = my_strtok(&str);
 	}
@@ -455,11 +471,13 @@ t_cmd *main_function(int ac, char *str, t_list **env)
 	check_env(&info, env);
 	adjest(&info);
 	del_space(&info);
-	syntax_error(&info);
-	// exit(100);
+	if (syntax_error(&info) == 1)
+	{
+		free_token(&info);
+		return (NULL);
+	}
 	del_empty(&info);
 	listing_cmd(&info, &head); 
-	// print2(&head);
 	free_token(&info);
 	return (head);
 }
