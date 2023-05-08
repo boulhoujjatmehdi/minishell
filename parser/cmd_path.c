@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 20:39:36 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/05 17:00:36 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/08 18:36:32 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,7 @@ char	*ft_env(char **env)
 	char	*path;
 
 	i = 0;
-	path = ft_strdup("/usr/local/sbin:/usr/local/bin:/\
-	/usr/sbin:/usr/bin:/sbin:/bin");
+	path = ft_strdup("");
 	while (env[i])
 	{
 		if (ft_strncmp("PATH=", env[i], 5) == 0)
@@ -146,7 +145,7 @@ void	ft_cmd_not_found(char *cmd, int exit_code, t_cmd *node)
 {
 	node->exit_msg = ft_strjoin2(node->exit_msg, "minishell: ");
 	if (ft_strncmp("\\", cmd, 2) == 0)
-		node->exit_msg = ft_strjoin2(node->exit_msg, cmd);
+		node->exit_msg = ft_strjoin2(node->exit_msg, "");
 	else
 		node->exit_msg = ft_strjoin2(node->exit_msg, cmd);
 	node->exit_msg = ft_strjoin2(node->exit_msg, ": command not found\n");
