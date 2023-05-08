@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/08 16:04:07 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/08 16:07:43 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -436,11 +436,7 @@ void	check_env(t_tokens **list, t_list **env)
 			swap_env(head, env);
 		}
 		else if (head->token_type == 5)
-		{
-			tmp = head->token;
-			head->token = ft_replace(tmp, &l, env);
-			free(tmp);
-		}
+			swap_env(head, env);
 		else if (head->token_type == 7)
 		{
 			tmp = head->token;

@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:25:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/05 16:04:27 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/08 16:12:08 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,21 @@ int	get_env_var(char *s)
 	i = 1;
 	while (s[i])
 	{
-		if (!ft_isalnum(s[i]) && s[i] != '_')
+		if (is_not_arg(s[i]))
 			break ;
 		i++;
 	}
 	return (i);
 }
 
-void	quote_error(char start, char end)
+int	quote_error(char start, char end)
 {
 	if (start != end)
-		exit(1);
+	{
+		ft_putstr_fd("minishell: syntax error \n", 2);
+		return (1);
+	}
+	return (0);
 }
 
 
@@ -105,22 +109,6 @@ char	*my_strtok(char **ss)
 	}
 	return (new);
 }
-
-// int main (int ac, char **av)
-// {
-// 	char *new, *s;
-// 	int i = 0;
-
-// 	s = strdup(av[1]);
-// 	new = my_strtok(&s);
-// 	while (new)
-// 	{
-// 		printf(":%s:\n", new);
-// 		new = my_strtok(&s);
-// 		// printf("\n----------:%s:\n", s);
-// 	}
-// 	return (0);
-// }
 
 char	*ft_joinchar(char *s, char c)
 {
