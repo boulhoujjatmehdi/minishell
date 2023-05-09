@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/08 18:24:20 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/09 16:20:06 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"parse.h"
 
+extern int g_exit;
 
 int	token_type(char *s)
 {
@@ -204,7 +205,9 @@ int	input_file(t_cmd *node)
 		name = get_filename(name , 1, 1);
 		fd2 = get_here_doc(name);
 		if(fd2 == -2)
+		{
 			node->ctr_c = 1;
+		}
 		free (name);
 		fd2 = open(".tmp", O_RDONLY);
 		name = ft_strchr2(s, '<', 1);

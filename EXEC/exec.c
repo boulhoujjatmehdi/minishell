@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/08 17:40:49 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/09 16:19:44 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ void wait_for_all(int *pids , int nb)
 	{
 		int status= 0;
 		waitpid(pids[i], &status, 0);
-		// printf("exit %d\n", status>>8);
+		// if()
+		g_exit = status>>8;
+		// g_exit = status>>8;
+		
 		i++;
 	}
 }
@@ -34,7 +37,6 @@ void close_all_pipes(t_minishell *msh)
 		{
 			close(msh->pipe[ii]);
 			close(msh->pipe[ii + 1]);
-			exit(55);
 			ii += 2;
 		}
 }
@@ -51,16 +53,16 @@ void fork_it_for_me(t_minishell *msh)
 	k = 0;
 	int stat = 1;
 	pid = ft_calloc(sizeof(int) , msh->pipe_nb);
-		while(k < msh->child_nb)
+		while(stat && k < msh->child_nb)
 		{
 			t_cmd *com = get_right_comm(msh , k);
 			proccesing_cmd(com, msh->env);
-
 			if(com->ctr_c == 1)
 			{
 				stat = 0;
+				exit(44);
+				g_exit = 130;
 			}
-
 			if(stat && com->exit_msg)
 			{
 				printf("-%s-\n", com->exit_msg);
@@ -71,6 +73,10 @@ void fork_it_for_me(t_minishell *msh)
 		}
 	close_all_pipes(msh);
 	wait_for_all(pid, msh->pipe_nb);
+	// if(!stat)
+	// 	g_exit = 130;
+	// else
+	// 	g_exit = 122;
 	free(pid);
 }
 
