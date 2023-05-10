@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LList1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/08 18:23:50 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/10 13:34:34 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,7 @@ int	syntax_error(t_tokens **list)
 	}
 	while (head)
 	{
-		if (head->token_type == 3 && head->next)
+		if (head->token_type == 3 && !head->next)
 		{
 			ft_putstr_fd("minishell: syntax error\n", 2);
 			return (1);

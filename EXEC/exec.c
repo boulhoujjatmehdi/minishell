@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/09 16:19:44 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/10 14:23:46 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,9 @@ void close_all_pipes(t_minishell *msh)
 
 void fork_it_for_me(t_minishell *msh)
 {
-	int i;
-	int j;
 	int k;
 	int *pid;
-	
-	i = 0;
-	j = 2;
+
 	k = 0;
 	int stat = 1;
 	pid = ft_calloc(sizeof(int) , msh->pipe_nb);
@@ -60,12 +56,13 @@ void fork_it_for_me(t_minishell *msh)
 			if(com->ctr_c == 1)
 			{
 				stat = 0;
-				exit(44);
 				g_exit = 130;
+				// exit(44);
 			}
-			if(stat && com->exit_msg)
+			else if(stat && com->exit_msg)
 			{
-				printf("-%s-\n", com->exit_msg);
+				printf("%s", com->exit_msg);
+				g_exit = com->exit_stat;
 			}
 			else if(stat && !check_builtis(com, msh))
 				child_forked(msh , k,  &pid[k]);
@@ -73,10 +70,6 @@ void fork_it_for_me(t_minishell *msh)
 		}
 	close_all_pipes(msh);
 	wait_for_all(pid, msh->pipe_nb);
-	// if(!stat)
-	// 	g_exit = 130;
-	// else
-	// 	g_exit = 122;
 	free(pid);
 }
 

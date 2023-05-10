@@ -6,14 +6,14 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/09 16:23:32 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/10 14:46:00 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minishell.h"
 
 int g_exit = -1;
-int stat ;
+int stat;
 
 void signal_handler(int sig)
 {
@@ -21,12 +21,11 @@ void signal_handler(int sig)
 	{
         waitpid(-1, NULL, 0);
 		rl_redisplay();
-		ft_putstr_fd("  \n",1);
+		ft_putstr_fd("\n",1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
         stat =1;
-        g_exit = 130;
 	}
 }
 
@@ -43,22 +42,27 @@ int main(int ac, char **av, char **env)
     while(1)
     {
         signal(SIGINT, *signal_handler);
-        ft_putnbr_fd(g_exit, 1);
-        ft_putstr_fd("\n", 1);
+        // ft_putnbr_fd(g_exit, 1);
+        // ft_putstr_fd("\n", 1);
         g_exit = -1;
         str = readline("minishell->");
         if(str== NULL)
 			exit(0);
         if(*str)
-        {   
-            
+        {
             add_history(str);
             head = main_function(ac, str, &lenv);
-            main_function_exec(head , &lenv);
+            if(head)
+                main_function_exec(head , &lenv);
         }
         if(stat)
-            g_exit = 130;
-
+        {
+            if(g_exit != -1)
+                g_exit = 130;
+            else 
+                g_exit = stat;
+        }
+        stat = 0;
         // mainfunctiongoto:
         // t_list *tmp = lenv;
         // while(tmp)
