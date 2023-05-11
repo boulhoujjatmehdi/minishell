@@ -6,31 +6,55 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/09 16:34:17 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/11 17:25:32 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-
+extern int g_exit;
+int	export_error(char *s)
+{
+	if (ft_isdigit(s[0]))
+	{
+		ft_putstr_fd("minishell: export: `", 2);
+		ft_putstr_fd(s, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+		return (1);
+	}
+	return (0);
+}
 int ft_export(t_minishell msh , t_cmd *cmd)
 {
     t_list *tmp;
+	int i;
 
-    tmp = *msh.lenv;
-    while(tmp && tmp->content)
-    {
-       if(!ft_strncmp(cmd->cmd_args[1], tmp->content, ft_strnstr_mod(tmp->content, "=")))
-       {    
-            tmp->content = cmd->cmd_args[1];
-            return 1;
-       }
-       tmp = tmp->next;
-    }
+	i = 1;
+	while (cmd->cmd_args[i])
+	{
+    	tmp = *msh.lenv;
+
+		if (!export_error(cmd->cmd_args[i]))
+		{		
+    		while(tmp && tmp->content)
+    		{
+    		   	if(!ft_strncmp(cmd->cmd_args[i], tmp->content, ft_strnstr_mod(tmp->content, "=")))
+    		   	{    
+    		   	     tmp->content = cmd->cmd_args[i];
+					 break ;
+    		   	}
+    		   	tmp = tmp->next;
+    		}
+			if(!tmp || !tmp->content)
+			{
+				ft_lstlast(*msh.lenv)->content = cmd->cmd_args[i];
+				ft_lstadd_back(msh.lenv, ft_lstnew(NULL));
+			}
+		}
+		i++;
+	}
 
     
-    ft_lstlast(*msh.lenv)->content = cmd->cmd_args[1];
-    ft_lstadd_back(msh.lenv, ft_lstnew(NULL));
     return 1;
 
 	return 0;
@@ -107,6 +131,8 @@ int  check_builtis(t_cmd *cmd , t_minishell *msh)
 {
     // puts(cmd->cmd_path);
     // puts("test");
+	if(!cmd->cmd_path)
+		return (0);
 	if(!ft_strncmp(cmd->cmd_path, "export", 7))
 	{
 		ft_export(*msh, cmd);

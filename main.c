@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/10 14:46:00 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/10 15:46:13 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void signal_handler(int sig)
 		rl_redisplay();
 		ft_putstr_fd("\n",1);
 		rl_on_new_line();
-		rl_replace_line("", 0);
+		// rl_replace_line("", 0);
 		rl_redisplay();
         stat =1;
 	}
@@ -44,7 +44,7 @@ int main(int ac, char **av, char **env)
         signal(SIGINT, *signal_handler);
         // ft_putnbr_fd(g_exit, 1);
         // ft_putstr_fd("\n", 1);
-        g_exit = -1;
+        // g_exit = -1;
         str = readline("minishell->");
         if(str== NULL)
 			exit(0);
@@ -53,7 +53,10 @@ int main(int ac, char **av, char **env)
             add_history(str);
             head = main_function(ac, str, &lenv);
             if(head)
+			{
+				g_exit = -1;
                 main_function_exec(head , &lenv);
+			}
         }
         if(stat)
         {

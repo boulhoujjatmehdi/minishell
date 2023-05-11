@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 20:39:36 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/08 18:36:39 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/10 20:23:10 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,35 +68,56 @@ char	*ft_env(char **env)
 	return (path);
 }
 
+int	check_diractory(char *cmd, t_cmd *node)
+{
+	if (cmd[ft_strlen(cmd) - 1] == '/')
+	{
+		if (access(cmd, F_OK) == 0)
+			ft_is_a_diractory(cmd, 126, node);
+		else
+			ft_is_not_diractory(cmd, 126, node);
+		return (1);
+	}
+	return (0);
+}
+
 char	*ft_cmd_path(char *cmd, char *env[], t_cmd *node)
 {
 	char	*cmd_path;
 	int		l;
 
 	l = 0;
-	if(check_builtins(cmd))
-		return (cmd);
 	if (!cmd)
 		return NULL;
+	if(check_builtins(cmd))
+		return (cmd);
 	cmd_path = NULL;
 	if (ft_strchr(cmd, '/') || cmd[0] == '.')
 	{
 		l = 1;
+		if (check_diractory(cmd, node))
+			return (NULL);
 		if (access(cmd, F_OK) == 0)
 		{
 			if (access(cmd, X_OK) == 0)
 				return(cmd);
 			else
+			{
 				ft_permision(cmd, 126, node);
+				return (NULL);
+			}
 		}
 	}
 	if (l == 1)
+	{
 		ft_no_file_diractory(cmd, 127, node);
-	cmd_path = ft_cmd_path2(cmd, env, l, node);
+		return (NULL);
+	}
+	cmd_path = ft_cmd_path2(cmd, env, node);
 	return (cmd_path);
 }
 
-char	*ft_cmd_path2(char *cmd, char *env[], int l, t_cmd *node)
+char	*ft_cmd_path2(char *cmd, char *env[], t_cmd *node)
 {
 	char	**paths;
 	char	*cmd_path;
@@ -113,12 +134,7 @@ char	*ft_cmd_path2(char *cmd, char *env[], int l, t_cmd *node)
 	while (paths[i] && (access(paths[i], F_OK) == -1))
 		i++;
 	if (!paths[i])
-	{
-		if (!ft_strncmp(cmd, "\\", 2))
-			ft_cmd_not_found("", 127, node);
-		else
 			ft_cmd_not_found(cmd, 127, node);
-	}
 	else
 		cmd_path = ft_strdup(paths[i]);
 	free(cmd);
@@ -127,6 +143,22 @@ char	*ft_cmd_path2(char *cmd, char *env[], int l, t_cmd *node)
 		free(paths[i++]);
 	free(paths);
 	return (cmd_path);
+}
+
+void	ft_is_a_diractory(char *cmd, int exit_code, t_cmd *node)
+{
+	node->exit_msg = ft_strjoin2(node->exit_msg, "minishell: ");
+	node->exit_msg = ft_strjoin2(node->exit_msg, cmd);
+	node->exit_msg = ft_strjoin2(node->exit_msg, ": is a directory\n");
+	node->exit_stat = exit_code;
+}
+
+void	ft_is_not_diractory(char *cmd, int exit_code, t_cmd *node)
+{
+	node->exit_msg = ft_strjoin2(node->exit_msg, "minishell: ");
+	node->exit_msg = ft_strjoin2(node->exit_msg, cmd);
+	node->exit_msg = ft_strjoin2(node->exit_msg, ": Not a directory\n");
+	node->exit_stat = exit_code;
 }
 
 void	ft_permision(char *cmd, int exit_code, t_cmd *node)
@@ -140,7 +172,10 @@ void	ft_permision(char *cmd, int exit_code, t_cmd *node)
 void	ft_cmd_not_found(char *cmd, int exit_code, t_cmd *node)
 {
 	node->exit_msg = ft_strjoin2(node->exit_msg, "minishell: ");
-	node->exit_msg = ft_strjoin2(node->exit_msg, cmd);
+	if (!ft_strncmp(cmd, "\\", 2))
+		node->exit_msg = ft_strjoin2(node->exit_msg, "");
+	else 
+		node->exit_msg = ft_strjoin2(node->exit_msg, cmd);
 	node->exit_msg = ft_strjoin2(node->exit_msg, ": command not found\n");
 	node->exit_stat = exit_code;
 }
@@ -150,5 +185,12 @@ void	ft_no_file_diractory(char *file_name, int exit_code, t_cmd *node)
 	node->exit_msg = ft_strjoin2(node->exit_msg, "minishell: ");
 	node->exit_msg = ft_strjoin2(node->exit_msg, file_name);
 	node->exit_msg = ft_strjoin2(node->exit_msg, ": No such file or directory\n");
+	node->exit_stat = exit_code;
+}
+
+void	ft_ambiguous(char *name, int exit_code, t_cmd *node)
+{
+	node->exit_msg = ft_strjoin2(node->exit_msg, "minishell: ");
+	node->exit_msg = ft_strjoin2(node->exit_msg, "ambiguous redirect\n");
 	node->exit_stat = exit_code;
 }

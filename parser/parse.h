@@ -36,10 +36,14 @@ void	free_cmd(t_cmd **list);
 char	**ft_get_paths(char *env[]);
 char	*ft_env(char **env);
 char	*ft_cmd_path(char *cmd, char *env[], t_cmd *node);
-char	*ft_cmd_path2(char *cmd, char *env[], int l, t_cmd *node);
+char	*ft_cmd_path2(char *cmd, char *env[], t_cmd *node);
+int		check_diractory(char *cmd, t_cmd *node);
+void	ft_is_a_diractory(char *cmd, int exit_code, t_cmd *node);
+void	ft_is_not_diractory(char *cmd, int exit_code, t_cmd *node);
 void	ft_no_file_diractory(char *file_name, int exit_code, t_cmd *node);
 void	ft_permision(char *cmd, int exit_code, t_cmd *node);
 void	ft_cmd_not_found(char *cmd, int exit_code, t_cmd *node);
+void	ft_ambiguous(char *name, int exit_code, t_cmd *node);
 
 char		*my_strtok(char **ss);
 int			token_type(char *s);
@@ -47,18 +51,5 @@ int			token_type(char *s);
 t_cmd *main_function(int ac, char *av, t_list **env);
 void	proccesing_cmd(t_cmd *node, char **env);
 void print(t_tokens **list);
-// void	join_nodes(t_tokens **list, t_tokens *node1, t_tokens *node2)
-// {
-// 	char	*tmp;
-// 	int		tmp1;
-	
-// 	tmp = ft_strdup(node1->token);
-// 	node2->token = ft_strjoin2(tmp, node2->token);
-// 	tmp1 = node1->pos;
-// 	node1 = node1->next;
-// 	delete_node(list, tmp1);
-// }
-
-
 
 #endif
