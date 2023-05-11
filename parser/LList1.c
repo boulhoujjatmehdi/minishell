@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/08 18:23:50 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/11 15:28:16 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ void	del_space(t_tokens **list)
 void	del_empty(t_tokens **list)
 {
 	t_tokens *head;
-	
+
 	head = *list;
 	give_pos(list);
 	while (head)
@@ -152,7 +152,7 @@ void	del_empty(t_tokens **list)
 			head = head->next;
 		else if (!ft_strncmp(head->token, "", 1))
 		{
-			delete_node(list, head->pos);
+			head->token = ft_joinchar(head->token, 2);
 			head = head->next;
 		}
 		else 
@@ -195,6 +195,24 @@ void	adjest(t_tokens **list)
 			head = head->next;
 			delete_node(list, tmp1);
 		}
+		else if ((head->token_type == 5 && head->next->token_type == 6) || \
+(head->token_type == 6 && head->next->token_type == 5))
+		{
+			tmp = ft_strdup(head->token);
+			head->next->token = ft_strjoin2(tmp, head->next->token);
+			tmp1 = head->pos;
+			head = head->next;
+			delete_node(list, tmp1);
+		}
+		else if ((head->token_type == 5 && head->next->token_type == 7) || \
+(head->token_type == 7 && head->next->token_type == 5))
+		{
+			tmp = ft_strdup(head->token);
+			head->next->token = ft_strjoin2(tmp, head->next->token);
+			tmp1 = head->pos;
+			head = head->next;
+			delete_node(list, tmp1);
+		}
 		else
 			head = head->next;
 	}
@@ -213,7 +231,7 @@ int	syntax_error(t_tokens **list)
 	}
 	while (head)
 	{
-		if (head->token_type == 3 && head->next)
+		if (head->token_type == 3 && !head->next)
 		{
 			ft_putstr_fd("minishell: syntax error\n", 2);
 			return (1);

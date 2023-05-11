@@ -6,26 +6,26 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/08 17:13:33 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/10 15:46:13 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minishell.h"
 
-int g_exit = 0;
-int g_fork = 0;
+int g_exit = -1;
+int stat;
 
 void signal_handler(int sig)
 {
 	if(sig == SIGINT)
 	{
         waitpid(-1, NULL, 0);
-        g_fork = 1;
 		rl_redisplay();
-		ft_putstr_fd("  \n",1);
+		ft_putstr_fd("\n",1);
 		rl_on_new_line();
 		// rl_replace_line("", 0);
 		rl_redisplay();
+        stat =1;
 	}
 }
 
@@ -41,16 +41,31 @@ int main(int ac, char **av, char **env)
     add_history("cat -e <<eof");
     while(1)
     {
-
-        
         signal(SIGINT, *signal_handler);
+        // ft_putnbr_fd(g_exit, 1);
+        // ft_putstr_fd("\n", 1);
+        // g_exit = -1;
         str = readline("minishell->");
         if(str== NULL)
 			exit(0);
-        add_history(str);
-        head = main_function(ac, str, &lenv);
-		if (head != NULL)
-        	main_function_exec(head , &lenv);
+        if(*str)
+        {
+            add_history(str);
+            head = main_function(ac, str, &lenv);
+            if(head)
+			{
+				g_exit = -1;
+                main_function_exec(head , &lenv);
+			}
+        }
+        if(stat)
+        {
+            if(g_exit != -1)
+                g_exit = 130;
+            else 
+                g_exit = stat;
+        }
+        stat = 0;
         // mainfunctiongoto:
         // t_list *tmp = lenv;
         // while(tmp)
@@ -71,3 +86,33 @@ int main(int ac, char **av, char **env)
         // }
     }
 }
+
+
+
+
+// fd[1]   * file.txt
+// 1       * stdout
+
+// dup2(fd[1], 1);
+
+// 1       * file.txt
+
+// 1
+// -------------------
+// fd0             fd
+// -------------------
+
+
+
+
+
+// fd[0]   * file.txt
+// 0       * stdin
+
+
+// dup2(fd[0], 0);
+
+// 0       * file.txt
+
+
+// ft_putstr_fd("mehdi", 1);
