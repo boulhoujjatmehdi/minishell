@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 13:26:41 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/02/21 14:59:51 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/11 17:42:42 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 //modified ft_strnstr to return the first occurence of a char of needle
+//else return -3 if no character apeared in haystack.
 int		ft_strnstr_mod(const char *haystack, const char *needle);
 
 #endif

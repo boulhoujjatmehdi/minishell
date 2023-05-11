@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/11 17:25:32 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/11 21:57:28 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 extern int g_exit;
 int	export_error(char *s)
 {
-	if (ft_isdigit(s[0]))
+	int i;
+
+	i = 0;
+
+	if (!ft_isalpha(s[0]) && s[0] != '_' ) // check for @ in the first section abc@def=foooo
 	{
 		ft_putstr_fd("minishell: export: `", 2);
 		ft_putstr_fd(s, 2);
@@ -24,12 +28,18 @@ int	export_error(char *s)
 	}
 	return (0);
 }
+
 int ft_export(t_minishell msh , t_cmd *cmd)
 {
     t_list *tmp;
 	int i;
 
 	i = 1;
+	if(!cmd->cmd_args[1])
+	{
+		ft_env_cmd(&msh, 1);
+		return 0;
+	}
 	while (cmd->cmd_args[i])
 	{
     	tmp = *msh.lenv;
@@ -40,8 +50,8 @@ int ft_export(t_minishell msh , t_cmd *cmd)
     		{
     		   	if(!ft_strncmp(cmd->cmd_args[i], tmp->content, ft_strnstr_mod(tmp->content, "=")))
     		   	{    
-    		   	     tmp->content = cmd->cmd_args[i];
-					 break ;
+    		   	    tmp->content = cmd->cmd_args[i];
+					break ;
     		   	}
     		   	tmp = tmp->next;
     		}
@@ -53,10 +63,6 @@ int ft_export(t_minishell msh , t_cmd *cmd)
 		}
 		i++;
 	}
-
-    
-    return 1;
-
 	return 0;
 }
 int ft_cd(t_cmd *cmd, t_minishell *msh)
@@ -88,14 +94,19 @@ int ft_pwd()
     printf("%s\n", getcwd(NULL, 0));
     return 0;
 }
-void ft_env_cmd(t_minishell *msh)
+void ft_env_cmd(t_minishell *msh, int vars_type)
 {
     t_list *tmp;
     
     tmp = *msh->lenv;
     while(tmp && tmp->content)
     {
-        printf("%s\n", tmp->content);
+		if(ft_strnstr_mod(tmp->content, "=") >= 0)
+        	printf("%s\n", tmp->content);
+		else if(vars_type)
+			printf("%s\n", tmp->content);
+		
+		
         tmp = tmp->next;
     }
 }
@@ -104,22 +115,35 @@ void ft_unset(t_minishell *msh, t_cmd *cmd)
 {
     t_list *tmp;
     t_list *prv;
-    
-    prv = NULL;
-    tmp = *msh->lenv;
     char *arg;
+	char *str;
+    
+    tmp = *msh->lenv;
+	prv = NULL;
     if(cmd->cmd_args[1])
     {
         arg = cmd->cmd_args[1];
         while(tmp && tmp->content)
         {
-            int i = 1;
-            if(!ft_strncmp(tmp->content, arg, ft_strlen(arg)-1))
+            if(!ft_strncmp(tmp->content, arg, ft_strlen(arg)))
             {
-                prv->next = tmp->next;
-                free(tmp->content);
-                free(tmp);
-                break;
+				str = (char *)tmp->content;
+				if(str[ft_strlen(arg)] == 0 || str[ft_strlen(arg)] == '=')
+				{
+					if(prv)
+					{
+						prv->next = tmp->next;
+						free(tmp->content);
+						free(tmp);
+					}
+					else
+					{
+						*msh->lenv = tmp->next;
+						free(tmp->content);
+						free(tmp);
+					}
+					break;
+				}
             }
             prv = tmp;
             tmp = tmp->next;
@@ -160,7 +184,7 @@ int  check_builtis(t_cmd *cmd , t_minishell *msh)
 	}
 	if(!ft_strncmp(cmd->cmd_path, "env", 4))
 	{
-		ft_env_cmd(msh);
+		ft_env_cmd(msh , 0);
         return 1;
 	}
 	if(!ft_strncmp(cmd->cmd_path, "exit", 5))
