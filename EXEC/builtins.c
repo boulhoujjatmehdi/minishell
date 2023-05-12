@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/12 16:35:06 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/12 16:52:30 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,38 +164,35 @@ void ft_unset(t_minishell *msh, t_cmd *cmd)
     t_list *prv;
     char *arg;
 	char *str;
+	int i;
     
-    tmp = *msh->lenv;
 	prv = NULL;
-    if(cmd->cmd_args[1])
-    {
-        arg = cmd->cmd_args[1];
-        while(tmp && tmp->content)
-        {
-            if(!ft_strncmp(tmp->content, arg, ft_strlen(arg)))
-            {
+		i = 1;
+	while(cmd->cmd_args[i])
+	{
+    	tmp = *msh->lenv;
+		arg = cmd->cmd_args[i];
+		while(tmp && tmp->content)
+		{
+			if(!ft_strncmp(tmp->content, arg, ft_strlen(arg)))
+			{
 				str = (char *)tmp->content;
 				if(str[ft_strlen(arg)] == 0 || str[ft_strlen(arg)] == '=')
 				{
 					if(prv)
-					{
 						prv->next = tmp->next;
-						free(tmp->content);
-						free(tmp);
-					}
 					else
-					{
 						*msh->lenv = tmp->next;
-						free(tmp->content);
-						free(tmp);
-					}
+					free(tmp->content);
+					free(tmp);
 					break;
 				}
-            }
-            prv = tmp;
-            tmp = tmp->next;
-        }
-    }
+			}
+			prv = tmp;
+			tmp = tmp->next;
+		}
+		i++;
+	}
 }
 
 int  check_builtis(t_cmd *cmd , t_minishell *msh)

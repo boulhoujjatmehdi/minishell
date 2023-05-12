@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/12 16:29:56 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/12 17:00:21 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void fork_it_for_me(t_minishell *msh)
 			t_cmd *com = get_right_comm(msh , k);
 			// puts("trap1");
 			proccesing_cmd(com, msh->env);
+			
 			// puts("trap2");
 			if(com->ctr_c == 1)
 			{
@@ -125,6 +126,5 @@ int main_function_exec(t_cmd *comms , t_list **lenv)
     open_pipes(msh);
 
 	fork_it_for_me(msh);
-    
     return (0);
 }
