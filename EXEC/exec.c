@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/12 17:00:21 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/12 20:29:57 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void fork_it_for_me(t_minishell *msh)
 		while(stat && k < msh->child_nb)
 		{
 			t_cmd *com = get_right_comm(msh , k);
-			// puts("trap1");
+			com->env = msh->lenv;
 			proccesing_cmd(com, msh->env);
 			
 			// puts("trap2");

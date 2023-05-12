@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:25:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/10 19:57:48 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/12 20:00:43 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,67 +21,48 @@ int	is_not_arg(char c)
 	return (0);
 }
 
-//used to skip whats between the quotes
-int	skip_opt(char *s, char c)
-{
-	int i;
-	int n;
-	
-	n = 0;
-	i = 1;
-	while (s[i])
-	{
-		if (s[i] == c)
-			break;
-		i++;
-	}
-	return (i);
-}
-
-int	get_env_var(char *s)
+char	*ft_part_one(char **ss, char *s, int *l)
 {
 	int	i;
+	char *new;
 
-	i = 1;
-	while (s[i])
+	i = *l;
+	if (s[i] == '$' && i == 0)
 	{
-		if (is_not_arg(s[i]))
-			break ;
-		i++;
+		i = get_env_var(s);
+		new = ft_substr(s, 0, i);
+		*ss = s + i;
+		return (new) ;
 	}
-	return (i);
+	//whne i have an ARG token
+	if ((is_not_arg(s[i]) || s[i] == '$') && i > 0)
+	{
+		new = ft_substr(s, 0, i);
+		*ss = s + i;
+		return (new);
+	}
+	//whne i have a RED OR PIPE OR SPACE token
+	if (is_not_arg(s[i]) && i == 0)
+	{
+		new = ft_substr(s, 0, 1);
+		*ss = s + 1;
+		return (new);
+	}
+	return (new);
 }
 
-int	quote_error(char start, char end)
-{
-	if (start != end)
-	{
-		ft_putstr_fd("minishell: syntax error \n", 2);
-		return (1);
-	}
-	return (0);
-}
-
-
-//this function is used to tokenis my initial string
+// this function is used to tokenis my initial string
 char	*my_strtok(char **ss)
 {
 	int i = 0;
 	char *new;
 	char *s = *ss;
-	// puts("here");
+
 	while (i <= ft_strlen(s))
 	{
 		//when i reach the end of the string
 		if (!s[i] && i == 0)
 			return NULL;
-		if (s[i] == '$')
-		{
-			i = get_env_var(s);
-			new = ft_substr(s, 0, i);
-			*ss = s + i;
-			break ;
-		}
 		//here the case of quotes in my string
 		if ((s[i] == '\'' || s[i] == '\"') && i == 0)
 		{
@@ -92,50 +73,12 @@ char	*my_strtok(char **ss)
 				return (ft_strdup("SSYY"));
 			break;
 		}
-		//whne i have an ARG token
-		if (is_not_arg(s[i]) && i > 0)
+		if ((s[i] == '$' && i == 0) || ((is_not_arg(s[i]) || s[i] == '$') && i > 0) || (is_not_arg(s[i]) && i == 0))
 		{
-			new = ft_substr(s, 0, i);
-			*ss = s + i;
-			break;
-		}
-		//whne i have a RED OR PIPE OR SPACE token
-		if (is_not_arg(s[i]) && i == 0)
-		{
-			new = ft_substr(s, 0, 1);
-			*ss = s + 1;
-			break;
+			new = ft_part_one(ss, s, &i);
+			break ;
 		}
 		i++;
 	}
-	return (new);
-}
-
-char	*ft_joinchar(char *s, char c)
-{
-	size_t	size;
-	size_t	i;
-	size_t	j2;
-	char	*new;
-
-	if (!s)
-	{
-		return (NULL);
-	}
-	size = ft_strlen2(s) + 1;
-	new = (char *)malloc((size + 1) * sizeof(char));
-	if (!new)
-		return (0);
-	i = 0;
-	j2 = 0;
-	while (s[i])
-	{
-		new[i] = s[i];
-		i++;
-	}
-	new[i] = c;
-	i++;
-	new[i] = '\0';
-	free(s);
 	return (new);
 }

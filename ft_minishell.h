@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/10 20:27:11 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/12 17:00:48 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_cmd
 	char *exit_msg;
 	int	exit_stat;
 	int ctr_c;
+	t_list **env;
 	struct s_cmd *next;
 	
 }	t_cmd;
