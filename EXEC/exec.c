@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/10 14:23:46 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/12 17:02:49 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void fork_it_for_me(t_minishell *msh)
 		while(stat && k < msh->child_nb)
 		{
 			t_cmd *com = get_right_comm(msh , k);
+			com->env = msh->lenv;
 			proccesing_cmd(com, msh->env);
 			if(com->ctr_c == 1)
 			{
@@ -118,7 +119,6 @@ int main_function_exec(t_cmd *comms , t_list **lenv)
 		tmp = tmp->next;
 		i++;
 	}
-
     initialize_data(msh);
     open_pipes(msh);
 
