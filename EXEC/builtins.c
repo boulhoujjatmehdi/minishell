@@ -6,24 +6,50 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/11 21:57:28 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/12 16:35:06 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
 extern int g_exit;
+int ret_cases(char *s)
+{
+	int pos_eq;
+	int pos_at;
+	int i;
+
+
+	i = 0;
+	if(s[0] == '-' && s[1])
+		return 2;
+	while(s[i] && s[i]!= '=' )
+	{
+		if(!ft_isalnum(s[i]) && s[i] != '_' )
+			return 1;
+		i++;
+	}
+	if(!ft_isalpha(s[0]) && s[0] != '_')
+		return 1;
+	return 0;
+}
 int	export_error(char *s)
 {
 	int i;
 
-	i = 0;
 
-	if (!ft_isalpha(s[0]) && s[0] != '_' ) // check for @ in the first section abc@def=foooo
+	// i = 0;
+	i = ret_cases(s);
+	if (i == 1) // check for @ in the first section abc@def=foooo
 	{
 		ft_putstr_fd("minishell: export: `", 2);
 		ft_putstr_fd(s, 2);
 		ft_putstr_fd("': not a valid identifier\n", 2);
+		return (1);
+	}
+	else if(i == 2)
+	{
+		printf("bash: export: -%c: invalid option\n", s[1]);
 		return (1);
 	}
 	return (0);
@@ -35,6 +61,8 @@ int ft_export(t_minishell msh , t_cmd *cmd)
 	int i;
 
 	i = 1;
+	// printf("-----%s----\n", cmd->cmd_args[1]);
+	// exit(22);
 	if(!cmd->cmd_args[1])
 	{
 		ft_env_cmd(&msh, 1);
@@ -43,16 +71,35 @@ int ft_export(t_minishell msh , t_cmd *cmd)
 	while (cmd->cmd_args[i])
 	{
     	tmp = *msh.lenv;
-
+		
 		if (!export_error(cmd->cmd_args[i]))
 		{		
     		while(tmp && tmp->content)
     		{
-    		   	if(!ft_strncmp(cmd->cmd_args[i], tmp->content, ft_strnstr_mod(tmp->content, "=")))
-    		   	{    
-    		   	    tmp->content = cmd->cmd_args[i];
-					break ;
-    		   	}
+				int j=0;
+				char *str = (char *)tmp->content;
+				char *str2 = cmd->cmd_args[i];
+				while(str[j] && str[j] != '=' && str2[j] && str2[j] != '=')
+				{
+					if(str[j] != str2[j])
+						break;
+					j++;
+				}
+				if(str[j] == 0 && str2[j] == '=')
+				{
+					tmp->content = cmd->cmd_args[i];
+					break;
+				}
+				if(str[j] == '='  && str2[j] == '=')
+				{
+					tmp->content = cmd->cmd_args[i];
+					break;
+				}
+				
+				if(str[j] == '=' && str2[j] == 0)
+					break;
+				if(!str[j] && !str2[j])
+					break;
     		   	tmp = tmp->next;
     		}
 			if(!tmp || !tmp->content)

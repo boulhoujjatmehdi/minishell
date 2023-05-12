@@ -2,3 +2,16 @@ dash does not work >
     bash: export: -l: invalid option
 
 
+export a=foo
+export b=$a
+echo $b
+
+
+error 
+export _$ls@=ls
+
+
+not error
+export _$ls=ls
+
+export a=">"
