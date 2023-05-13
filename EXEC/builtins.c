@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/12 16:52:30 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/13 16:13:39 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,28 +114,72 @@ int ft_export(t_minishell msh , t_cmd *cmd)
 }
 int ft_cd(t_cmd *cmd, t_minishell *msh)
 {
-    if(cmd->cmd_args[1])
-        chdir(cmd->cmd_args[1]);
+	char *str;
+	char *sss = cmd->cmd_args[1];
+
+	// printf("%d\n", sss[0]);
+    if(cmd->cmd_args[1] && sss[0] != 0)
+	{
+       	str =cmd->cmd_args[1];
+	}
     else
-        chdir(get_from_env(*msh->lenv, "HOME=", 5)+5);
+	{
+        str = get_from_env(*msh->lenv, "HOME=", 5)+5;
+		if(str)
+		{
+			ft_putstr_fd("minishell: cd: HOME not set\n",2);
+			g_msh->exit_st = 1;
+			return 1;
+		}
+	}
+	if(chdir(str) == -1)
+	{
+		g_msh->exit_st = 1;
+	}
+	g_msh->exit_st = 0;
     return 0;
 }
 
 int ft_echo(t_cmd *cmd)
 {
     char **to_print;
-
+	int trigger;
+	trigger = 0;
     to_print = cmd->cmd_args;
-    // puts("jdkjkdjk");
     to_print++;
+	while(*to_print)
+	{
+		if(*to_print[0]== '-')
+		{
+			int i = 1;
+			char *str = *to_print;
+			while(str[i] && str[i] == 'n')
+			{
+				i++;
+			}
+			if(str[i])
+			{
+				break;
+			}
+			to_print++;
+		}
+		else{
+			break;
+		}
+			trigger = 1;
+	}
     while(*to_print)
     {
             printf("%s", *to_print);
             to_print++;
+			if(*to_print)
+				printf(" ");
     }
-    printf("\n");
+	if(!trigger)
+    	printf("\n");
     return 0;
 }
+
 int ft_pwd()
 {
     printf("%s\n", getcwd(NULL, 0));
@@ -195,7 +239,7 @@ void ft_unset(t_minishell *msh, t_cmd *cmd)
 	}
 }
 
-int  check_builtis(t_cmd *cmd , t_minishell *msh)
+int  check_builtis(t_cmd *cmd , t_minishell *msh, int nb)
 {
     // puts(cmd->cmd_path);
     // puts("test");

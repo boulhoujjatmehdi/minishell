@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/12 16:27:07 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/13 16:27:03 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int main(int ac, char **av, char **env)
 {
     t_cmd	*head;
     t_list  *lenv;
+
+    g_msh = ft_calloc(sizeof(t_minishell), 1);
     char *str;
     lenv = NULL;
 	fill_env_list(&lenv, env);

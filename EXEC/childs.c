@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 14:52:15 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/09 16:16:30 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/13 16:05:33 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ void child_forked(t_minishell *msh , int idx, int *pid)
 	{
 		t_cmd *com = get_right_comm(msh , idx);
 
-		
-		check_builtis(com ,msh);
 		if(com->next)
 			dup2(msh->pipe[idx * 2 + 1], 1);
 		if(com->outfile != 1)
