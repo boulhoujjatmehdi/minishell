@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/13 16:13:39 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/13 16:57:52 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,17 +124,23 @@ int ft_cd(t_cmd *cmd, t_minishell *msh)
 	}
     else
 	{
-        str = get_from_env(*msh->lenv, "HOME=", 5)+5;
-		if(str)
+        str = get_from_env(*msh->lenv, "HOME=", 5);
+
+		if(!str)
 		{
 			ft_putstr_fd("minishell: cd: HOME not set\n",2);
 			g_msh->exit_st = 1;
 			return 1;
 		}
+		str = str+5;
 	}
 	if(chdir(str) == -1)
 	{
+		ft_putstr_fd("bash: cd: ", 2);
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
 		g_msh->exit_st = 1;
+		return 1;//TO_DO
 	}
 	g_msh->exit_st = 0;
     return 0;
@@ -262,7 +268,9 @@ int  check_builtis(t_cmd *cmd , t_minishell *msh, int nb)
 	}
 	if(!ft_strncmp(cmd->cmd_path, "cd", 3))
 	{
-		ft_cd(cmd , msh);
+		// printf("%d\n", nb);
+		if(nb == 0)
+			ft_cd(cmd , msh);
         return 1;
 	}
 	if(!ft_strncmp(cmd->cmd_path, "pwd", 4))

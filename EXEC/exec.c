@@ -6,13 +6,13 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/13 16:27:58 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/13 16:40:51 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-extern int g_exit;
+
 void wait_for_all(int *pids , int nb)
 {
 	int i;
@@ -52,18 +52,15 @@ void fork_it_for_me()
 			t_cmd *com = get_right_comm(g_msh , k);
 			com->env = g_msh->lenv;
 			proccesing_cmd(com, g_msh->env);
-			
-			// puts("trap2");
 			if(com->ctr_c == 1)
 			{
 				stat = 0;
-				g_exit = 130;
-				// exit(44);
+				g_msh->exit_st = 130;
 			}
 			else if(stat && com->exit_msg)
 			{
-				printf("%s", com->exit_msg);
-				g_exit = com->exit_stat;
+				ft_putstr_fd(com->exit_msg, 2);
+				g_msh->exit_st = com->exit_stat;
 			}
 			else if(stat && !check_builtis(com, g_msh, k))
 				child_forked(g_msh , k,  &pid[k]);
