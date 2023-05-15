@@ -6,14 +6,14 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:53:55 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/13 16:21:21 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/15 15:19:01 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include"parse.h"
 
-
+extern int g_exit;
 
 int	env_len(char *s)
 {
@@ -72,10 +72,10 @@ char	*ft_exit_status(char *str)
 {
 	char 	*new;
 
-	if (g_msh->exit_st == -1)
-		new = ft_strjoin2("0", str + 1);
+	if (g_exit == -1)
+		new = ft_strjoin2(ft_strdup("0"), str + 1);
 	else 
-		new = ft_strjoin2(ft_itoa(g_msh->exit_st), str + 1);
+		new = ft_strjoin2(ft_itoa(g_exit), str + 1);
 	free(str);
 	return (new);
 }

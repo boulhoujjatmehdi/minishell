@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:53:58 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/12 18:58:21 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/13 16:08:57 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,13 @@ int	check_after_heredoc(t_tokens *node)
 			return (1);
 	}
 	return (0);
+}
+
+void	fill_empty(char *s)
+{
+	if (s[0] == '\0')
+		s = ft_joinchar(s, 7);
+	return ;
 }
 
 void	check_env(t_tokens **list, t_list **env)

@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:44:44 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/12 18:51:24 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/13 16:30:00 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,15 @@ char	**get_cmd_opt(char *s)
 	if (!s && !s[0])
 		return (NULL);
 	new = ft_split(s, 1);
+	if (new[0] == NULL)
+		return NULL;
 	return_red(new[0]);
 	while (new[i])
 	{
 		return_red(new[i]);
-		if (new[i][0] == 2)
+		if (new[i][0] == 2 && new[i][1] == 0)
+			new[i] = NULL;
+		else if ((new[i][0] == 2 && new[i][1] == 2 && new[i][2] == '\0') || (new[i][0] == 5 && new[i][1] == 0) || new[i][0] == 6)
 			new[i][0] = 0;
 		i++;
 	}
@@ -83,7 +87,7 @@ void	proccesing_cmd(t_cmd *node, char **env)
 	if (node->outfile == -1)
 		return ;
 	node->cmd_args = get_cmd_opt(node->str);
-	if (*node->cmd_args != NULL)
+	if (node->cmd_args != NULL)
 		cmd = ft_strdup(node->cmd_args[0]);
 	node->cmd_path = ft_cmd_path(cmd, env, node);
 }

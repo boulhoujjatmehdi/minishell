@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/15 14:46:39 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/15 15:34:29 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,16 @@ int	export_error(char *s)
 	}
 	return (0);
 }
+// void ft_export_list()
+// {
+// 	t_list *prt;
+
+// 	prt = g_msh->lenv;
+// 	while(prt && prt->content)
+// 	{
+		
+// 	}
+// }
 
 int ft_export(t_minishell msh , t_cmd *cmd)
 {
@@ -61,8 +71,6 @@ int ft_export(t_minishell msh , t_cmd *cmd)
 	int i;
 
 	i = 1;
-	// printf("-----%s----\n", cmd->cmd_args[1]);
-	// exit(22);
 	if(!cmd->cmd_args[1])
 	{
 		ft_env_cmd(&msh, 1);
@@ -251,10 +259,19 @@ int  exec_builtins(t_cmd *cmd , int par)
 {
 	if(!cmd->cmd_path)
 		return (0);
-	else if(!ft_strncmp(cmd->cmd_path, "export", 7) && g_msh->child_nb == 1)
+	else if(!ft_strncmp(cmd->cmd_path, "export", 7))
 	{
-		ft_export(*g_msh, cmd);
-        return 1;
+		if(par)
+		{
+			ft_export(*g_msh, cmd);
+		}
+		if( g_msh->child_nb == 1)
+		{
+			ft_export(*g_msh, cmd);
+			return 1;
+		}
+			
+        return 0;
 	}
 	else if(!ft_strncmp(cmd->cmd_path, "unset", 6) && g_msh->child_nb == 1)
 	{

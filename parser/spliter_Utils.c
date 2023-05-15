@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 19:03:38 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/12 19:04:25 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/13 16:08:41 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,7 @@ char	*ft_joinchar(char *s, char c)
 	char	*new;
 
 	if (!s)
-	{
 		return (NULL);
-	}
 	size = ft_strlen2(s) + 1;
 	new = (char *)malloc((size + 1) * sizeof(char));
 	if (!new)
