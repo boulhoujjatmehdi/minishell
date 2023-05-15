@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/12 20:05:21 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/14 15:19:44 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void print(t_tokens **list)
 	head = *list;
 	while (head)
 	{
-		printf("token     =     -%s-,  token_type %d,    position %d, len %lu\n", head->token, head->token_type, head->pos, strlen(head->token));
+		printf("token     =     -%s-%d-%d-,  token_type %d,    position %d, len %lu\n", head->token, head->token[0], head->token[ft_strlen2(head->token) - 1], head->token_type, head->pos, strlen(head->token));
 		head = head->next;
 	}
 }
@@ -38,6 +38,30 @@ void print2(t_cmd **list)
 	}
 }
 
+int	check_if_connected(t_tokens *node)
+{
+	if (node->token_type == 2 || node->token_type == 5 ||\
+	 node->token_type == 6 || node->token_type == 7)
+	 	return (1);
+	return (0);
+}
+
+void fill_alone_empty(t_tokens **list)
+{
+	t_tokens *head;
+
+	head = *list;
+	while (head)
+	{
+		if (!ft_strncmp(head->token, "\'\'", 1) || !ft_strncmp(head->token, "\"\"", 1))
+		{
+			if ((!(head->next) || (head->next && !check_if_connected(head->next))) &&\
+			 (!(head->prev) || (head->prev && !check_if_connected(head->prev))))
+				head->token = ft_joinchar(head->token, 6);
+		}
+		head = head->next;
+	}
+}
 
 t_cmd *main_function(int ac, char *str, t_list **env)
 {
@@ -60,6 +84,7 @@ t_cmd *main_function(int ac, char *str, t_list **env)
 		s = my_strtok(&str);
 	}
 	check_double_red(&info);
+	fill_alone_empty(&info);
 	check_env(&info, env);
 	adjest(&info);
 	del_space(&info);

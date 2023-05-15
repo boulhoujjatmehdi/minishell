@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:47:02 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/12 19:49:28 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/13 15:40:09 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,15 @@ int procces_readfiles(char *s, t_cmd *node)
 	return (fd);
 }
 
+void	name_with_nonprint(char *s)
+{
+	int len;
+
+	len = ft_strlen(s) - 1;
+	if (s[len] == 5)
+		s[len] = '\0';
+	return ;
+}
 
 int procces_writefiles(char *s, t_cmd *node)
 {
@@ -58,7 +67,7 @@ int procces_writefiles(char *s, t_cmd *node)
 	{
 		name++;
 		name = get_filename(name, 1, 1);
-		if (name[0] == 2 && name[1] == 2 && name[2] == '\0')
+		if ((name[0] == 2 && name[1] == 2 && name[2] == '\0') || (name[0] == 5 && name[1] == 0))
 		{
 			free(name);
 			name = ft_strdup("");
@@ -68,7 +77,8 @@ int procces_writefiles(char *s, t_cmd *node)
 			if (file_errors(name, -2, node) == 1)
 				return (-1);
 		}
-		fd = open(name, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		name_with_nonprint(name);
+		fd = open(name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (fd == -1)
 		{
 			if (file_errors(name, 1, node) == 1)
@@ -96,7 +106,7 @@ int procces_appendfiles(char *s, t_cmd *node)
 			if (file_errors(name, -2, node) == 1)
 				return (-1);
 		}
-		fd = open(name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		fd = open(name, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if (fd == -1)
 		{
 			if (file_errors(name, 1, node) == 1)

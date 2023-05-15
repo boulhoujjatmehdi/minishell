@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 19:00:11 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/12 19:54:00 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/14 15:17:28 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,6 @@ int	syntax_error(t_tokens **list)
 			ft_putstr_fd("minishell: syntax error\n", 2);
 			return (1);
 		}
-		// if (head->token_type == 1 && head->next->token_type == 3)
-		// {
-		// 	ft_putstr_fd("minishell: syntax error\n", 2);
-		// 	return (1);
-		// }
-		// if (head->token_type == 3 && !head->next)
 		head = head->next;
 	}
 	return (0);
@@ -148,5 +142,5 @@ void	free_token(t_tokens **list)
 		delete_node(list, head->pos);
 		head = head->next;
 	}
-	// *list = NULL;
+	free(*list);
 }
