@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/13 16:40:51 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/15 14:47:29 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,12 @@ void wait_for_all(int *pids , int nb)
 	while(i < nb)
 	{
 		int status= 0;
-		waitpid(pids[i], &status, 0);
-		g_msh->exit_st = status>>8;
-		
+		if(pids[i])
+		{
+			waitpid(pids[i], &status, 0);
+			// printf("**%d , %d\n", g_msh->exit_st , pids[i]);
+			g_msh->exit_st = status>>8;
+		}
 		i++;
 	}
 }
@@ -62,7 +65,7 @@ void fork_it_for_me()
 				ft_putstr_fd(com->exit_msg, 2);
 				g_msh->exit_st = com->exit_stat;
 			}
-			else if(stat && !check_builtis(com, g_msh, k))
+			else if(stat && !exec_builtins(com, 0))
 				child_forked(g_msh , k,  &pid[k]);
 			k++;
 		}
@@ -119,7 +122,6 @@ int main_function_exec(t_cmd *comms , t_list **lenv)
 
     initialize_data();
     open_pipes();
-
 	fork_it_for_me();
     return (0);
 }

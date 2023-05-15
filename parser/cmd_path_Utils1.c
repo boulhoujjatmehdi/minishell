@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_path_Utils1.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 19:43:08 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/12 19:44:45 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/15 12:27:30 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 int check_builtins(char *cmd)
 {
 	if (!ft_strncmp(cmd, "pwd", 4))
+		return (1);
+	else if (!ft_strncmp(cmd, "echo", 5))
 		return (1);
 	else if (!ft_strncmp(cmd, "export", 7))
 		return (1);

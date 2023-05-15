@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 14:52:15 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/13 16:39:23 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/15 14:07:33 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,12 @@ void child_forked(t_minishell *msh , int idx, int *pid)
 
 		signal(SIGINT, exit_handler);
 		close_all_pipes(msh);
+
+		
+		
+		exec_builtins(com, 1);
 		execve(com->cmd_path, com->cmd_args, msh->env);
-		exit(10);
+		exit(0);
 	}
 	if(*pid)
 	{

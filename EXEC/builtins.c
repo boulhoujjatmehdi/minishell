@@ -6,10 +6,9 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/14 13:04:33 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/15 14:46:39 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "exec.h"
 
@@ -187,10 +186,10 @@ int ft_echo(t_cmd *cmd)
     return 0;
 }
 
-int ft_pwd()
+void ft_pwd()
 {
     printf("%s\n", getcwd(NULL, 0));
-    return 0;
+	exit(0);
 }
 void ft_env_cmd(t_minishell *msh, int vars_type)
 {
@@ -207,6 +206,8 @@ void ft_env_cmd(t_minishell *msh, int vars_type)
 		
         tmp = tmp->next;
     }
+
+	exit(0);
 }
 
 void ft_unset(t_minishell *msh, t_cmd *cmd)
@@ -246,45 +247,43 @@ void ft_unset(t_minishell *msh, t_cmd *cmd)
 	}
 }
 
-int  check_builtis(t_cmd *cmd , t_minishell *msh, int nb)
+int  exec_builtins(t_cmd *cmd , int par)
 {
-    // puts(cmd->cmd_path);
-    // puts("test");
 	if(!cmd->cmd_path)
 		return (0);
-	if(!ft_strncmp(cmd->cmd_path, "export", 7))
+	else if(!ft_strncmp(cmd->cmd_path, "export", 7) && g_msh->child_nb == 1)
 	{
-		ft_export(*msh, cmd);
+		ft_export(*g_msh, cmd);
         return 1;
 	}
-	if(!ft_strncmp(cmd->cmd_path, "unset", 6))
+	else if(!ft_strncmp(cmd->cmd_path, "unset", 6) && g_msh->child_nb == 1)
 	{
-		ft_unset(msh, cmd);
+		ft_unset(g_msh, cmd);
         return 1;
 	}
-	if(!ft_strncmp(cmd->cmd_path, "echo", 5))
+	else if(!ft_strncmp(cmd->cmd_path, "echo", 5) && par)
 	{
 		ft_echo(cmd);
+        return 0;
+	}
+	else if(!ft_strncmp(cmd->cmd_path, "cd", 3) && g_msh->child_nb == 1)
+	{
+		ft_cd(cmd , g_msh);
         return 1;
 	}
-	if(!ft_strncmp(cmd->cmd_path, "cd", 3))
+	else if(!ft_strncmp(cmd->cmd_path, "pwd", 4) && par)
 	{
-		// printf("%d\n", nb);
-		if(nb == 0)
-			ft_cd(cmd , msh);
-        return 1;
-	}
-	if(!ft_strncmp(cmd->cmd_path, "pwd", 4))
-	{
+		
 		ft_pwd();
-        return 1;
+        return 0;
 	}
-	if(!ft_strncmp(cmd->cmd_path, "env", 4))
+	else if(!ft_strncmp(cmd->cmd_path, "env", 4) && par)
 	{
-		ft_env_cmd(msh , 0);
+		
+		ft_env_cmd(g_msh , 0);
         return 1;
 	}
-	if(!ft_strncmp(cmd->cmd_path, "exit", 5))
+	else if(!ft_strncmp(cmd->cmd_path, "exit", 5))
 	{
 		exit(0);
         return 1;
