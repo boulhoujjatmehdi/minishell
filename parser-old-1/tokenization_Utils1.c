@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:53:58 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/16 19:28:47 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/13 16:08:57 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,18 +75,6 @@ void	fill_empty(char *s)
 	return ;
 }
 
-void fill_qouted_empty(t_tokens *node)
-{
-	if (!ft_strncmp(node->token, "", 1))
-	{
-		if ((!(node->next) || (node->next && !check_if_connected(node->next))) &&\
-		 (!(node->prev) || (node->prev && !check_if_connected(node->prev))))
-		{
-			node->token = ft_joinchar(node->token, 6);
-		}
-	}
-}
-
 void	check_env(t_tokens **list, t_list **env)
 {
 	char		*tmp;
@@ -104,7 +92,6 @@ void	check_env(t_tokens **list, t_list **env)
 			free(tmp);
 			if (!check_after_heredoc(head))
 				head->token = swap_env(head->token, head, env);
-			fill_qouted_empty(head);
 		}
 		else if (head->token_type == 7)
 		{

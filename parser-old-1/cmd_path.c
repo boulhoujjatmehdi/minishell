@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 20:39:36 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/17 00:02:20 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/15 23:02:29 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ char	*ft_cmd_path(char *cmd, char *env[], t_cmd *node)
 	l = 0;
 	if (!cmd)
 		return NULL;
-	if (cmd && !cmd[0])
-		ft_cmd_not_found(cmd, 127, node);
 	if(check_builtins(cmd))
 		return (cmd);
 	cmd_path = NULL;
@@ -67,7 +65,7 @@ char	*ft_cmd_path2(char *cmd, char *env[], t_cmd *node)
 	while (paths[i] && (access(paths[i], F_OK) == -1))
 		i++;
 	if (!paths[i])
-		ft_cmd_not_found(cmd, 127, node);
+			ft_cmd_not_found(cmd, 127, node);
 	else
 		cmd_path = ft_strdup(paths[i]);
 	free(cmd);
