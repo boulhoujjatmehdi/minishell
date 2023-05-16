@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/15 21:51:35 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/16 13:12:33 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,15 @@ void signal_handler(int sig)
         stat =1;
 	}
 }
+int skip_char(char *str, char c)
+{
+    int i;
+
+    i = 0;
+    while(str[i] && str[i] == c)
+        i++;
+    return i;
+}
 
 int main2(int ac, char **av, char **env)
 {
@@ -46,6 +55,8 @@ int main2(int ac, char **av, char **env)
         {
 			exit(g_msh->exit_st);
         }
+        if(str[skip_char(str, ' ')] == 0)
+            str[0] = 0;
         if(*str && str[0] != '\n')
         {
             str[ft_strlen(str)-1] = 0; //mini-test
@@ -65,11 +76,13 @@ int main2(int ac, char **av, char **env)
         }
         if(stat)
         {
+            // puts("mehdi");
             if(g_msh->exit_st != -1)
                 g_msh->exit_st = 130;
             else 
                 g_msh->exit_st = stat;
         }
+	// printf("~a~~~%d\n", g_msh->exit_st);
         stat = 0;
     }
 }

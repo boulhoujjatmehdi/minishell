@@ -15,4 +15,4 @@ not error
 export _$ls=ls
 
 export a=">"
-Tests failed: 148/261 / 56.70%
+KO! [Tests passed: 175/261 / 67.04%] :: [Tests failed: 86/261 / 32.95%]
