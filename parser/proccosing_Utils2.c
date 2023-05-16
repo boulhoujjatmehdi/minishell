@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:47:02 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/16 16:36:17 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/16 19:20:47 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	*triiim_char(char *name, char c)
 	char	*new;
 
 	tmp = ft_joinchar(ft_strdup(""), c);
-	new = ft_strtrim(name, tmp);
+	new = ft_my_strtrim(name, tmp);
 	free(tmp);
 	free(name);
 	return (new);
@@ -72,26 +72,17 @@ void	print_str(char *s)
 int	has_space(char *name)
 {
 	char **test;
-	int len;
-	int t;
+	char *tmp;
 	int count;
 
 	if (!name[0])
 		return (0);
-	len = ft_strlen(name) - 1;
 	count = 0;
-	t = 0;
-	if (name[len] == 5)
-	{
-		t = len;
-		name[len] = 0;
-	}
-	test = ft_split(name, 7);
+	// name = ft_strdup(name);
+	test = ft_my_split(name, 7);
 	while (test && test[count])
 		count++;
 	// return_space(name);
-	if (t)
-		name[t] = 5;
 	if (count > 1 || !(*test))
 	{
 		tmp_free(test);
@@ -116,12 +107,13 @@ int procces_readfiles(char *s, t_cmd *node)
 		name = get_filename(name, 1, 1);
 		if (!name)
 			return (0);
+		if (name[ft_strlen(name) - 1] == 5)
+			name[ft_strlen(name) - 1] = 0;
 		if ((name[0] == 2 && name[1] == '\0') || has_space(name))
 		{
 			if (file_errors(name, -2, node) == 1)
 				return (-1);
 		}
-		name = triiim_char(name, 5);
 		name = triiim_char(name, 7); 
 		fd = open(name, O_RDONLY);
 		if (fd == -1)
@@ -151,12 +143,13 @@ int procces_writefiles(char *s, t_cmd *node)
 			free(name);
 			name = ft_strdup("");
 		}
+		if (name[ft_strlen(name) - 1] == 5)
+			name[ft_strlen(name) - 1] = 0;
 		if ((name[0] == 2 && name[1] == '\0') || has_space(name))
 		{	
 			if (file_errors(name, -2, node) == 1)
 				return (-1);
 		}
-		name = triiim_char(name, 5);
 		name = triiim_char(name, 7);
 		fd = open(name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (fd == -1)
@@ -186,12 +179,13 @@ int procces_appendfiles(char *s, t_cmd *node)
 			free(name);
 			name = ft_strdup("");
 		}
+		if (name[ft_strlen(name) - 1] == 5)
+			name[ft_strlen(name) - 1] = 0;
 		if ((name[0] == 2 && name[1] == '\0') || has_space(name))
 		{	
 			if (file_errors(name, -2, node) == 1)
 				return (-1);
 		}
-		name = triiim_char(name, 5);
 		name = triiim_char(name, 7); 
 		fd = open(name, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if (fd == -1)
