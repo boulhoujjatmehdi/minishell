@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/15 16:47:41 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 00:26:33 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,9 +184,9 @@ int ft_echo(t_cmd *cmd)
 	}
     while(*to_print)
     {
-            printf("%s", *to_print);
+        	printf("%s", *to_print);
             to_print++;
-			if(*to_print)
+			if(*to_print && (*to_print)[0] != 0)
 				printf(" ");
     }
 	if(!trigger)

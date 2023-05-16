@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 20:39:36 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/17 00:02:20 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 00:15:27 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ char	*ft_cmd_path2(char *cmd, char *env[], t_cmd *node)
 
 	i = 0;
 	paths = ft_get_paths(env);
+	if (!paths)
+	{
+		ft_no_file_diractory(cmd, 127, node);
+		return (NULL);
+	}
 	while (paths[i])
 	{
 		paths[i] = ft_strjoin2(paths[i], cmd);

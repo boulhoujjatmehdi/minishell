@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 19:43:08 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/17 00:10:58 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 00:15:39 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ char	**ft_get_paths(char *env[])
 	int		i;
 
 	path = ft_env(env);
+	if (!path[0])
+		return (NULL);
 	paths = ft_split(path, ':');
 	i = 0;
 	while (paths[i])
