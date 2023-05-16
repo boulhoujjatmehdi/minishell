@@ -12,7 +12,8 @@ OTH = get_next_line.c get_next_line_utils.c
 
 LBT = libft/libft.a
 
-RDL = 	-lreadline -L /Users/eboulhou/.brew/opt/readline/lib -I /Users/eboulhou/.brew/opt/readline/lib/include
+RDL = 	-lreadline \
+			#-L /Users/eboulhou/.brew/opt/readline/lib -I /Users/eboulhou/.brew/opt/readline/lib/include
 
 all: $(LBT)
 	cc  $(addprefix parser/, $(PRS)) $(addprefix EXEC/, $(EXE)) $(RDL)  $(addprefix other_src/, $(OTH)) $(SRC)  -o minishell
