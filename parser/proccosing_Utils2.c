@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:47:02 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/16 19:20:47 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/16 22:10:50 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,23 +50,13 @@ char	*triiim_char(char *name, char c)
 	char	*tmp;
 	char	*new;
 
+	if (!name)
+		return (NULL);
 	tmp = ft_joinchar(ft_strdup(""), c);
 	new = ft_my_strtrim(name, tmp);
 	free(tmp);
 	free(name);
 	return (new);
-}
-
-void	print_str(char *s)
-{
-	int i;
-
-	i = 0;
-	puts(s);
-	while (s[i])
-		printf("%d - ", s[i++]);
-	printf("\n");
-	return ;
 }
 
 int	has_space(char *name)
@@ -82,7 +72,6 @@ int	has_space(char *name)
 	test = ft_my_split(name, 7);
 	while (test && test[count])
 		count++;
-	// return_space(name);
 	if (count > 1 || !(*test))
 	{
 		tmp_free(test);
@@ -114,7 +103,8 @@ int procces_readfiles(char *s, t_cmd *node)
 			if (file_errors(name, -2, node) == 1)
 				return (-1);
 		}
-		name = triiim_char(name, 7); 
+		name = triiim_char(name, 7);
+		return_space(name);
 		fd = open(name, O_RDONLY);
 		if (fd == -1)
 		{
