@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:44:44 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/17 00:05:13 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 00:25:54 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char *remove_non_printble(char *s)
 	i = 0;
 	while (i <= len)
 	{
-		if (s[i] != 5)
+		if (s[i] != 5 && s[i] != 7)
 			new[i] = s[i];
 		i++;
 	}
@@ -174,7 +174,6 @@ char	**get_cmd_opt(char *s)
 			new[i] = remove_non_printble(new[i]);
 			i++;
 		}
-		// print_str(head->content);
 		head = head->next;
 	}
 	new[i] = NULL;

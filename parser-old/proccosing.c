@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:44:44 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/13 16:30:00 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 00:05:13 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,27 +48,136 @@ void	return_red(char *s)
 	}
 }
 
+char *remove_non_printble(char *s)
+{
+	int i;
+	int len;
+	char *new;
+	
+	if (!s)
+		return (NULL);
+	len = ft_strlen(s);
+	new = (char *)malloc(len + 1);
+	if (!new)
+		return (NULL);
+	i = 0;
+	while (i <= len)
+	{
+		if (s[i] != 5)
+			new[i] = s[i];
+		i++;
+	}
+	free(s);
+	return (new);
+}
+
+
+void deleteLastNode(t_list **list) {
+    t_list *head = *list;
+	
+    if (*list == NULL)
+        return;
+
+    // If the linked list has only one node
+    if ((*list)->next == NULL)
+	{
+        free(*list);
+        *list = NULL;
+        return;
+    }
+    // Traverse to the second last node
+    while (head->next->next != NULL)
+        head = head->next;
+    free(head->next);
+    head->next = NULL;
+	return ;
+}
+
+void	print_str(char *s)
+{
+	int i;
+
+	i = 0;
+	puts(s);
+	while (s[i])
+		printf("%d - ", s[i++]);
+	printf("\n");
+	return ;
+}
+
+void	add_if_separeted(t_list **list)
+{
+	t_list *head;
+	char **tmp;
+	int i;
+	
+	head = ft_lstlast(*list);
+	tmp = ft_split(head->content, 7);
+	i = 0;
+	if (tmp && tmp[i])
+	{
+		deleteLastNode(list);
+	}
+	while (tmp && tmp[i])
+	{
+		ft_lstadd_back(list, ft_lstnew(ft_my_strdup(tmp[i])));
+		i++;
+	}
+	return ;
+}
+
+void	cmd_opt_ll(t_list **list, char *s)
+{
+	char **tmp;
+	t_list *head;
+	int i;
+	
+	tmp = ft_my_split(s, 1);
+	i = 0;
+	while (tmp[i])
+	{
+		return_red(tmp[i]);
+		if (tmp[i][0] == 2 && tmp[i][1] == 0)
+			ft_lstadd_back(list, ft_lstnew(NULL));
+		else
+			ft_lstadd_back(list, ft_lstnew(ft_my_strdup(tmp[i])));
+		add_if_separeted(list);
+		i++;
+	}
+}
+
 char	**get_cmd_opt(char *s)
 {
 	char **new;
+	t_list *list;
+	t_list *head;
 	int i;
 	
-	i = 1;
 	if (!s && !s[0])
 		return (NULL);
-	new = ft_split(s, 1);
-	if (new[0] == NULL)
-		return NULL;
-	return_red(new[0]);
-	while (new[i])
+	list = NULL;
+	cmd_opt_ll(&list, s);
+	i = ft_lstsize(list);
+	new = (char **)malloc((sizeof(char *) * i) + 1);
+	if (!new)
+		return (NULL);
+	head = list;
+	i = 0;
+	while (head)
 	{
-		return_red(new[i]);
-		if (new[i][0] == 2 && new[i][1] == 0)
-			new[i] = NULL;
-		else if ((new[i][0] == 2 && new[i][1] == 2 && new[i][2] == '\0') || (new[i][0] == 5 && new[i][1] == 0) || new[i][0] == 6)
-			new[i][0] = 0;
-		i++;
+		if (head->content != NULL)
+		{
+			new[i] = ft_my_strdup(head->content);
+			if ((new[i][0] == 2 && new[i][1] == 2 && new[i][2] == '\0') ||\
+			(new[i][ft_strlen(new[i]) - 1] == 5 && new[i][ft_strlen(new[i])] == 0) || new[i][0] == 6)
+				new[i][ft_strlen(new[i]) - 1] = 0;
+			new[i] = remove_non_printble(new[i]);
+			i++;
+		}
+		// print_str(head->content);
+		head = head->next;
 	}
+	new[i] = NULL;
 	return new;	
 }
 

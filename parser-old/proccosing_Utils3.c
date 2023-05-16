@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:51:08 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/12 18:51:27 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/16 19:13:58 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	*get_filename(char *s, int c, int c1)
 	int i;
 	
 	i = 0;
-	new = (char *)malloc(sizeof(s));
+	new = (char *)malloc(ft_strlen(s) + 1);
 	if (!new)
 		return NULL;
 	while (s[i] != c)
