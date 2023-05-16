@@ -68,7 +68,7 @@ int	check_after_heredoc(t_tokens *node);
 void	check_env(t_tokens **list, t_list **env);
 int	env_len(char *s);
 char	*env_var(char *s);
-char	*get_assos(char *s, t_list **env);
+char	*get_assos(char *s, t_list **env, int type);
 char	*ft_exit_status(char *str);
 char	*ft_replace(t_tokens *node, char *from, int *l, t_list **env);
 char	*swap_env(char *str, t_tokens *node, t_list **env);

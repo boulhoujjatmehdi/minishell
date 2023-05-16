@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/10 15:46:13 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/15 23:17:07 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,11 @@ int main(int ac, char **av, char **env)
 {
     t_cmd	*head;
     t_list  *lenv;
+
+    g_msh = ft_calloc(sizeof(t_minishell), 1);
     char *str;
     lenv = NULL;
 	fill_env_list(&lenv, env);
-    add_history("cat <out <<eof | cat -e");
-    add_history("echo $PATH");
-    add_history("cat -e <<eof");
     while(1)
     {
         signal(SIGINT, *signal_handler);
@@ -46,73 +45,47 @@ int main(int ac, char **av, char **env)
         // ft_putstr_fd("\n", 1);
         // g_exit = -1;
         str = readline("minishell->");
+        // str = get_next_line(0);
         if(str== NULL)
-			exit(0);
+        {
+			exit(g_msh->exit_st);
+            
+        }
         if(*str)
         {
+            // str[ft_strlen(str)-1] = 0;
             add_history(str);
             head = main_function(ac, str, &lenv);
             if(head)
 			{
-				g_exit = -1;
+				g_msh->exit_st = -1;
                 main_function_exec(head , &lenv);
 			}
+			else
+				g_msh->exit_st = 2;
         }
         if(stat)
         {
-            if(g_exit != -1)
-                g_exit = 130;
+            if(g_msh->exit_st != -1)
+                g_msh->exit_st = 130;
             else 
-                g_exit = stat;
+                g_msh->exit_st = stat;
         }
         stat = 0;
-        // mainfunctiongoto:
-        // t_list *tmp = lenv;
-        // while(tmp)
-        // {
-        //     printf("%s\n======", tmp->content);
-        //     tmp = tmp->next;
-        // }
-
-
-        // while (head)
-        // {
-        //     puts("**********************************************************************************************************");
-        //     printf("str === :%s:\ninfile %d --- outfile %d -  cmd :%s:, here_doc --> %s\n", head->str, head->infile, head->outfile, head->cmd_path, head->her_doc);
-        //     int i = 0;
-        //     while (head->cmd_args[i])
-        //         printf("opts == %s\n", head->cmd_args[i++]);
-        //     head = head->next;
-        // }
     }
+        return g_msh->exit_st;
 }
 
+// int main(int ac, char **av, char **env)
+// {
+    
+//     // add_history("cat <out <<eof | cat -e");
+//     // add_history("echo $PATH");
+//     // add_history("cat -e <<eof");
+//     main2(ac, av, env);
+//     return g_msh->exit_st;
+
+// }
 
 
 
-// fd[1]   * file.txt
-// 1       * stdout
-
-// dup2(fd[1], 1);
-
-// 1       * file.txt
-
-// 1
-// -------------------
-// fd0             fd
-// -------------------
-
-
-
-
-
-// fd[0]   * file.txt
-// 0       * stdin
-
-
-// dup2(fd[0], 0);
-
-// 0       * file.txt
-
-
-// ft_putstr_fd("mehdi", 1);

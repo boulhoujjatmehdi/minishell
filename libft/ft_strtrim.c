@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 18:48:23 by eboulhou          #+#    #+#             */
-/*   Updated: 2022/10/20 16:22:06 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/16 16:07:49 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	found_char(const char *set, char c)
 	}
 	return (0);
 }
-
+#include <stdio.h>
 char	*ft_strtrim(char const *s1, char const *set)
 {
 	int		i[2];
@@ -44,5 +44,6 @@ char	*ft_strtrim(char const *s1, char const *set)
 	if (!ret)
 		return (0);
 	ft_strlcpy(ret, s1 + i[0], i[1] - i[0] + 2);
+
 	return (ret);
 }

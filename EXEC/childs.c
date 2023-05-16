@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 14:52:15 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/09 16:16:30 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/15 14:07:33 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,8 @@ int export(t_minishell msh , t_cmd *cmd)
 }
 void exit_handler()
 {
-	// printf();
 	exit(150);
 }
-
-
 
 void child_forked(t_minishell *msh , int idx, int *pid)
 {
@@ -37,8 +34,6 @@ void child_forked(t_minishell *msh , int idx, int *pid)
 	{
 		t_cmd *com = get_right_comm(msh , idx);
 
-		
-		check_builtis(com ,msh);
 		if(com->next)
 			dup2(msh->pipe[idx * 2 + 1], 1);
 		if(com->outfile != 1)
@@ -56,15 +51,15 @@ void child_forked(t_minishell *msh , int idx, int *pid)
 		}
 		if(com->infile > 0)
 			dup2(com->infile, 0);
-		
-
-
-
 
 		signal(SIGINT, exit_handler);
 		close_all_pipes(msh);
+
+		
+		
+		exec_builtins(com, 1);
 		execve(com->cmd_path, com->cmd_args, msh->env);
-		exit(10);
+		exit(0);
 	}
 	if(*pid)
 	{

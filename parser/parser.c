@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/14 15:19:44 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/15 23:14:39 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,13 @@ void fill_alone_empty(t_tokens **list)
 	head = *list;
 	while (head)
 	{
-		if (!ft_strncmp(head->token, "\'\'", 1) || !ft_strncmp(head->token, "\"\"", 1))
+		if (!ft_strncmp(head->token, "\'\'", 3) || !ft_strncmp(head->token, "\"\"", 3))
 		{
 			if ((!(head->next) || (head->next && !check_if_connected(head->next))) &&\
 			 (!(head->prev) || (head->prev && !check_if_connected(head->prev))))
+			{
 				head->token = ft_joinchar(head->token, 6);
+			}
 		}
 		head = head->next;
 	}
@@ -72,7 +74,7 @@ t_cmd *main_function(int ac, char *str, t_list **env)
 	info = NULL;
 	head = NULL;
 	head = (t_cmd *)calloc(sizeof(t_cmd), 1);
-	s = my_strtok(&str);
+	s = my_strtok(&str); 
 	while (s)
 	{
 		if (!ft_strncmp(s, "SSYY", ft_strlen(s) + 1))

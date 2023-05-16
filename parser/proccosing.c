@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:44:44 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/13 16:30:00 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/16 00:51:01 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,29 @@ void	return_red(char *s)
 	}
 }
 
+char *remove_non_printble(char *s)
+{
+	int i;
+	int len;
+	char *new;
+	
+	if (!s)
+		return (NULL);
+	len = ft_strlen(s);
+	new = (char *)malloc(len + 1);
+	if (!new)
+		return (NULL);
+	i = 0;
+	while (i <= len)
+	{
+		if (s[i] != 5)
+			new[i] = s[i];
+		i++;
+	}
+	free(s);
+	return (new);
+}
+
 char	**get_cmd_opt(char *s)
 {
 	char **new;
@@ -60,15 +83,19 @@ char	**get_cmd_opt(char *s)
 	if (new[0] == NULL)
 		return NULL;
 	return_red(new[0]);
+	new[0] = remove_non_printble(new[0]);
 	while (new[i])
 	{
 		return_red(new[i]);
 		if (new[i][0] == 2 && new[i][1] == 0)
 			new[i] = NULL;
-		else if ((new[i][0] == 2 && new[i][1] == 2 && new[i][2] == '\0') || (new[i][0] == 5 && new[i][1] == 0) || new[i][0] == 6)
-			new[i][0] = 0;
+		else if ((new[i][0] == 2 && new[i][1] == 2 && new[i][2] == '\0') ||\
+		 (new[i][ft_strlen(new[i]) - 1] == 5 && new[i][ft_strlen(new[i])] == 0) || new[i][0] == 6)
+			new[i][ft_strlen(new[i]) - 1] = 0;
+		new[i] = remove_non_printble(new[i]);
 		i++;
 	}
+	
 	return new;	
 }
 

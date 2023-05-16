@@ -6,13 +6,100 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:47:02 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/13 15:40:09 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/16 16:36:17 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"parse.h"
 
 extern int g_exit;
+
+void	return_space(char *s)
+{
+	int i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == 7)
+			s[i] = ' ';
+		i++;
+	}
+	return ;
+}
+
+void	tmp_free(char **s)
+{
+	int i;
+
+	if (!s)
+		return ;
+
+	i = 0;
+	while(s[i])
+	{
+		free(s[i]);
+		i++;
+	}
+	free(s[i]);
+	free(s);
+}
+
+char	*triiim_char(char *name, char c)
+{
+	char	*tmp;
+	char	*new;
+
+	tmp = ft_joinchar(ft_strdup(""), c);
+	new = ft_strtrim(name, tmp);
+	free(tmp);
+	free(name);
+	return (new);
+}
+
+void	print_str(char *s)
+{
+	int i;
+
+	i = 0;
+	puts(s);
+	while (s[i])
+		printf("%d - ", s[i++]);
+	printf("\n");
+	return ;
+}
+
+int	has_space(char *name)
+{
+	char **test;
+	int len;
+	int t;
+	int count;
+
+	if (!name[0])
+		return (0);
+	len = ft_strlen(name) - 1;
+	count = 0;
+	t = 0;
+	if (name[len] == 5)
+	{
+		t = len;
+		name[len] = 0;
+	}
+	test = ft_split(name, 7);
+	while (test && test[count])
+		count++;
+	// return_space(name);
+	if (t)
+		name[t] = 5;
+	if (count > 1 || !(*test))
+	{
+		tmp_free(test);
+		return (1);
+	}
+	tmp_free(test);
+	return (0);
+}
 
 int procces_readfiles(char *s, t_cmd *node)
 {
@@ -29,11 +116,13 @@ int procces_readfiles(char *s, t_cmd *node)
 		name = get_filename(name, 1, 1);
 		if (!name)
 			return (0);
-		if (name[0] == 2 && name[1] == '\0')
+		if ((name[0] == 2 && name[1] == '\0') || has_space(name))
 		{
 			if (file_errors(name, -2, node) == 1)
 				return (-1);
 		}
+		name = triiim_char(name, 5);
+		name = triiim_char(name, 7); 
 		fd = open(name, O_RDONLY);
 		if (fd == -1)
 		{
@@ -44,16 +133,6 @@ int procces_readfiles(char *s, t_cmd *node)
 		name = ft_strchr1(s, '<', 1);
 	}
 	return (fd);
-}
-
-void	name_with_nonprint(char *s)
-{
-	int len;
-
-	len = ft_strlen(s) - 1;
-	if (s[len] == 5)
-		s[len] = '\0';
-	return ;
 }
 
 int procces_writefiles(char *s, t_cmd *node)
@@ -67,17 +146,18 @@ int procces_writefiles(char *s, t_cmd *node)
 	{
 		name++;
 		name = get_filename(name, 1, 1);
-		if ((name[0] == 2 && name[1] == 2 && name[2] == '\0') || (name[0] == 5 && name[1] == 0))
+		if ((name[0] == 2 && name[1] == 2 && name[2] == '\0') || (name[0] == 6 && name[1] == 0))
 		{
 			free(name);
 			name = ft_strdup("");
 		}
-		if (name[0] == 2 && name[1] == '\0')
+		if ((name[0] == 2 && name[1] == '\0') || has_space(name))
 		{	
 			if (file_errors(name, -2, node) == 1)
 				return (-1);
 		}
-		name_with_nonprint(name);
+		name = triiim_char(name, 5);
+		name = triiim_char(name, 7);
 		fd = open(name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (fd == -1)
 		{
@@ -101,11 +181,18 @@ int procces_appendfiles(char *s, t_cmd *node)
 	{
 		name++;
 		name = get_filename(name, 1, 1);
-		if (name[0] == 2 && name[1] == '\0')
+		if ((name[0] == 2 && name[1] == 2 && name[2] == '\0') || (name[0] == 6 && name[1] == 0))
+		{
+			free(name);
+			name = ft_strdup("");
+		}
+		if ((name[0] == 2 && name[1] == '\0') || has_space(name))
 		{	
 			if (file_errors(name, -2, node) == 1)
 				return (-1);
 		}
+		name = triiim_char(name, 5);
+		name = triiim_char(name, 7); 
 		fd = open(name, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if (fd == -1)
 		{

@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 18:35:07 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/08 15:57:35 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/13 16:50:00 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void fill_env_list(t_list **lenv, char **env)
 
 char *get_from_env(t_list *lenv, char *str, int n)
 {
-    while(lenv)
+    while(lenv && lenv->content)
     {
         if(!ft_strncmp(lenv->content, "HOME=", n))
         {
@@ -77,5 +77,5 @@ char *get_from_env(t_list *lenv, char *str, int n)
         }
 		lenv = lenv->next;
     }
-    return "";
+    return NULL;
 }

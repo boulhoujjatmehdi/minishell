@@ -26,6 +26,8 @@ run: clear	all
 	./minishell
 
 clear:
-	clear
+	rm -rf minishell
+	# make -C libft fclean
+
 ex:
 	clear && ./minishell

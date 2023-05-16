@@ -6,13 +6,13 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/12 17:02:49 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/15 16:39:00 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-extern int g_exit;
+
 void wait_for_all(int *pids , int nb)
 {
 	int i;
@@ -21,11 +21,12 @@ void wait_for_all(int *pids , int nb)
 	while(i < nb)
 	{
 		int status= 0;
-		waitpid(pids[i], &status, 0);
-		// if()
-		g_exit = status>>8;
-		// g_exit = status>>8;
-		
+		if(pids[i])
+		{
+			waitpid(pids[i], &status, 0);
+			// printf("**%d , %d\n", g_msh->exit_st , pids[i]);
+			g_msh->exit_st = status>>8;
+		}
 		i++;
 	}
 }
@@ -41,88 +42,86 @@ void close_all_pipes(t_minishell *msh)
 		}
 }
 
-void fork_it_for_me(t_minishell *msh)
+void fork_it_for_me()
 {
 	int k;
 	int *pid;
 
 	k = 0;
 	int stat = 1;
-	pid = ft_calloc(sizeof(int) , msh->pipe_nb);
-		while(stat && k < msh->child_nb)
+	pid = ft_calloc(sizeof(int) , g_msh->pipe_nb);
+		while(stat && k < g_msh->child_nb)
 		{
-			t_cmd *com = get_right_comm(msh , k);
-			com->env = msh->lenv;
-			proccesing_cmd(com, msh->env);
+			t_cmd *com = get_right_comm(g_msh , k);
+			com->env = g_msh->lenv;
+			proccesing_cmd(com, g_msh->env);
 			if(com->ctr_c == 1)
 			{
 				stat = 0;
-				g_exit = 130;
-				// exit(44);
+				g_msh->exit_st = 130;
 			}
 			else if(stat && com->exit_msg)
 			{
-				printf("%s", com->exit_msg);
-				g_exit = com->exit_stat;
+				ft_putstr_fd(com->exit_msg, 2);
+				g_msh->exit_st = com->exit_stat;
 			}
-			else if(stat && !check_builtis(com, msh))
-				child_forked(msh , k,  &pid[k]);
+			else if(stat && !exec_builtins(com, 0))
+				child_forked(g_msh , k,  &pid[k]);
 			k++;
 		}
-	close_all_pipes(msh);
-	wait_for_all(pid, msh->pipe_nb);
+	close_all_pipes(g_msh);
+	wait_for_all(pid, g_msh->pipe_nb);
 	free(pid);
 }
 
-void  open_pipes(t_minishell *msh)
+void  open_pipes()
 {
 	int i;
 
 	i = 0;
-	msh->pipe = ft_calloc (sizeof(int) * 2 , (msh->pipe_nb + 1));
+	g_msh->pipe = ft_calloc (sizeof(int) * 2 , (g_msh->pipe_nb + 1));
 
-	if(!msh->pipe)
+	if(!g_msh->pipe)
 	{
-		msh->pipe = NULL;
+		g_msh->pipe = NULL;
 		return ;
 	}
-	while(i < msh->pipe_nb-1)
+	while(i < g_msh->pipe_nb-1)
 	{
-		pipe(&msh->pipe[i * 2]);
+		pipe(&g_msh->pipe[i * 2]);
 		i++;
 	}
 }
 
-void initialize_data(t_minishell *msh)
+void initialize_data()
 {
 	int i;
 
-	msh->child_nb = get_comm_lenght(msh->comms);
-	msh->pipe_nb = msh->child_nb;
+	g_msh->child_nb = get_comm_lenght(g_msh->comms);
+	g_msh->pipe_nb = g_msh->child_nb;
 }
 
 int main_function_exec(t_cmd *comms , t_list **lenv)
 {
-    t_minishell *msh;
-    msh = ft_calloc(sizeof(t_minishell), 1);
-	msh->lenv = lenv;
-    msh->comms = comms;
+
+    g_msh = g_msh;
+	g_msh->lenv = lenv;
+    g_msh->comms = comms;
 
 
-	msh->env = ft_calloc(sizeof(char*), ft_lstsize(*msh->lenv));
-	t_list *tmp = *msh->lenv;
+	g_msh->env = ft_calloc(sizeof(char*), ft_lstsize(*g_msh->lenv));
+	t_list *tmp = *g_msh->lenv;
 	int i =0;
 	while(tmp)
 	{
 		if(tmp->content)
-			msh->env[i] = tmp->content;
+			g_msh->env[i] = tmp->content;
 		tmp = tmp->next;
 		i++;
 	}
-    initialize_data(msh);
-    open_pipes(msh);
 
-	fork_it_for_me(msh);
-    
+    initialize_data();
+    open_pipes();
+	fork_it_for_me();
     return (0);
 }

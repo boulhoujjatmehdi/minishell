@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_minishell.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/12 17:00:48 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/13 16:00:38 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,11 @@ typedef struct s_minishell
 	char **env;
 	t_list **lenv;
 	t_tokens **list;
-	int g_exit;
+	int exit_st;
 }t_minishell;
 ///////////////////
 
+t_minishell *g_msh;
 
 // int g_exit = 0;
 #include "EXEC/exec.h"

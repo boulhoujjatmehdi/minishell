@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:53:55 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/12 18:58:17 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/16 16:30:02 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,21 @@ char	*env_var(char *s)
 	return (var);
 }
 
-char	*get_assos(char *s, t_list **env)
+void	replace_space(char *s)
+{
+	int i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == ' ')
+			s[i] = 7;
+		i++;
+	}
+	return ;
+}
+
+char	*get_assos(char *s, t_list **env, int type)
 {
 	int len;
 	int size;
@@ -65,6 +79,8 @@ char	*get_assos(char *s, t_list **env)
 	len = env_len(head->content);
 	size = ft_strlen(head->content) - len;
 	new = ft_substr(head->content, len, size);
+	if (type == 5)
+		replace_space(new);
 	return (new);
 }
 
@@ -72,10 +88,10 @@ char	*ft_exit_status(char *str)
 {
 	char 	*new;
 
-	if (g_exit == -1)
-		new = ft_strjoin2("0", str + 1);
+	if (g_msh->exit_st == -1)
+		new = ft_strjoin2(ft_strdup("0"), str + 1);
 	else 
-		new = ft_strjoin2(ft_itoa(g_exit), str + 1);
+		new = ft_strjoin2(ft_itoa(g_msh->exit_st), str + 1);
 	free(str);
 	return (new);
 }
@@ -93,17 +109,17 @@ char	*ft_replace(t_tokens *node, char *from, int *l, t_list **env)
 		*l = 1;
 		return (ft_strdup(from));
 	}
-	while (from[i] && (ft_isalnum(from[i]) || from[i] == '_' || from[1] == '?'))
+	while (from[i] && (ft_isalnum(from[i]) || from[i] == '_' || from[1] == '?' || from[1] == '@'))
 	{
 		i++;
-		if (from[1] == '?' || ft_isdigit(from[1]))
+		if (from[1] == '?' || from[1] == '@' || ft_isdigit(from[1]))
 			break ;
 	}
 	*l = i;
 	env1 = ft_substr(from, 1, i - 1);
 	if (env1[0] == '?')
 		return (ft_exit_status(env1));
-	new = get_assos(env1, env);
+	new = get_assos(env1, env, node->token_type);
 	return (new);
 }
 

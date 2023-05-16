@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 14:30:48 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/08 15:57:47 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/15 12:16:55 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void child_forked(t_minishell *msh , int idx, int *pid);
 
 
 //builtins.c
-int check_builtis(t_cmd *cmd , t_minishell *msh);
+int exec_builtins(t_cmd *cmd, int nb);
 int ft_export(t_minishell msh , t_cmd *cmd);
+void ft_env_cmd(t_minishell *msh, int vars_type);
 int ft_echo(t_cmd *cmd);
 #endif
