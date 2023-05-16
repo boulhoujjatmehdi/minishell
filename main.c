@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/15 14:05:32 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/15 21:51:35 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void signal_handler(int sig)
 		rl_redisplay();
 		ft_putstr_fd("\n",1);
 		rl_on_new_line();
-		// rl_replace_line("", 0);
 		rl_redisplay();
         stat =1;
 	}
@@ -41,26 +40,28 @@ int main2(int ac, char **av, char **env)
     while(1)
     {
         signal(SIGINT, *signal_handler);
-        // ft_putnbr_fd(g_exit, 1);
-        // ft_putstr_fd("\n", 1);
-        // g_exit = -1;
+        str = get_next_line(0); //mini-test
         // str = readline("minishell->");
-        str = get_next_line(0);
         if(str== NULL)
         {
 			exit(g_msh->exit_st);
-            
         }
-        if(*str)
+        if(*str && str[0] != '\n')
         {
-            str[ft_strlen(str)-1] = 0;
+            str[ft_strlen(str)-1] = 0; //mini-test
             add_history(str);
             head = main_function(ac, str, &lenv);
             if(head)
 			{
-				g_msh->exit_st = -1;
+				g_msh->last_st = g_msh->exit_st;
+                if(g_msh->exit_st == -1)
+                        g_msh->last_st = 0;
+                g_msh->exit_st = -1;
+                
                 main_function_exec(head , &lenv);
 			}
+            else
+                g_msh->exit_st = 2;
         }
         if(stat)
         {
@@ -71,7 +72,6 @@ int main2(int ac, char **av, char **env)
         }
         stat = 0;
     }
-        return g_msh->exit_st;
 }
 
 int main(int ac, char **av, char **env)

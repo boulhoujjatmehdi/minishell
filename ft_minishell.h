@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/13 16:00:38 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/15 20:00:45 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ typedef struct s_minishell
 	t_list **lenv;
 	t_tokens **list;
 	int exit_st;
+	int last_st;
 }t_minishell;
 ///////////////////
 

@@ -17,7 +17,6 @@ RDL = 	-lreadline -L /Users/eboulhou/.brew/opt/readline/lib -I /Users/eboulhou/.
 all: $(LBT)
 	cc  $(addprefix parser/, $(PRS)) $(addprefix EXEC/, $(EXE)) $(RDL)  $(addprefix other_src/, $(OTH)) $(SRC)  -o minishell
 
-
 $(LBT): 
 	make -C libft bonus
 	# make -C libft clean

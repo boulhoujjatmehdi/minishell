@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/15 15:14:28 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/15 21:58:14 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void wait_for_all(int *pids , int nb)
 		if(pids[i])
 		{
 			waitpid(pids[i], &status, 0);
-			// printf("**%d , %d\n", g_msh->exit_st , pids[i]);
 			g_msh->exit_st = status>>8;
 		}
 		i++;
@@ -64,13 +63,16 @@ void fork_it_for_me()
 			{
 				ft_putstr_fd(com->exit_msg, 2);
 				g_msh->exit_st = com->exit_stat;
+				printf("**%d**\n", com->exit_stat);
 			}
 			else if(stat && !exec_builtins(com, 0))
 				child_forked(g_msh , k,  &pid[k]);
 			k++;
 		}
 	close_all_pipes(g_msh);
+	printf("**%d**\n", g_msh->exit_st);
 	wait_for_all(pid, g_msh->pipe_nb);
+	printf("**%d**\n", g_msh->exit_st);
 	free(pid);
 }
 
@@ -107,7 +109,6 @@ int main_function_exec(t_cmd *comms , t_list **lenv)
     g_msh = g_msh;
 	g_msh->lenv = lenv;
     g_msh->comms = comms;
-
 
 	g_msh->env = ft_calloc(sizeof(char*), ft_lstsize(*g_msh->lenv));
 	t_list *tmp = *g_msh->lenv;

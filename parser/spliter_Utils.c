@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   spliter_Utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 19:03:38 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/13 16:08:41 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/15 21:36:56 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	quote_error(char start, char end)
 	if (start != end)
 	{
 		ft_putstr_fd("minishell: syntax error \n", 2);
+		
 		return (1);
 	}
 	return (0);
