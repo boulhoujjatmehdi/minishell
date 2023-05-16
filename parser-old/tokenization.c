@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:53:47 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/15 19:39:18 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/12 20:04:44 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	listing_cmd(t_tokens **list1, t_cmd **list2)
 			head2 = head2->next;
 		}
 		else
-		{
+		{	
 			head2->str = ft_strjoin2(head2->str, head1->token);
 			head2->str = ft_joinchar(head2->str, 1);
 			head1 = head1->next;

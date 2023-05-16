@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:47:06 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/16 16:17:05 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/13 17:27:05 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,17 @@ char	*ft_rplc(char *from, int *l, t_list **env)
 
 	i = 1;
 	*l = 0;
-	while (from[i] && (ft_isalnum(from[i]) || from[i] == '_' || from[1] == '?' || from[1] == '@'))
+	while (from[i] && (ft_isalnum(from[i]) || from[i] == '_' || from[1] == '?'))
 	{
 		i++;
-		if (from[1] == '?' || from[1] == '@' || ft_isdigit(from[1]))
+		if (from[1] == '?' || ft_isdigit(from[1]))
 			break ;
 	}
 	*l = i;
 	env1 = ft_substr(from, 1, i - 1);
 	if (env1[0] == '?')
 		return (ft_exit_status(env1));
-	new = get_assos(env1, env, 0);
+	new = get_assos(env1, env);
 	return (new);
 }
 
