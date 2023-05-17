@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization_Utils2.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:53:55 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/17 14:33:17 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 15:16:01 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,10 @@ char	*ft_exit_status(char *str)
 {
 	char 	*new;
 
-	if (g_msh->exit_st == -1)
+	if (g_msh->last_st == -1)
 		new = ft_strjoin2(ft_strdup("0"), str + 1);
 	else 
-		new = ft_strjoin2(ft_itoa(g_msh->exit_st), str + 1);
+		new = ft_strjoin2(ft_itoa(g_msh->last_st), str + 1);
 	free(str);
 	return (new);
 }

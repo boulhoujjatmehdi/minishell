@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/15 23:17:07 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 16:21:10 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,24 @@ void signal_handler(int sig)
 		rl_redisplay();
 		ft_putstr_fd("\n",1);
 		rl_on_new_line();
-		// rl_replace_line("", 0);
 		rl_redisplay();
         stat =1;
 	}
 }
+int skip_char(char *str, char c)
+{
+    int i;
+
+    i = 0;
+    while(str[i] && str[i] == c)
+        i++;
+    return i;
+}
+
 
 int main(int ac, char **av, char **env)
 {
+    
     t_cmd	*head;
     t_list  *lenv;
 
@@ -40,6 +50,9 @@ int main(int ac, char **av, char **env)
 	fill_env_list(&lenv, env);
     while(1)
     {
+        g_msh->last_st = g_msh->exit_st;
+            if(g_msh->exit_st == -1)
+                    g_msh->last_st = 0;
         signal(SIGINT, *signal_handler);
         // ft_putnbr_fd(g_exit, 1);
         // ft_putstr_fd("\n", 1);
@@ -49,20 +62,24 @@ int main(int ac, char **av, char **env)
         if(str== NULL)
         {
 			exit(g_msh->exit_st);
-            
         }
-        if(*str)
+        // if(*str )
+
+            
+        if(*str && str[skip_char(str, ' ')] != 0)
         {
-            // str[ft_strlen(str)-1] = 0;
+            g_msh->exit_st = -1;
             add_history(str);
             head = main_function(ac, str, &lenv);
             if(head)
 			{
-				g_msh->exit_st = -1;
+				// pause();
                 main_function_exec(head , &lenv);
+                // printf("exit code (0) >> %d\n",g_msh->last_st);
+                // printf("exit code (1) >> %d\n",g_msh->exit_st);
 			}
-			else
-				g_msh->exit_st = 2;
+            else
+                g_msh->exit_st = 2;
         }
         if(stat)
         {
@@ -73,19 +90,8 @@ int main(int ac, char **av, char **env)
         }
         stat = 0;
     }
-        return g_msh->exit_st;
 }
 
-// int main(int ac, char **av, char **env)
-// {
-    
-//     // add_history("cat <out <<eof | cat -e");
-//     // add_history("echo $PATH");
-//     // add_history("cat -e <<eof");
-//     main2(ac, av, env);
-//     return g_msh->exit_st;
-
-// }
 
 
 

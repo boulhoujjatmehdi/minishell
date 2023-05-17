@@ -6,13 +6,11 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 20:39:36 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/17 14:55:17 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 16:48:24 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"parse.h"
-
-
 
 void	print_str(char *s)
 {
@@ -43,14 +41,19 @@ char	*ft_cmd_path(char *cmd, char *env[], t_cmd *node)
 	{
 		l = 1;
 		if (check_diractory(cmd, node))
+		{
+			free(cmd);
 			return (NULL);
+		}
 		if (access(cmd, F_OK) == 0)
 		{
+			
 			if (access(cmd, X_OK) == 0)
 				return(cmd);
 			else
 			{
 				ft_permision(cmd, 126, node);
+				free(cmd);
 				return (NULL);
 			}
 		}
@@ -58,6 +61,7 @@ char	*ft_cmd_path(char *cmd, char *env[], t_cmd *node)
 	if (l == 1)
 	{
 		ft_no_file_diractory(cmd, 127, node);
+		free(cmd);
 		return (NULL);
 	}
 	cmd_path = ft_cmd_path2(cmd, env, node);
@@ -103,3 +107,4 @@ void	ft_ambiguous(int exit_code, t_cmd *node)
 	node->exit_msg = ft_strjoin2(node->exit_msg, "ambiguous redirect\n");
 	node->exit_stat = exit_code;
 }
+	

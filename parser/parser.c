@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/17 00:34:53 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 16:22:22 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ t_cmd *main_function(int ac, char *str, t_list **env)
 	{
 		if (!ft_strncmp(s, "SSYY", ft_strlen(s) + 1))
 		{
+			free(s);
 			free_token(&info);
 			return (NULL);
 		}

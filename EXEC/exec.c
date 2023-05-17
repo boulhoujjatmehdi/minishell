@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/17 14:54:30 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 12:36:23 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,14 @@ void wait_for_all(int *pids , int nb)
 	while(i < nb)
 	{
 		int status= 0;
-		if(pids[i])
+		t_cmd *cmd = get_right_comm(g_msh, i);
+		if(cmd->exit_msg)
+		{
+			g_msh->exit_st = cmd->exit_stat;
+		}
+		else if(pids[i])
 		{
 			waitpid(pids[i], &status, 0);
-			// printf("**%d , %d\n", g_msh->exit_st , pids[i]);
 			g_msh->exit_st = status>>8;
 		}
 		i++;
@@ -41,7 +45,7 @@ void close_all_pipes(t_minishell *msh)
 			ii += 2;
 		}
 }
-
+#include<sys/time.h>
 void fork_it_for_me()
 {
 	int k;
@@ -54,7 +58,10 @@ void fork_it_for_me()
 		{
 			t_cmd *com = get_right_comm(g_msh , k);
 			com->env = g_msh->lenv;
+			// puts("was here");
 			proccesing_cmd(com, g_msh->env);
+			// puts("was here");
+			
 			if(com->ctr_c == 1)
 			{
 				stat = 0;
@@ -64,13 +71,16 @@ void fork_it_for_me()
 			{
 				ft_putstr_fd(com->exit_msg, 2);
 				g_msh->exit_st = com->exit_stat;
+				// puts("22222222222");
 			}
 			else if(stat && !exec_builtins(com, 0))
 				child_forked(g_msh , k,  &pid[k]);
 			k++;
 		}
 	close_all_pipes(g_msh);
+	// printf("**%d**\n", g_msh->exit_st);
 	wait_for_all(pid, g_msh->pipe_nb);
+	// printf("**%d**\n", g_msh->exit_st);
 	free(pid);
 }
 
@@ -107,7 +117,6 @@ int main_function_exec(t_cmd *comms , t_list **lenv)
     g_msh = g_msh;
 	g_msh->lenv = lenv;
     g_msh->comms = comms;
-
 
 	g_msh->env = ft_calloc(sizeof(char*), ft_lstsize(*g_msh->lenv));
 	t_list *tmp = *g_msh->lenv;
