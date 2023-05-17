@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/17 12:17:10 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/17 12:36:23 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,10 @@ void fork_it_for_me()
 		{
 			t_cmd *com = get_right_comm(g_msh , k);
 			com->env = g_msh->lenv;
+			// puts("was here");
 			proccesing_cmd(com, g_msh->env);
+			// puts("was here");
+			
 			if(com->ctr_c == 1)
 			{
 				stat = 0;
