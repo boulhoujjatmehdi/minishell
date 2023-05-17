@@ -89,7 +89,7 @@ void	free_token(t_tokens **list);
 int	token_type(char *s);
 void	listing_cmd(t_tokens **list1, t_cmd **list2);
 void	del_space(t_tokens **list);
-
+void	free_2darrary(char **arr);
 
 
 #endif

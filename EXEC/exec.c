@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/17 12:36:23 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/17 16:58:53 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,14 @@ void wait_for_all(int *pids , int nb)
 
 void close_all_pipes(t_minishell *msh)
 {
-		int ii = 0;
-		while(ii < (msh->pipe_nb - 1 ) * 2)
-		{
-			close(msh->pipe[ii]);
-			close(msh->pipe[ii + 1]);
-			ii += 2;
-		}
+	int ii = 0;
+	while(ii < (msh->pipe_nb - 1 ) * 2)
+	{
+		close(msh->pipe[ii]);
+		close(msh->pipe[ii + 1]);
+		ii += 2;
+	}
+	free(msh->pipe);
 }
 #include<sys/time.h>
 void fork_it_for_me()
@@ -78,9 +79,7 @@ void fork_it_for_me()
 			k++;
 		}
 	close_all_pipes(g_msh);
-	// printf("**%d**\n", g_msh->exit_st);
 	wait_for_all(pid, g_msh->pipe_nb);
-	// printf("**%d**\n", g_msh->exit_st);
 	free(pid);
 }
 
@@ -128,9 +127,16 @@ int main_function_exec(t_cmd *comms , t_list **lenv)
 		tmp = tmp->next;
 		i++;
 	}
-
     initialize_data();
     open_pipes();
 	fork_it_for_me();
+	i = 0;
+	while(g_msh->env[i])
+	{
+		free(g_msh->env[i]);
+		g_msh->env[i] = NULL;
+		i++;
+	}
+	free(g_msh->env);
     return (0);
 }

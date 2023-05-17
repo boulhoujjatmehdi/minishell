@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization_Utils4.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 19:00:11 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/14 15:17:28 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 16:38:01 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,28 +32,28 @@ void	del_emptyyy(t_tokens **list)
 	}
 }
 
-// //this fucntion removes empty tokens from the Llist that need to be removed
-// void	del_empty(t_tokens **list)
-// {
-// 	t_tokens *head;
+void	free_2darrary(char **arr)
+{
+	int i;
+	
+	i = 0;
+	while(arr && arr[i])
+	{
+		free(arr[i]);
+		arr[i] = NULL;
+		i++;
+	}
+	free(arr);
+}
 
-// 	head = *list;
-// 	give_pos(list);
-// 	while (head)
-// 	{
-// 		if (!ft_strncmp(head->token, "", 1) && head->pos == 1)
-// 			head = head->next;
-// 		else if (!ft_strncmp(head->token, "", 1) && head->pos != 1 && head->prev->token_type == 1)
-// 			head = head->next;
-// 		else if (!ft_strncmp(head->token, "", 1))
-// 		{
-// 			head->token = ft_joinchar(head->token, 2);
-// 			head = head->next;
-// 		}
-// 		else 
-// 			head = head->next;
-// 	}
-// }
+void	free_lincked_list(t_list *head)
+{
+	while(head)
+	{
+		ft_lstdelone(head, &free);
+		head = head->next;		
+	}
+}
 
 int	syntax_error(t_tokens **list)
 {

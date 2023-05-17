@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/17 15:10:34 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/17 16:04:25 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,7 +235,6 @@ void ft_env_cmd(t_minishell *msh)
 		
         tmp = tmp->next;
     }
-
 	exit(0);
 }
 

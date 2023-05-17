@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/17 15:41:07 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/17 16:36:01 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,18 +54,11 @@ int main(int ac, char **av, char **env)
             if(g_msh->exit_st == -1)
                     g_msh->last_st = 0;
         signal(SIGINT, *signal_handler);
-        // ft_putnbr_fd(g_exit, 1);
-        // ft_putstr_fd("\n", 1);
-        // g_exit = -1;
-        str = readline("minishell->");
-        // str = get_next_line(0);
-        if(str== NULL)
-        {
-			exit(g_msh->exit_st);
-        }
-        // if(*str )
 
-            
+        str = readline("minishell->");
+        if(str== NULL)
+			exit(g_msh->exit_st);
+
         if(*str && str[skip_char(str, ' ')] != 0)
         {
             g_msh->exit_st = -1;
@@ -73,10 +66,7 @@ int main(int ac, char **av, char **env)
             head = main_function(ac, str, &lenv);
             if(head)
 			{
-                
                 main_function_exec(head , &lenv);
-                // printf("exit code (0) >> %d\n",g_msh->last_st);
-                // printf("exit code (1) >> %d\n",g_msh->exit_st);
 			}
             else
                 g_msh->exit_st = 2;
