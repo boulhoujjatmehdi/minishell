@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/17 00:31:22 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/17 12:23:39 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int skip_char(char *str, char c)
 int main(int ac, char **av, char **env)
 {
     
- t_cmd	*head;
+    t_cmd	*head;
     t_list  *lenv;
 
     g_msh = ft_calloc(sizeof(t_minishell), 1);
@@ -70,11 +70,14 @@ int main(int ac, char **av, char **env)
             head = main_function(ac, str, &lenv);
             if(head)
 			{
-				g_msh->exit_st = -1;
+				g_msh->last_st = g_msh->exit_st;
+                if(g_msh->exit_st == -1)
+                        g_msh->last_st = 0;
+                g_msh->exit_st = -1;
                 main_function_exec(head , &lenv);
 			}
-			else
-				g_msh->exit_st = 2;
+            else
+                g_msh->exit_st = 2;
         }
         if(stat)
         {
@@ -85,7 +88,6 @@ int main(int ac, char **av, char **env)
         }
         stat = 0;
     }
-        return g_msh->exit_st;
 }
 
 

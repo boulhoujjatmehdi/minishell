@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/16 17:50:41 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/17 12:17:10 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void wait_for_all(int *pids , int nb)
 		}
 		else if(pids[i])
 		{
-			// puts("222222");
 			waitpid(pids[i], &status, 0);
 			g_msh->exit_st = status>>8;
 		}
@@ -130,6 +129,5 @@ int main_function_exec(t_cmd *comms , t_list **lenv)
     initialize_data();
     open_pipes();
 	fork_it_for_me();
-
     return (0);
 }
