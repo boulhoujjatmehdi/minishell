@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:53:52 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/15 16:25:19 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 14:14:52 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	mark_delelimeter(t_tokens **list, int key)
 	head = *list;
 	while (head)
 	{
-		if (head->pos == key)
+		if (head->pos == key || head->token_type == 6 || head->token_type == 7)
 		{
 			head->token = ft_joinchar(head->token, 5);
 		}
@@ -47,8 +47,8 @@ void	adjest(t_tokens **list)
 	{
 		if ((head->token_type == 2 && head->next->token_type == 2) || (head->token_type == 6 && head->next->token_type == 6) || (head->token_type == 7 && head->next->token_type == 7) )
 		{
-			tmp1 = join_two_nodes(head, head->next);
 			tmp2 = head->pos;
+			tmp1 = join_two_nodes(head, head->next);
 			delete_node(list, tmp1);
 		}
 		else if ((head->token_type == 6 && head->next->token_type == 7) || (head->token_type == 7 && head->next->token_type == 6))
@@ -67,7 +67,6 @@ void	adjest(t_tokens **list)
 		else if ((head->token_type == 2 && head->next->token_type == 5) || \
 (head->token_type == 5 && head->next->token_type == 2))
 		{
-			tmp2 = head->pos;
 			tmp1 = join_two_nodes(head, head->next);
 			delete_node(list, tmp1);
 		}

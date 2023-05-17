@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:47:02 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/16 22:10:50 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 14:58:05 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int procces_writefiles(char *s, t_cmd *node)
 	{
 		name++;
 		name = get_filename(name, 1, 1);
-		if ((name[0] == 2 && name[1] == 2 && name[2] == '\0') || (name[0] == 6 && name[1] == 0))
+		if ((name[0] == 2 && name[1] == 2 && name[2] == '\0') || (name[0] == 6 && name[1] == 5 && name[2] == 0))
 		{
 			free(name);
 			name = ft_strdup("");
@@ -164,7 +164,7 @@ int procces_appendfiles(char *s, t_cmd *node)
 	{
 		name++;
 		name = get_filename(name, 1, 1);
-		if ((name[0] == 2 && name[1] == 2 && name[2] == '\0') || (name[0] == 6 && name[1] == 0))
+		if ((name[0] == 2 && name[1] == 2 && name[2] == '\0') || (name[0] == 6 && name[1] == 5 && name[2] == 0))
 		{
 			free(name);
 			name = ft_strdup("");

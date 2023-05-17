@@ -6,11 +6,25 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 20:39:36 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/17 00:15:27 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 14:55:17 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"parse.h"
+
+
+
+void	print_str(char *s)
+{
+	int i;
+
+	i = 0;
+	puts(s);
+	while (s[i])
+		printf("%d - ", s[i++]);
+	printf("\n");
+	return ;
+}
 
 char	*ft_cmd_path(char *cmd, char *env[], t_cmd *node)
 {
@@ -20,7 +34,7 @@ char	*ft_cmd_path(char *cmd, char *env[], t_cmd *node)
 	l = 0;
 	if (!cmd)
 		return NULL;
-	if (cmd && !cmd[0])
+	if (!cmd[0])
 		ft_cmd_not_found(cmd, 127, node);
 	if(check_builtins(cmd))
 		return (cmd);

@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:44:44 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/17 00:25:54 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 14:50:48 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,18 +93,6 @@ void deleteLastNode(t_list **list) {
 	return ;
 }
 
-void	print_str(char *s)
-{
-	int i;
-
-	i = 0;
-	puts(s);
-	while (s[i])
-		printf("%d - ", s[i++]);
-	printf("\n");
-	return ;
-}
-
 void	add_if_separeted(t_list **list)
 {
 	t_list *head;
@@ -168,10 +156,9 @@ char	**get_cmd_opt(char *s)
 		if (head->content != NULL)
 		{
 			new[i] = ft_my_strdup(head->content);
-			if ((new[i][0] == 2 && new[i][1] == 2 && new[i][2] == '\0') ||\
-			(new[i][ft_strlen(new[i]) - 1] == 5 && new[i][ft_strlen(new[i])] == 0) || new[i][0] == 6)
-				new[i][ft_strlen(new[i]) - 1] = 0;
 			new[i] = remove_non_printble(new[i]);
+			if ((new[i][0] == 2 && new[i][1] == 2 && new[i][2] == '\0') || new[i][0] == 6)
+				new[i][0] = 0;
 			i++;
 		}
 		head = head->next;
@@ -195,7 +182,7 @@ void	proccesing_cmd(t_cmd *node, char **env)
 	if (node->outfile == -1)
 		return ;
 	node->cmd_args = get_cmd_opt(node->str);
-	if (node->cmd_args != NULL)
+	if (node->cmd_args != NULL && (node->cmd_args)[0] != NULL)
 		cmd = ft_strdup(node->cmd_args[0]);
 	node->cmd_path = ft_cmd_path(cmd, env, node);
 }
