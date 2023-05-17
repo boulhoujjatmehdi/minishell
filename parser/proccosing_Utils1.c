@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   proccosing_Utils1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:47:06 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/17 14:44:01 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/17 14:38:33 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	get_here_doc(char *name, t_list **env)
 	{
 		t = check_delimeter(name);
 		signal(SIGINT, SIG_DFL);
-		len = ft_strlen(name);
+		len = ft_strlen(name) + 1;
 		fd = open(".tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777);
 		str = readline(">");
 			while(str && ft_strncmp(name, str, len))

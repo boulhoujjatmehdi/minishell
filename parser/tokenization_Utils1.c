@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:53:58 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/16 19:28:47 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 14:22:00 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,21 @@ int	check_after_heredoc(t_tokens *node)
 	t_tokens	*current;
 	int			key1;
 	int			key2;
+	int			key3;
 	int			tmp;
 
 	current = node;
 	key1 = 4;
 	key2 = 4;
-	if (current->prev && (current->prev->token_type == 4 || current->prev->token_type == 7 || current->prev->token_type == 6))
+	key3 = 4;
+	if (current->prev && (current->prev->token_type == 4 || current->prev->token_type == 7 || current->prev->token_type == 6 || current->prev->token_type == 2))
 	{
 		tmp = current->prev->token_type;
 		if (tmp != 4)
 		{
 			key1 = 6;
 			key2 = 7;
+			key3 = 2; 
 		}
 		current = current->prev;
 	}
@@ -55,8 +58,9 @@ int	check_after_heredoc(t_tokens *node)
 		{
 			key1 = 4;
 			key2 = 4;
+			key3 = 4;
 		}
-		if (current->prev->token_type == key1 || current->prev->token_type == key2)
+		if (current->prev->token_type == key1 || current->prev->token_type == key2 || current->prev->token_type == key3)
 		{
 			current = current->prev;
 		}

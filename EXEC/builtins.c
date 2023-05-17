@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/16 17:47:40 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/17 15:10:34 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,7 @@ int ft_echo(t_cmd *cmd)
     {
             printf("%s", *to_print);
             to_print++;
-			if(*to_print)
+			if(*to_print && (*to_print)[0] != 0)
 				printf(" ");
     }
 	if(!trigger)
