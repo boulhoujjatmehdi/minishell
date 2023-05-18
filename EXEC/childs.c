@@ -6,64 +6,76 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 14:52:15 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/18 14:30:08 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/18 17:33:13 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-int	export(t_minishell msh, t_cmd *cmd)
+void	child_forked(t_minishell *msh, int idx, int *pid)
 {
-	int	i;
-
-	ft_lstadd_back(msh.lenv, ft_lstnew(cmd->cmd_args[1]));
-	i = 0;
-	return (0);
-}
-
-void exit_handler()
-{
-	exit(150);
-}
-
-void child_forked(t_minishell *msh, int idx, int *pid)
-{
-	t_cmd	*com;
-
 	*pid = fork();
-	if(*pid == 0)
+	if (*pid == 0)
 	{
-		com = get_right_comm(msh , idx);
-		if(com->next)
+		g_msh->c_tmp = get_right_comm(msh, idx);
+		if (g_msh->c_tmp->next)
 			dup2(msh->pipe[idx * 2 + 1], 1);
-		if(com->outfile != 1)
+		if (g_msh->c_tmp->outfile != 1)
 		{
-			dup2(com->outfile, 1);
-			if(com->next)
-				ft_putstr_fd("\n",msh->pipe[idx * 2 + 1]);
+			dup2(g_msh->c_tmp->outfile, 1);
+			if (g_msh->c_tmp->next)
+				ft_putstr_fd("\n", msh->pipe[idx * 2 + 1]);
 		}
-		if(idx > 0)
+		if (idx > 0)
 		{
 			dup2(msh->pipe[(idx - 1) * 2], 0);
-			if(com->infile > 0)
+			if (g_msh->c_tmp->infile > 0)
 				read(0, NULL, 1);
 		}
-		if(com->infile > 0)
-			dup2(com->infile, 0);
-
-		signal(SIGINT, exit_handler);
+		if (g_msh->c_tmp->infile > 0)
+			dup2(g_msh->c_tmp->infile, 0);
 		close_all_pipes(msh);
-
-		
-		
-		exec_builtins(com, 1);
-		execve(com->cmd_path, com->cmd_args, msh->env);
+		exec_builtins(g_msh->c_tmp, 1);
+		execve(g_msh->c_tmp->cmd_path, g_msh->c_tmp->cmd_args, msh->env);
 		exit(0);
 	}
-	if(*pid)
+}
+
+void	forking(int k, int *stat, int *pid)
+{
+	while (*stat && k < g_msh->child_nb)
 	{
-		// int status;
-		// // waitpid(*pid ,&status,0);
-		// printf("~~~~~~~~~%d\n", status);
+		g_msh->c_tmp = get_right_comm(g_msh, k);
+		g_msh->c_tmp->env = g_msh->lenv;
+		proccesing_cmd(g_msh->c_tmp, g_msh->env);
+		if (g_msh->c_tmp->ctr_c == 1)
+		{
+			*stat = 0;
+			g_msh->exit_st = 130;
+		}
+		else if (*stat && g_msh->c_tmp->exit_msg)
+		{
+			ft_putstr_fd(g_msh->c_tmp->exit_msg, 2);
+			g_msh->exit_st = g_msh->c_tmp->exit_stat;
+		}
+		else if (*stat && !exec_builtins(g_msh->c_tmp, 0))
+			child_forked(g_msh, k, &pid[k]);
+		k++;
 	}
+}
+
+void	fork_it_for_me(void)
+{
+	int	k;
+	int	*pid;
+	int	stat;
+
+	k = 0;
+	stat = 1;
+	pid = ft_calloc(sizeof(int), g_msh->child_nb);
+	open_pipes();
+	forking(k, &stat, pid);
+	close_all_pipes(g_msh);
+	wait_for_all(pid, g_msh->child_nb);
+	free(pid);
 }

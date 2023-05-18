@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/17 18:09:05 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/18 19:20:36 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct s_comm
 typedef struct s_minishell
 {
 	t_cmd *comms;
+	t_cmd *c_tmp;
 	int *pipe;
 	int pipecount;
 	int pipe_nb;
@@ -91,6 +92,7 @@ typedef struct s_minishell
 	char **env;
 	t_list **lenv;
 	t_tokens **list;
+	int stat;
 	int exit_st;
 	int last_st;
 }t_minishell;
