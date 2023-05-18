@@ -6,13 +6,11 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:53:47 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/15 19:39:18 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/18 20:14:48 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"parse.h"
-
-extern int g_exit;
 
 int	token_type(char *s)
 {
@@ -23,22 +21,24 @@ int	token_type(char *s)
 	else if (!ft_strncmp("$", s, 1))
 		return (ENV_VAR);
 	else if (!ft_strncmp("|", s, 2))
-		return(PIPE_TOKEN);
-	else if (!ft_strncmp(">", s, 2) || !ft_strncmp("<", s, 2) || !ft_strncmp(">>", s, 3) || !ft_strncmp("<<", s, 3))
+		return (PIPE_TOKEN);
+	else if (!ft_strncmp(">", s, 2) || !ft_strncmp("<", s, 2) || \
+	!ft_strncmp(">>", s, 3) || !ft_strncmp("<<", s, 3))
 		return (RED_TOKEN);
 	else if (!ft_strncmp(" ", s, 2))
-		return(SPACE_TOKEN);
+		return (SPACE_TOKEN);
 	else
-		return(ARG_TOKEN);
+		return (ARG_TOKEN);
 }
 
-//this function puts together my commend table by spliting the tokens with the pipe token and
+//this function puts together my commend table by spliting
+// the tokens with the pipe token and
 // puting them together into a string ready to be processed 
 void	listing_cmd(t_tokens **list1, t_cmd **list2)
 {
 	t_tokens	*head1;
 	t_cmd		*head2;
-	char *tmp;
+	char		*tmp;
 
 	head2 = *list2;
 	head1 = *list1;
@@ -62,8 +62,8 @@ void	listing_cmd(t_tokens **list1, t_cmd **list2)
 //this fucntion removes space tokens from the Llist
 void	del_space(t_tokens **list)
 {
-	t_tokens *head;
-	
+	t_tokens	*head;
+
 	head = *list;
 	give_pos(list);
 	while (head)

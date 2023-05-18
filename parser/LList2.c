@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:42 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/12 19:40:51 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/18 15:32:19 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,44 +50,4 @@ t_cmd	*lstlast2(t_cmd *lst)
 	while (lst->next)
 		lst = lst->next;
 	return (lst);
-}
-
-void	delete_node2(t_cmd **head, int key)
-{
-    t_cmd *temp;
-    t_cmd *current  = *head;
-	int i;
-
-    if((*head)->key == key)
-    {
-        temp = *head;    
-        *head = (*head)->next;
-		free(temp->str);
-		free(temp->cmd_path);
-		i = 0;
-		while (temp->cmd_args && temp->cmd_args[i])
-			free(temp->cmd_args[i++]);
-        free(temp);
-	}
-    else
-    {
-        while(current->next)
-        {
-            if(current->next->key == key)
-            {
-                temp = current->next;
-                current->next = current->next->next;
-        		*head = (*head)->next;
-				free(temp->str);
-				free(temp->cmd_path);
-				i = 0;
-				while (temp->cmd_args && temp->cmd_args[i])
-					free(temp->cmd_args[i++]);
-        		free(temp);
-                break;
-            }
-            else
-                current = current->next;
-        }
-    }
 }
