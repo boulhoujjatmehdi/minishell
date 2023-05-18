@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/12 19:01:03 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 16:06:42 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void	give_pos(t_tokens **list)
 
 void delete_node(t_tokens** head, int key) {
     t_tokens	*current;
-    // t_tokens	*temp;
 
 	current = *head;
     while (current != NULL && current->pos != key) {

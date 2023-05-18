@@ -88,8 +88,12 @@ void	check_double_red(t_tokens **list);
 void	free_token(t_tokens **list);
 int	token_type(char *s);
 void	listing_cmd(t_tokens **list1, t_cmd **list2);
+char *remove_non_printble(char *s);
 void	del_space(t_tokens **list);
+
 void	free_2darrary(char **arr);
+void	free_lincked_list(t_list *head);
+void	print_str(char *s);
 
 
 #endif

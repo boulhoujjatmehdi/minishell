@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/15 20:00:45 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/17 18:09:05 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ typedef struct s_minishell
 ///////////////////
 
 t_minishell *g_msh;
-
+int puse_ ;
 // int g_exit = 0;
 #include "EXEC/exec.h"
 #include "parser/parse.h"

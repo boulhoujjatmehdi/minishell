@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/17 16:58:53 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/18 14:22:01 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,22 +104,20 @@ void  open_pipes()
 
 void initialize_data()
 {
-	int i;
-
 	g_msh->child_nb = get_comm_lenght(g_msh->comms);
 	g_msh->pipe_nb = g_msh->child_nb;
 }
 
 int main_function_exec(t_cmd *comms , t_list **lenv)
 {
-
-    g_msh = g_msh;
 	g_msh->lenv = lenv;
     g_msh->comms = comms;
 
 	g_msh->env = ft_calloc(sizeof(char*), ft_lstsize(*g_msh->lenv));
 	t_list *tmp = *g_msh->lenv;
 	int i =0;
+	if(puse_)
+		pause();
 	while(tmp)
 	{
 		if(tmp->content)
@@ -131,12 +129,6 @@ int main_function_exec(t_cmd *comms , t_list **lenv)
     open_pipes();
 	fork_it_for_me();
 	i = 0;
-	while(g_msh->env[i])
-	{
-		free(g_msh->env[i]);
-		g_msh->env[i] = NULL;
-		i++;
-	}
 	free(g_msh->env);
     return (0);
 }

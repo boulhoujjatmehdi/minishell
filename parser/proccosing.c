@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:44:44 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/17 14:50:48 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/17 16:55:25 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	return_red(char *s)
 char *remove_non_printble(char *s)
 {
 	int i;
+	int k;
 	int len;
 	char *new;
 	
@@ -61,10 +62,11 @@ char *remove_non_printble(char *s)
 	if (!new)
 		return (NULL);
 	i = 0;
+	k = 0;
 	while (i <= len)
 	{
 		if (s[i] != 5 && s[i] != 7)
-			new[i] = s[i];
+			new[k++] = s[i];
 		i++;
 	}
 	free(s);
@@ -78,14 +80,12 @@ void deleteLastNode(t_list **list) {
     if (*list == NULL)
         return;
 
-    // If the linked list has only one node
     if ((*list)->next == NULL)
 	{
         free(*list);
         *list = NULL;
         return;
     }
-    // Traverse to the second last node
     while (head->next->next != NULL)
         head = head->next;
     free(head->next);
@@ -103,14 +103,13 @@ void	add_if_separeted(t_list **list)
 	tmp = ft_split(head->content, 7);
 	i = 0;
 	if (tmp && tmp[i])
-	{
 		deleteLastNode(list);
-	}
 	while (tmp && tmp[i])
 	{
 		ft_lstadd_back(list, ft_lstnew(ft_my_strdup(tmp[i])));
 		i++;
 	}
+	free_2darrary(tmp);
 	return ;
 }
 
@@ -132,6 +131,7 @@ void	cmd_opt_ll(t_list **list, char *s)
 		add_if_separeted(list);
 		i++;
 	}
+	free_2darrary(tmp);
 }
 
 char	**get_cmd_opt(char *s)
@@ -164,6 +164,7 @@ char	**get_cmd_opt(char *s)
 		head = head->next;
 	}
 	new[i] = NULL;
+	free_lincked_list(list);
 	return new;	
 }
 

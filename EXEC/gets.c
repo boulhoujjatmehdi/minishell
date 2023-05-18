@@ -6,59 +6,60 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 18:35:07 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/13 16:50:00 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/18 14:28:09 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-int get_comm_lenght(t_cmd *comms)
+int	get_comm_lenght(t_cmd *comms)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(comms)
+	while (comms)
 	{
 		comms = comms->next;
 		i++;
 	}
-	return i;
+	return (i);
 }
 
-int get_nb_of_pipes(t_cmd *comms)
+int	get_nb_of_pipes(t_cmd *comms)
 {
-	int i;
-	
+	int	i;
+
 	i = 0;
-	while(comms)
+	while (comms)
 	{
-		if(comms->infile > 0 || comms->infile == -2)
+		if (comms->infile > 0 || comms->infile == -2)
 			i++;
 		i++;
 		comms = comms->next;
 	}
-	return i;
+	return (i);
 }
 
-t_cmd *get_right_comm(t_minishell *msh, int idx)
+t_cmd	*get_right_comm(t_minishell *msh, int idx)
 {
-	t_cmd *tmp;
+	t_cmd	*tmp;
+	int		i;
+
 	tmp = msh->comms;
-    int i = 0;
-	while(i < idx)
+	i = 0;
+	while (i < idx)
 	{
 		tmp = tmp->next;
-        i++;
-		if(i == idx)
-			return tmp;
+		i++;
+		if (i == idx)
+			return (tmp);
 	}
-	
-	return tmp;
+	return (tmp);
 }
 
-void fill_env_list(t_list **lenv, char **env)
+void	fill_env_list(t_list **lenv, char **env)
 {
-	while(*env)
+	while (*env)
 	{
 		ft_lstadd_back(lenv, ft_lstnew(ft_strdup(*env)));
 		env++;
@@ -66,16 +67,15 @@ void fill_env_list(t_list **lenv, char **env)
 	ft_lstadd_back(lenv, ft_lstnew(NULL));
 }
 
-
-char *get_from_env(t_list *lenv, char *str, int n)
+char	*get_from_env(t_list *lenv, char *str, int n)
 {
-    while(lenv && lenv->content)
-    {
-        if(!ft_strncmp(lenv->content, "HOME=", n))
-        {
-            return(lenv->content);
-        }
+	while (lenv && lenv->content)
+	{
+		if (!ft_strncmp(lenv->content, str, n))
+		{
+			return (lenv->content);
+		}
 		lenv = lenv->next;
-    }
-    return NULL;
+	}
+	return (NULL);
 }

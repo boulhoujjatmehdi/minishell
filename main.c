@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/17 16:36:01 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/17 18:40:37 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,25 @@ int skip_char(char *str, char c)
         i++;
     return i;
 }
+void free_cmd_mehdi(t_cmd **head)
+{
+    t_cmd *hd;
+    t_cmd *tmp;
 
+    hd = *head;
+    while(hd)
+    {
+        if(hd->cmd_path)
+            free(hd->cmd_path);
+        free_2darrary(hd->cmd_args);
+        if(hd->str)
+            free(hd->str);
+        tmp = hd;
+        hd = hd->next;
+        // hd.
+        free(tmp);
+    }
+}
 
 int main(int ac, char **av, char **env)
 {
@@ -47,7 +65,9 @@ int main(int ac, char **av, char **env)
     g_msh = ft_calloc(sizeof(t_minishell), 1);
     char *str;
     lenv = NULL;
-	fill_env_list(&lenv, env);
+	fill_env_list(&lenv, env);//to check
+
+    add_history("ls -la");
     while(1)
     {
         g_msh->last_st = g_msh->exit_st;
@@ -56,6 +76,8 @@ int main(int ac, char **av, char **env)
         signal(SIGINT, *signal_handler);
 
         str = readline("minishell->");
+        // if(str[0] == '.')
+        //     puse_ = 1;        
         if(str== NULL)
 			exit(g_msh->exit_st);
 
@@ -67,6 +89,10 @@ int main(int ac, char **av, char **env)
             if(head)
 			{
                 main_function_exec(head , &lenv);
+
+                // free_cmd_mehdi(&head);
+                // head = NULL;
+                
 			}
             else
                 g_msh->exit_st = 2;
@@ -81,7 +107,3 @@ int main(int ac, char **av, char **env)
         stat = 0;
     }
 }
-
-
-
-
