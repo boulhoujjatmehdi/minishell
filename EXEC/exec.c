@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/18 17:33:02 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 13:55:29 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,6 @@ int	execution_function(t_cmd *comms, t_list **lenv)
 	g_msh->env = ft_calloc(sizeof(char *), ft_lstsize(*g_msh->lenv));
 	tmp = *g_msh->lenv;
 	i = 0;
-	if (puse_)
-		pause();
 	while (tmp)
 	{
 		if (tmp->content)
@@ -91,5 +89,6 @@ int	execution_function(t_cmd *comms, t_list **lenv)
 	fork_it_for_me();
 	i = 0;
 	free(g_msh->env);
+	unlink(".tmp");
 	return (0);
 }

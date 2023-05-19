@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 19:40:29 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/12 20:04:35 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/18 16:21:38 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ char	*ft_strjoin2(char *s1, char *s2)
 
 void	give_key(t_cmd **list)
 {
-	t_cmd *head;
-	int i;
-	
+	t_cmd	*head;
+	int		i;
+
 	i = 1;
 	head = *list;
 	while (head)
@@ -63,18 +63,4 @@ void	give_key(t_cmd **list)
 		i++;
 		head = head->next;
 	}
-}
-
-void	free_cmd(t_cmd **list)
-{
-	t_cmd *head;
-
-	give_key(list);
-	head = *list;
-	while (head)
-	{
-		delete_node2(list, head->key);
-		head = head->next;
-	}
-	// *list = NULL;
 }

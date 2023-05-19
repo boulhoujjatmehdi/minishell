@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/18 17:27:44 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 15:27:37 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	ft_export(t_minishell msh, t_cmd *cmd)
 			tmp = find_var_env(tmp, cmd->cmd_args[i]);
 			if (!tmp || !tmp->content)
 			{
-				ft_lstlast(*msh.lenv)->content = cmd->cmd_args[i];
+				ft_lstlast(*msh.lenv)->content = ft_strdup(cmd->cmd_args[i]);
 				ft_lstadd_back(msh.lenv, ft_lstnew(NULL));
 			}
 		}
@@ -44,9 +44,9 @@ int	ft_echo(t_cmd *cmd)
 {
 	char	**to_print;
 	int		trigger;
-	int		i;
 	char	*str;
 
+	str = NULL;
 	trigger = 0;
 	to_print = cmd->cmd_args;
 	to_print++;
@@ -79,6 +79,7 @@ int	ft_unset(t_minishell *msh, t_cmd *cmd)
 	char	*str;
 	int		i;
 
+	str = NULL;
 	prv = NULL;
 		i = 1;
 	while (cmd->cmd_args[i])

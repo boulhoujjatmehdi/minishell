@@ -6,7 +6,7 @@
 /*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:54:45 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/17 16:06:42 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/18 16:21:14 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ t_tokens	*lstlast(t_tokens *lst)
 //this function goes through a the tokens lincked list and indexs it
 void	give_pos(t_tokens **list)
 {
-	t_tokens *head;
-	int i;
-	
+	t_tokens	*head;
+	int			i;
+
 	i = 1;
 	head = *list;
 	while (head)
@@ -65,23 +65,21 @@ void	give_pos(t_tokens **list)
 	}
 }
 
-void delete_node(t_tokens** head, int key) {
-    t_tokens	*current;
+void	delete_node(t_tokens **head, int key)
+{
+	t_tokens	*current;
 
 	current = *head;
-    while (current != NULL && current->pos != key) {
-        current = current->next;
-    }
-    if (current == NULL)
-        return;
-    if (current->prev != NULL) {
-        current->prev->next = current->next;
-    } else {
-        *head = current->next;
-    }
-    if (current->next != NULL) {
-        current->next->prev = current->prev;
-    }
+	while (current != NULL && current->pos != key)
+		current = current->next;
+	if (current == NULL)
+		return ;
+	if (current->prev != NULL)
+		current->prev->next = current->next;
+	else
+		*head = current->next;
+	if (current->next != NULL)
+		current->next->prev = current->prev;
 	free(current->token);
-    free(current);
+	free(current);
 }

@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/01 16:40:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/15 20:50:04 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 13:49:35 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	ft_atoi(const char *str)
 	}
 	return (ret * neg);
 }
+
 int	ft_atoi_mod(const char *str, int *boel)
 {
 	int		i;
@@ -62,7 +63,7 @@ int	ft_atoi_mod(const char *str, int *boel)
 			return (0);
 		i++;
 	}
-	if(str[i])
+	if (str[i])
 		*boel = 1;
 	return (ret * neg);
 }

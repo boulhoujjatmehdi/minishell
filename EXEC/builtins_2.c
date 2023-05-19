@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 17:22:06 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/18 17:24:12 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 14:17:16 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,11 @@ t_list	*find_var_env(t_list *tmp, char *str2)
 		}
 		if ((str[j] == 0 || str[j] == '=') && str2[j] == '=')
 		{
-			tmp->content = str2;
+			free(tmp->content);
+			tmp->content = ft_strdup(str2);
 			break ;
 		}
-		if (str[j] == '=' && str2[j] == 0)
-			break ;
-		if (!str[j] && !str2[j])
+		if ((str[j] == '=' && str2[j] == 0) || (!str[j] && !str2[j]))
 			break ;
 		tmp = tmp->next;
 	}
