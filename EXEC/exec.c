@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/17 12:36:23 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/18 15:37:55 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void close_all_pipes(t_minishell *msh)
 			close(msh->pipe[ii + 1]);
 			ii += 2;
 		}
+		free(msh->pipe);
 }
 #include<sys/time.h>
 void fork_it_for_me()
@@ -132,5 +133,6 @@ int main_function_exec(t_cmd *comms , t_list **lenv)
     initialize_data();
     open_pipes();
 	fork_it_for_me();
+	free(g_msh->env);
     return (0);
 }

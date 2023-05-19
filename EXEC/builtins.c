@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:14:20 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/17 15:10:34 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/18 15:56:50 by fhihi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,12 +118,14 @@ int ft_export(t_minishell msh , t_cmd *cmd)
 				}
 				if(str[j] == 0 && str2[j] == '=')
 				{
-					tmp->content = cmd->cmd_args[i];
+					free(tmp->content);
+					tmp->content = ft_strdup(cmd->cmd_args[i]);
 					break;
 				}
 				if(str[j] == '='  && str2[j] == '=')
 				{
-					tmp->content = cmd->cmd_args[i];
+					free(tmp->content);
+					tmp->content = ft_strdup(cmd->cmd_args[i]);
 					break;
 				}
 				
@@ -135,7 +137,7 @@ int ft_export(t_minishell msh , t_cmd *cmd)
     		}
 			if(!tmp || !tmp->content)
 			{
-				ft_lstlast(*msh.lenv)->content = cmd->cmd_args[i];
+				ft_lstlast(*msh.lenv)->content = ft_strdup(cmd->cmd_args[i]);
 				ft_lstadd_back(msh.lenv, ft_lstnew(NULL));
 			}
 		}
