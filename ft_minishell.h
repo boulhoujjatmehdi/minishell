@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/19 16:14:12 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:49:25 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define PR_FRST
 # include "ft_struct.h"
 # include "EXEC/exec.h"
-# include "parser/parse.h"
+# include "PARSER/parse.h"
 # include "./other_src/get_next_line.h"
 
 t_minishell	*g_msh;

@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/19 16:18:25 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:54:33 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	signal_handler(int sig)
 		rl_redisplay();
 		ft_putstr_fd("  \n", 1);
 		rl_on_new_line();
-		// rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_redisplay();
 		g_msh->stat = 1;
 	}
@@ -30,7 +30,7 @@ void	sigquit_handler(int sig)
 	if (sig == 3)
 	{
 		rl_on_new_line();
-		// rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_redisplay();
 	}
 	return ;
@@ -52,7 +52,10 @@ void	ft_rd_and_run(t_cmd **head, t_list **lenv)
 
 	str = readline("minishell->");
 	if (str == NULL)
+	{
+		ft_putstr_fd("exit", 1);
 		exit(g_msh->exit_st);
+	}
 	if (*str && str[skip_char(str, ' ')] != 0)
 	{
 		g_msh->exit_st = -1;
@@ -95,6 +98,5 @@ int	main(int ac, char **av, char **env)
 				g_msh->exit_st = g_msh->stat;
 		}
 		g_msh->stat = 0;
-		system("leaks -q minishell");
 	}
 }

@@ -1,6 +1,5 @@
 
-
-SRC = libft/libft.a main.c 
+SRC = main.c 
 
 PRS = parser.c spliter.c LList1.c LList2.c cmd_path_Utils.c cmd_path_Utils1.c cmd_path_Utils2.c LList2_Utils.c proccosing_Utils1.c \
 proccosing_Utils2.c proccosing_Utils3.c proccosing_Utils4.c proccosing_Utils5.c proccosing_Utils6.c proccosing.c spliter_Utils.c tokenization_Utils1.c tokenization_Utils2.c \
@@ -14,23 +13,29 @@ OTH = get_next_line.c get_next_line_utils.c
 LBT = libft/libft.a
 
 RDL = 	-lreadline \
-			# -L /Users/eboulhou/.brew/opt/readline/lib -I /Users/eboulhou/.brew/opt/readline/lib/include
+			-L /Users/eboulhou/.brew/opt/readline/lib -I /Users/eboulhou/.brew/opt/readline/lib/include
 CC = cc \
 	-Wall -Wextra -Werror
+NAME = minishell
 
-all: $(LBT)
-	$(CC)   $(addprefix parser/, $(PRS)) $(addprefix EXEC/, $(EXE)) $(RDL)  $(addprefix other_src/, $(OTH)) $(SRC)  -o minishell
+HDS = ft_minishell.h ft_struct.h EXEC/exec.h PARSER/parse.h
+
+all:$(NAME)
+
+$(NAME): $(LBT) $(addprefix PARSER/, $(PRS)) $(addprefix EXEC/, $(EXE)) $(addprefix other_src/, $(OTH)) main.c $(HDS)
+	$(CC)   $(addprefix PARSER/, $(PRS)) $(addprefix EXEC/, $(EXE)) $(RDL)  $(addprefix other_src/, $(OTH)) $(LBT)  $(SRC) -o minishell
 
 $(LBT): 
 	make -C libft bonus
-	# make -C libft clean
 
-run: clear	all	
-	./minishell
+clean:
+	make -C libft clean
 
-clear:
+
+fclean:clean
+	make -C libft fclean
 	rm -rf minishell
-	# make -C libft fclean
+re: fclean all
 
 ex:
 	clear && ./minishell
