@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:25:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/19 15:21:14 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 15:39:51 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ char	*ft_part_one(char **ss, char *s, int *l)
 	int		i;
 
 	i = *l;
+	new = NULL;
 	if (s[i] == '$' && i == 0)
 	{
 		i = get_env_var(s);
@@ -69,29 +70,29 @@ char	*quoted_token(char **ss, char *s, int *l)
 // this function is used to tokenis my initial string
 char	*my_strtok(char **ss)
 {
-	int		i;
-	char	*new;
+	t_var	var;
 	char	*s;
 
-	i = 0;
+	var.i = 0;
 	s = *ss;
-	while (i <= ft_strlen(s))
+	var.new = NULL;
+	while (var.i <= (int)ft_strlen(s))
 	{
-		if (!s[i] && i == 0)
+		if (!s[var.i] && var.i == 0)
 			return (NULL);
-		if ((s[i] == '\'' || s[i] == '\"') && i == 0)
+		if ((s[var.i] == '\'' || s[var.i] == '\"') && var.i == 0)
 		{
-			new = quoted_token(ss, s, &i);
+			var.new = quoted_token(ss, s, &var.i);
 			break ;
 		}
-		if ((s[i] == '$' && i == 0) || \
-		((is_not_arg(s[i]) || s[i] == '$') && i > 0) || \
-		(is_not_arg(s[i]) && i == 0))
+		if ((s[var.i] == '$' && var.i == 0) || \
+		((is_not_arg(s[var.i]) || s[var.i] == '$') && var.i > 0) || \
+		(is_not_arg(s[var.i]) && var.i == 0))
 		{
-			new = ft_part_one(ss, s, &i);
+			var.new = ft_part_one(ss, s, &var.i);
 			break ;
 		}
-		i++;
+		var.i++;
 	}
-	return (new);
+	return (var.new);
 }

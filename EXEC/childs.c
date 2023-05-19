@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 14:52:15 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/18 17:33:13 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:05:47 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ void	fork_it_for_me(void)
 	k = 0;
 	stat = 1;
 	pid = ft_calloc(sizeof(int), g_msh->child_nb);
+	if (!pid)
+		return ;
 	open_pipes();
 	forking(k, &stat, pid);
 	close_all_pipes(g_msh);

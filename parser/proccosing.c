@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:44:44 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/19 15:21:06 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 15:35:11 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	add_if_separeted(t_list **list)
 void	cmd_opt_ll(t_list **list, char *s)
 {
 	char	**tmp;
-	t_list	*head;
 	int		i;
 
 	tmp = ft_my_split(s, 1);
@@ -100,7 +99,6 @@ char	**get_cmd_opt(char *s)
 // to read from and output file to write to and so on
 void	proccesing_cmd(t_cmd *node, char **env)
 {
-	int		fd;
 	char	*cmd;
 
 	cmd = NULL;

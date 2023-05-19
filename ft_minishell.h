@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 12:04:02 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/19 14:11:55 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:14:12 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,9 @@
 # define FT_MINISHELL_H
 
 # include "libft/libft.h"
+# include <fcntl.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <string.h>
-# include <curses.h>
 # include <stdio.h>
 # include <signal.h>
 # include <readline/readline.h>

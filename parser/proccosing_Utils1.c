@@ -6,13 +6,13 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:47:06 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/19 15:20:48 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 15:38:07 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"parse.h"
 
-void	her_child(char *name, int pid, t_list **env)
+void	her_child(char *name, t_list **env)
 {
 	t_var	var;
 	int		fd;
@@ -37,16 +37,15 @@ void	her_child(char *name, int pid, t_list **env)
 int	get_here_doc(char *name, t_list **env)
 {
 	int		pid;
-	int		fd;
 	int		status;
 
 	pid = fork();
 	if (pid == 0)
-		her_child(name, pid, env);
+		her_child(name, env);
 	waitpid(pid, &status, 0);
 	if (status)
 		return (-2);
-	return (fd);
+	return (0);
 }
 
 int	procces_her_doc(char *s, t_cmd *node)

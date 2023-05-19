@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:53:52 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/19 15:21:44 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 15:46:06 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 int	join_two_nodes(t_tokens *node1, t_tokens *node2)
 {
-	char	*temp;
-
 	node1->token = ft_strjoin2(node1->token, node2->token);
 	return (node2->pos);
 }
@@ -78,9 +76,9 @@ int	adjest2(t_tokens *head, t_tokens **list, int *tmp)
 void	adjest(t_tokens **list)
 {
 	t_tokens	*head;
-	int			tmp1;
 	int			tmp2;
 
+	tmp2 = 0;
 	head = *list;
 	while (head->next)
 	{

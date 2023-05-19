@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 20:20:19 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/19 15:20:43 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:13:57 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define PARSE_H
 
 # include"../ft_minishell.h"
-# include<fcntl.h>
 # define PIPE_TOKEN 1
 # define ARG_TOKEN 2
 # define RED_TOKEN 3
@@ -66,7 +65,7 @@ char		*triiim_char(char *name, char c);
 int			fiil_tokenll(char *str, t_tokens **info);
 int			check_if_connected(t_tokens *node);
 void		fill_alone_empty(t_tokens **list);
-t_cmd		*main_function(int ac, char *str, t_list **env);
+t_cmd		*main_function(char *str, t_list **env);
 void		check_env(t_tokens **list, t_list **env);
 void		d_quotes(t_tokens *head, t_list	**env);
 char		*ft_rplc(char *from, int *l, t_list **env);

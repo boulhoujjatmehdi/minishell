@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:23:50 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/19 15:20:45 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 15:40:05 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	fiil_tokenll(char *str, t_tokens **info)
 	return (0);
 }
 
-t_cmd	*main_function(int ac, char *str, t_list **env)
+t_cmd	*main_function(char *str, t_list **env)
 {
 	t_tokens	*info;
 	t_cmd		*head;

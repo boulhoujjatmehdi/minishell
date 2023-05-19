@@ -16,7 +16,8 @@ LBT = libft/libft.a
 RDL = 	-lreadline \
 			# -L /Users/eboulhou/.brew/opt/readline/lib -I /Users/eboulhou/.brew/opt/readline/lib/include
 CC = cc \
-	# -Wall -Wextra -Werror
+	-Wall -Wextra -Werror
+
 all: $(LBT)
 	$(CC)   $(addprefix parser/, $(PRS)) $(addprefix EXEC/, $(EXE)) $(RDL)  $(addprefix other_src/, $(OTH)) $(SRC)  -o minishell
 

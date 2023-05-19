@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 18:53:47 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/19 15:21:51 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 15:34:34 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	listing_cmd(t_tokens **list1, t_cmd **list2)
 {
 	t_tokens	*head1;
 	t_cmd		*head2;
-	char		*tmp;
 
 	head2 = *list2;
 	head1 = *list1;

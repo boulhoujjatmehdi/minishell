@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 18:28:37 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/19 15:20:59 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 15:35:19 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ char	*triiim_char(char *name, char c)
 int	has_space(char *name)
 {
 	char	**test;
-	char	*tmp;
 	int		count;
 
 	if (!name[0])

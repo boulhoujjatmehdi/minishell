@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:59:28 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/19 13:55:29 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 15:57:01 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,7 @@ void	open_pipes(void)
 	i = 0;
 	g_msh->pipe = ft_calloc (sizeof(int) * 2, (g_msh->child_nb + 1));
 	if (!g_msh->pipe)
-	{
-		g_msh->pipe = NULL;
 		return ;
-	}
 	while (i < g_msh->child_nb - 1)
 	{
 		pipe(&g_msh->pipe[i * 2]);
@@ -76,6 +73,8 @@ int	execution_function(t_cmd *comms, t_list **lenv)
 	g_msh->lenv = lenv;
 	g_msh->comms = comms;
 	g_msh->env = ft_calloc(sizeof(char *), ft_lstsize(*g_msh->lenv));
+	if (!g_msh->env)
+		return (1);
 	tmp = *g_msh->lenv;
 	i = 0;
 	while (tmp)

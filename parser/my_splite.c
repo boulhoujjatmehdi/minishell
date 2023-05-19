@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   my_splite.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhihi <fhihi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 17:26:26 by fhihi             #+#    #+#             */
-/*   Updated: 2023/05/18 16:22:36 by fhihi            ###   ########.fr       */
+/*   Updated: 2023/05/19 16:11:53 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,12 @@ char	*ft_my_strtrim(char const *s1, char const *set)
 	i = 0;
 	if (!s1)
 		return (NULL);
-	while ((int)strchr(set, s1[i]) && s1[i])
+	while ((int)ft_strchr(set, s1[i]) && s1[i])
 		i++;
-	if (i == (int)strlen(s1))
+	if (i == (int)ft_strlen(s1))
 		return (ft_my_substr(s1, i, 0));
-	len = (int)strlen(s1) - 1;
-	while ((int)strchr(set, s1[len]))
+	len = (int)ft_strlen(s1) - 1;
+	while ((int)ft_strchr(set, s1[len]))
 		len--;
 	size = len - i + 1;
 	return (ft_my_substr(s1, i, size));

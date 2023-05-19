@@ -6,7 +6,7 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:35:53 by eboulhou          #+#    #+#             */
-/*   Updated: 2023/05/19 15:23:18 by eboulhou         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:18:25 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	ft_rd_and_run(t_cmd **head, t_list **lenv)
 	{
 		g_msh->exit_st = -1;
 		add_history(str);
-		*head = main_function(0, str, lenv);
+		*head = main_function(str, lenv);
 		if (*head)
 		{
 			execution_function(*head, lenv);
@@ -95,5 +95,6 @@ int	main(int ac, char **av, char **env)
 				g_msh->exit_st = g_msh->stat;
 		}
 		g_msh->stat = 0;
+		system("leaks -q minishell");
 	}
 }
